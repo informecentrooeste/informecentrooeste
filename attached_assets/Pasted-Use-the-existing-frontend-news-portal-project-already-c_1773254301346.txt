@@ -1,0 +1,755 @@
+Use the existing frontend news portal project already created and now build the full backend, database, admin panel and integrations for production.
+
+This system is a professional news portal called Informe Centro-Oeste and must be secure, scalable, high-performance and ready for multiple concurrent users.
+
+Main stack requirements
+
+Backend:
+
+Node.js
+
+Express.js
+
+PostgreSQL
+
+Prisma ORM
+
+Authentication:
+
+JWT access token
+
+Refresh token
+
+bcrypt password hashing
+
+secure cookie support when needed
+
+Validation and security:
+
+Zod or Joi for input validation
+
+Helmet
+
+CORS with whitelist support
+
+express-rate-limit
+
+slow-down on sensitive routes
+
+sanitize input
+
+XSS protection
+
+CSRF protection for admin panel if using cookies
+
+request logging
+
+error logging
+
+centralized error handler
+
+Performance and scalability:
+
+Redis-compatible cache abstraction or in-memory cache fallback for development
+
+query pagination
+
+indexed database fields
+
+optimized SQL queries
+
+response compression
+
+image optimization pipeline support
+
+cache headers for public content
+
+support high read traffic for news pages
+
+structure ready for horizontal scaling in the future
+
+Goal
+
+Build a complete CMS and backend for the existing portal frontend.
+
+The system must allow:
+
+public readers to access news quickly
+
+editors/admins to publish and manage content easily
+
+the site to support high traffic peaks
+
+the platform to remain secure against common web attacks
+
+Database structure
+
+Create Prisma models for the following tables:
+
+User
+
+id
+
+name
+
+email
+
+passwordHash
+
+role (ADMIN, EDITOR, AUTHOR)
+
+isActive
+
+createdAt
+
+updatedAt
+
+lastLoginAt
+
+Category
+
+id
+
+name
+
+slug
+
+description
+
+isActive
+
+createdAt
+
+updatedAt
+
+News
+
+id
+
+title
+
+slug
+
+summary
+
+content
+
+featuredImage
+
+status (DRAFT, PUBLISHED, ARCHIVED)
+
+categoryId
+
+authorId
+
+isFeatured
+
+publishedAt
+
+createdAt
+
+updatedAt
+
+seoTitle
+
+seoDescription
+
+seoKeywords
+
+viewCount
+
+NewsTag
+
+id
+
+name
+
+slug
+
+NewsToTag
+
+newsId
+
+tagId
+
+AdBanner
+
+id
+
+title
+
+position (TOP, BELOW_PLAYER, SIDEBAR, BETWEEN_SECTIONS, FOOTER)
+
+imageUrl
+
+targetUrl
+
+isActive
+
+startsAt
+
+endsAt
+
+createdAt
+
+updatedAt
+
+VideoSection
+
+id
+
+title
+
+sourceType (YOUTUBE, INSTAGRAM, INTERNAL)
+
+videoUrl
+
+thumbnailUrl
+
+isActive
+
+createdAt
+
+updatedAt
+
+SiteSetting
+
+id
+
+key
+
+value
+
+updatedAt
+
+AuditLog
+
+id
+
+userId
+
+action
+
+entityType
+
+entityId
+
+metadata
+
+createdAt
+
+RefreshToken
+
+id
+
+userId
+
+tokenHash
+
+expiresAt
+
+createdAt
+
+revokedAt
+
+Public API requirements
+
+Create REST API routes for the public portal:
+
+Public news routes
+
+GET /api/public/news
+
+paginated
+
+filter by category
+
+filter by featured
+
+sort by latest or most viewed
+
+GET /api/public/news/:slug
+
+return full published article
+
+increment view count safely
+
+use caching
+
+return related news
+
+GET /api/public/categories
+
+GET /api/public/featured-news
+
+GET /api/public/latest-news
+
+GET /api/public/most-read
+
+GET /api/public/sidebar-news
+
+GET /api/public/videos
+
+GET /api/public/banners
+
+GET /api/public/search?q=
+
+Performance rules for public API
+
+cache homepage sections
+
+cache most-read and featured content
+
+cache category news lists
+
+invalidate cache when content changes
+
+paginate all list endpoints
+
+never expose draft content publicly
+
+Admin API requirements
+
+Create protected admin routes:
+
+Auth
+
+POST /api/auth/login
+
+POST /api/auth/refresh
+
+POST /api/auth/logout
+
+GET /api/auth/me
+
+Users
+
+GET /api/admin/users
+
+POST /api/admin/users
+
+PUT /api/admin/users/:id
+
+PATCH /api/admin/users/:id/status
+
+Categories
+
+GET /api/admin/categories
+
+POST /api/admin/categories
+
+PUT /api/admin/categories/:id
+
+PATCH /api/admin/categories/:id/status
+
+News
+
+GET /api/admin/news
+
+GET /api/admin/news/:id
+
+POST /api/admin/news
+
+PUT /api/admin/news/:id
+
+PATCH /api/admin/news/:id/publish
+
+PATCH /api/admin/news/:id/archive
+
+DELETE /api/admin/news/:id
+
+Banners
+
+GET /api/admin/banners
+
+POST /api/admin/banners
+
+PUT /api/admin/banners/:id
+
+PATCH /api/admin/banners/:id/status
+
+DELETE /api/admin/banners/:id
+
+Videos
+
+GET /api/admin/videos
+
+POST /api/admin/videos
+
+PUT /api/admin/videos/:id
+
+PATCH /api/admin/videos/:id/status
+
+DELETE /api/admin/videos/:id
+
+Settings
+
+GET /api/admin/settings
+
+PUT /api/admin/settings
+
+Dashboard
+
+GET /api/admin/dashboard/stats
+
+total news
+
+total published
+
+total drafts
+
+total views
+
+most viewed articles
+
+recent activity
+
+Audit
+
+GET /api/admin/audit-logs
+
+Authorization rules
+
+Implement role-based access control:
+
+ADMIN:
+full access
+
+EDITOR:
+create/edit/publish/archive news, manage categories and banners
+
+AUTHOR:
+create/edit only own articles, cannot publish directly unless allowed
+
+Protect all admin routes with JWT auth middleware and role-based authorization middleware.
+
+Admin panel requirements
+
+Create an intuitive admin panel integrated into the same project.
+
+Use React for admin pages too.
+
+Admin panel must include:
+
+Admin login page
+
+secure login form
+
+validation messages
+
+protected routes
+
+session persistence with refresh token flow
+
+Dashboard page
+
+cards with total posts, drafts, published posts, total views
+
+recent news
+
+recent activity log
+
+top articles
+
+News management
+
+list all articles with filters
+
+create article form
+
+edit article form
+
+rich text editor for content
+
+slug auto-generation
+
+category selection
+
+tag management
+
+featured image upload
+
+publish and draft actions
+
+preview mode
+
+Category management
+
+create/edit categories
+
+activate/deactivate categories
+
+Banner management
+
+upload banner image
+
+choose display position
+
+define target URL
+
+define active period
+
+Video management
+
+add/edit video cards
+
+assign YouTube or Instagram links
+
+Settings page
+
+portal name
+
+social links
+
+WhatsApp links
+
+TV stream URL
+
+app store links
+
+weather widget settings
+
+Admin UX requirements
+
+easy and intuitive
+
+responsive
+
+modern and fast
+
+clear error and success messages
+
+loading states
+
+optimistic UI where appropriate
+
+Media upload requirements
+
+Implement secure file upload for:
+
+featured images
+
+banners
+
+Rules:
+
+validate mime type
+
+validate file size
+
+rename files safely
+
+prevent executable upload
+
+create folder structure for media
+
+prepare abstraction to later move uploads to cloud storage if needed
+
+Security requirements
+
+Implement all of the following:
+
+bcrypt password hashing
+
+JWT access tokens with expiration
+
+refresh token rotation
+
+account lock or temporary block after repeated failed login attempts
+
+rate limit on login, search and content creation routes
+
+helmet security headers
+
+strict CORS policy
+
+input validation in all routes
+
+output sanitization where necessary
+
+centralized error handling
+
+404 and unknown route handling
+
+audit logging for admin actions
+
+no sensitive stack traces in production
+
+environment variables for all secrets
+
+secure defaults for Render deployment
+
+Performance requirements
+
+Implement:
+
+homepage content caching
+
+article caching
+
+most-read caching
+
+category list caching
+
+pagination everywhere
+
+Prisma indexes for slug, publishedAt, categoryId, status
+
+lightweight responses for listing pages
+
+lazy fetch for dashboard widgets
+
+compression middleware
+
+efficient view counting
+
+minimal N+1 query problems
+
+selective fields in list responses
+
+Design the system assuming:
+
+many readers accessing at the same time
+
+few editors writing content
+
+much more read traffic than write traffic
+
+Optimize for read-heavy traffic.
+
+SEO and content rules
+
+Support:
+
+seoTitle
+
+seoDescription
+
+seoKeywords
+
+canonical URL structure
+
+friendly slugs
+
+publishedAt date
+
+related content suggestions
+
+Existing portal integrations
+
+Use these portal settings as initial seed data:
+
+Primary brand color:
+
+#474085
+
+TV player URL:
+
+https://player.logicahost.com.br/player.php?player=2050
+
+Instagram:
+
+https://www.instagram.com/informecentrooeste?igsh=Nm1jb2F0eTJybXd5&utm_source=qr
+
+Facebook:
+
+https://www.facebook.com/share/14TiuW9h73u/?mibextid=wwXIfr
+
+YouTube:
+
+https://youtube.com/@informecentrooeste?si=TkvtAnoe6jStJXz3
+
+Play Store:
+
+https://play.google.com/store/apps/details?id=com.logicahost.informetv
+
+App Store:
+
+https://apps.apple.com/br/app/informe-tv/id6746223815
+
+WhatsApp VIP Formiga:
+
+https://chat.whatsapp.com/EhLqmbJ7UndF7IKgYUFjCh?mode=gi_t
+
+WhatsApp VIP Córrego Fundo:
+
+https://chat.whatsapp.com/IqL5s8VYgxW7Vxql1WTAo3?mode=gi_t
+
+WhatsApp contact:
+
+37998249936
+
+Seed data
+
+Add realistic seed data:
+
+categories
+
+sample articles
+
+sample banners
+
+sample videos
+
+default admin user
+
+default editor user
+
+Code organization requirements
+
+Structure backend clearly:
+
+/server
+/src
+/config
+/modules
+/auth
+/users
+/categories
+/news
+/banners
+/videos
+/settings
+/dashboard
+/audit
+/middleware
+/utils
+/cache
+/lib
+
+Use service/repository/controller separation where appropriate.
+
+Final requirement
+
+Generate production-ready code, not a toy example.
+
+The result must be:
+
+secure
+
+scalable
+
+cleanly organized
+
+easy to maintain
+
+ready to connect to the existing frontend
+
+ready for deployment on Render
+
+Also create a README with:
+
+environment variables
+
+how to run locally
+
+how to migrate database
+
+how to seed database
+
+how to deploy to Render
+
+Important
+
+Do not generate only mock data pages.
+Build the real backend, real API routes, real database schema, real auth flow and real admin management pages.

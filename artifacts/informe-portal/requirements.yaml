@@ -1,0 +1,14 @@
+packages:
+  "framer-motion": "For page transitions and layout animations"
+  "date-fns": "For formatting publication dates"
+  "recharts": "For the admin dashboard analytics charts"
+  "@hookform/resolvers": "For form validation with Zod"
+  "react-hook-form": "For robust form state management in admin panel"
+  "lucide-react": "For beautiful icons throughout the application"
+
+notes:
+  - Assumes backend is running and accessible via the `/api` prefix
+  - React Query hooks are imported from `@workspace/api-client-react`
+  - Authentication uses localStorage for accessToken and refreshToken
+  - File uploads go to `/api/admin/upload` and return `{ url, filename }`
+  - Images starting with `/uploads/` should be prefixed with `/api` for display

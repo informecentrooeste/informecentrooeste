@@ -1,22 +1,41 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
-  version: 0.1.0
-  description: API specification
+  version: 1.0.0
+  description: Informe Centro-Oeste - News Portal API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication
+  - name: public
+    description: Public news portal endpoints
+  - name: admin-news
+    description: Admin news management
+  - name: admin-categories
+    description: Admin categories management
+  - name: admin-users
+    description: Admin users management
+  - name: admin-banners
+    description: Admin banners management
+  - name: admin-videos
+    description: Admin videos management
+  - name: admin-settings
+    description: Admin settings management
+  - name: admin-dashboard
+    description: Admin dashboard stats
+  - name: admin-audit
+    description: Admin audit logs
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +43,1561 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ─── Auth ────────────────────────────────────────────────────────
+  /auth/login:
+    post:
+      operationId: authLogin
+      tags: [auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/refresh:
+    post:
+      operationId: authRefresh
+      tags: [auth]
+      summary: Refresh access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+              required: [refreshToken]
+      responses:
+        "200":
+          description: New access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/logout:
+    post:
+      operationId: authLogout
+      tags: [auth]
+      summary: Logout
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/me:
+    get:
+      operationId: authMe
+      tags: [auth]
+      summary: Get current user
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  # ─── Public ──────────────────────────────────────────────────────
+  /public/news:
+    get:
+      operationId: getPublicNews
+      tags: [public]
+      summary: List published news
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 12
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: featured
+          in: query
+          schema:
+            type: boolean
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [latest, most_viewed]
+            default: latest
+      responses:
+        "200":
+          description: Paginated news list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedNews"
+
+  /public/news/{slug}:
+    get:
+      operationId: getPublicNewsArticle
+      tags: [public]
+      summary: Get single published article
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Article with related news
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticleDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /public/categories:
+    get:
+      operationId: getPublicCategories
+      tags: [public]
+      summary: List active categories
+      responses:
+        "200":
+          description: Categories list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+
+  /public/featured-news:
+    get:
+      operationId: getPublicFeaturedNews
+      tags: [public]
+      summary: Get featured news (max 4)
+      responses:
+        "200":
+          description: Featured news
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NewsCard"
+
+  /public/latest-news:
+    get:
+      operationId: getPublicLatestNews
+      tags: [public]
+      summary: Get latest news
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 5
+      responses:
+        "200":
+          description: Latest news
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NewsCard"
+
+  /public/most-read:
+    get:
+      operationId: getPublicMostRead
+      tags: [public]
+      summary: Get most read articles
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 5
+      responses:
+        "200":
+          description: Most read news
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NewsCard"
+
+  /public/sidebar-news:
+    get:
+      operationId: getPublicSidebarNews
+      tags: [public]
+      summary: Get sidebar news by category
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 3
+      responses:
+        "200":
+          description: Sidebar news
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NewsCard"
+
+  /public/videos:
+    get:
+      operationId: getPublicVideos
+      tags: [public]
+      summary: Get active videos
+      responses:
+        "200":
+          description: Videos list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Video"
+
+  /public/banners:
+    get:
+      operationId: getPublicBanners
+      tags: [public]
+      summary: Get active banners
+      parameters:
+        - name: position
+          in: query
+          schema:
+            type: string
+            enum: [TOP, BELOW_PLAYER, SIDEBAR, BETWEEN_SECTIONS, FOOTER]
+      responses:
+        "200":
+          description: Banners list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Banner"
+
+  /public/search:
+    get:
+      operationId: searchPublicNews
+      tags: [public]
+      summary: Search news
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedNews"
+
+  /public/settings:
+    get:
+      operationId: getPublicSettings
+      tags: [public]
+      summary: Get public site settings
+      responses:
+        "200":
+          description: Site settings
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+
+  # ─── Admin: Users ─────────────────────────────────────────────────
+  /admin/users:
+    get:
+      operationId: adminListUsers
+      tags: [admin-users]
+      summary: List users
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Users list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedUsers"
+    post:
+      operationId: adminCreateUser
+      tags: [admin-users]
+      summary: Create user
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  /admin/users/{id}:
+    put:
+      operationId: adminUpdateUser
+      tags: [admin-users]
+      summary: Update user
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  /admin/users/{id}/status:
+    patch:
+      operationId: adminToggleUserStatus
+      tags: [admin-users]
+      summary: Toggle user active status
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isActive:
+                  type: boolean
+              required: [isActive]
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  # ─── Admin: Categories ────────────────────────────────────────────
+  /admin/categories:
+    get:
+      operationId: adminListCategories
+      tags: [admin-categories]
+      summary: List categories
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+    post:
+      operationId: adminCreateCategory
+      tags: [admin-categories]
+      summary: Create category
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCategoryRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+
+  /admin/categories/{id}:
+    put:
+      operationId: adminUpdateCategory
+      tags: [admin-categories]
+      summary: Update category
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCategoryRequest"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+
+  /admin/categories/{id}/status:
+    patch:
+      operationId: adminToggleCategoryStatus
+      tags: [admin-categories]
+      summary: Toggle category status
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isActive:
+                  type: boolean
+              required: [isActive]
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+
+  # ─── Admin: News ──────────────────────────────────────────────────
+  /admin/news:
+    get:
+      operationId: adminListNews
+      tags: [admin-news]
+      summary: List all news (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [DRAFT, PUBLISHED, ARCHIVED]
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Paginated news
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedAdminNews"
+    post:
+      operationId: adminCreateNews
+      tags: [admin-news]
+      summary: Create news article
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateNewsRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminNewsDetail"
+
+  /admin/news/{id}:
+    get:
+      operationId: adminGetNews
+      tags: [admin-news]
+      summary: Get news article (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Article
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminNewsDetail"
+    put:
+      operationId: adminUpdateNews
+      tags: [admin-news]
+      summary: Update news article
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateNewsRequest"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminNewsDetail"
+    delete:
+      operationId: adminDeleteNews
+      tags: [admin-news]
+      summary: Delete news article
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/news/{id}/publish:
+    patch:
+      operationId: adminPublishNews
+      tags: [admin-news]
+      summary: Publish news article
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Published
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminNewsDetail"
+
+  /admin/news/{id}/archive:
+    patch:
+      operationId: adminArchiveNews
+      tags: [admin-news]
+      summary: Archive news article
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Archived
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminNewsDetail"
+
+  # ─── Admin: Banners ───────────────────────────────────────────────
+  /admin/banners:
+    get:
+      operationId: adminListBanners
+      tags: [admin-banners]
+      summary: List banners
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Banners
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Banner"
+    post:
+      operationId: adminCreateBanner
+      tags: [admin-banners]
+      summary: Create banner
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBannerRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Banner"
+
+  /admin/banners/{id}:
+    put:
+      operationId: adminUpdateBanner
+      tags: [admin-banners]
+      summary: Update banner
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBannerRequest"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Banner"
+    delete:
+      operationId: adminDeleteBanner
+      tags: [admin-banners]
+      summary: Delete banner
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/banners/{id}/status:
+    patch:
+      operationId: adminToggleBannerStatus
+      tags: [admin-banners]
+      summary: Toggle banner status
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isActive:
+                  type: boolean
+              required: [isActive]
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Banner"
+
+  # ─── Admin: Videos ────────────────────────────────────────────────
+  /admin/videos:
+    get:
+      operationId: adminListVideos
+      tags: [admin-videos]
+      summary: List videos
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Videos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Video"
+    post:
+      operationId: adminCreateVideo
+      tags: [admin-videos]
+      summary: Create video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateVideoRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+
+  /admin/videos/{id}:
+    put:
+      operationId: adminUpdateVideo
+      tags: [admin-videos]
+      summary: Update video
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateVideoRequest"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+    delete:
+      operationId: adminDeleteVideo
+      tags: [admin-videos]
+      summary: Delete video
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/videos/{id}/status:
+    patch:
+      operationId: adminToggleVideoStatus
+      tags: [admin-videos]
+      summary: Toggle video status
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isActive:
+                  type: boolean
+              required: [isActive]
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+
+  # ─── Admin: Settings ──────────────────────────────────────────────
+  /admin/settings:
+    get:
+      operationId: adminGetSettings
+      tags: [admin-settings]
+      summary: Get all settings
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Settings
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+    put:
+      operationId: adminUpdateSettings
+      tags: [admin-settings]
+      summary: Update settings
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+      responses:
+        "200":
+          description: Updated settings
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+
+  # ─── Admin: Dashboard ─────────────────────────────────────────────
+  /admin/dashboard/stats:
+    get:
+      operationId: adminGetDashboardStats
+      tags: [admin-dashboard]
+      summary: Get dashboard statistics
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Dashboard stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  # ─── Admin: Audit ─────────────────────────────────────────────────
+  /admin/audit-logs:
+    get:
+      operationId: adminGetAuditLogs
+      tags: [admin-audit]
+      summary: Get audit logs
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        "200":
+          description: Audit logs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedAuditLogs"
+
+  # ─── Upload ───────────────────────────────────────────────────────
+  /admin/upload:
+    post:
+      operationId: adminUploadFile
+      tags: [admin-news]
+      summary: Upload image file
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required: [file]
+      responses:
+        "200":
+          description: Upload result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadResponse"
+
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     HealthStatus:
       type: object
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required: [error]
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+      required: [email, password]
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        user:
+          $ref: "#/components/schemas/UserProfile"
+      required: [accessToken, refreshToken, user]
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [ADMIN, EDITOR, AUTHOR]
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        lastLoginAt:
+          type: string
+          format: date-time
+          nullable: true
+      required: [id, name, email, role, isActive, createdAt]
+
+    CreateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        role:
+          type: string
+          enum: [ADMIN, EDITOR, AUTHOR]
+      required: [name, email, password, role]
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum: [ADMIN, EDITOR, AUTHOR]
+
+    PaginatedUsers:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserProfile"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required: [data, total, page, limit, totalPages]
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, name, slug, isActive, createdAt]
+
+    CreateCategoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+      required: [name, slug]
+
+    NewsCard:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        summary:
+          type: string
+          nullable: true
+        featuredImage:
+          type: string
+          nullable: true
+        publishedAt:
+          type: string
+          format: date-time
+          nullable: true
+        viewCount:
+          type: integer
+        isFeatured:
+          type: boolean
+        category:
+          $ref: "#/components/schemas/Category"
+        author:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+          required: [id, name]
+      required: [id, title, slug, viewCount, isFeatured, category, author]
+
+    ArticleDetail:
+      allOf:
+        - $ref: "#/components/schemas/NewsCard"
+        - type: object
+          properties:
+            content:
+              type: string
+            seoTitle:
+              type: string
+              nullable: true
+            seoDescription:
+              type: string
+              nullable: true
+            seoKeywords:
+              type: string
+              nullable: true
+            tags:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                required: [id, name, slug]
+            related:
+              type: array
+              items:
+                $ref: "#/components/schemas/NewsCard"
+          required: [content]
+
+    PaginatedNews:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/NewsCard"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required: [data, total, page, limit, totalPages]
+
+    AdminNewsDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        summary:
+          type: string
+          nullable: true
+        content:
+          type: string
+        featuredImage:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [DRAFT, PUBLISHED, ARCHIVED]
+        categoryId:
+          type: integer
+        authorId:
+          type: integer
+        isFeatured:
+          type: boolean
+        publishedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        seoTitle:
+          type: string
+          nullable: true
+        seoDescription:
+          type: string
+          nullable: true
+        seoKeywords:
+          type: string
+          nullable: true
+        viewCount:
+          type: integer
+        category:
+          $ref: "#/components/schemas/Category"
+        author:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+          required: [id, name]
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              slug:
+                type: string
+            required: [id, name, slug]
+      required: [id, title, slug, content, status, categoryId, authorId, isFeatured, viewCount, createdAt, updatedAt, category, author, tags]
+
+    CreateNewsRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        slug:
+          type: string
+        summary:
+          type: string
+        content:
+          type: string
+        featuredImage:
+          type: string
+        status:
+          type: string
+          enum: [DRAFT, PUBLISHED, ARCHIVED]
+          default: DRAFT
+        categoryId:
+          type: integer
+        isFeatured:
+          type: boolean
+          default: false
+        seoTitle:
+          type: string
+        seoDescription:
+          type: string
+        seoKeywords:
+          type: string
+        tagIds:
+          type: array
+          items:
+            type: integer
+      required: [title, slug, content, categoryId]
+
+    PaginatedAdminNews:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdminNewsDetail"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required: [data, total, page, limit, totalPages]
+
+    Banner:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        position:
+          type: string
+          enum: [TOP, BELOW_PLAYER, SIDEBAR, BETWEEN_SECTIONS, FOOTER]
+        imageUrl:
+          type: string
+        targetUrl:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+        startsAt:
+          type: string
+          format: date-time
+          nullable: true
+        endsAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, title, position, imageUrl, isActive, createdAt]
+
+    CreateBannerRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        position:
+          type: string
+          enum: [TOP, BELOW_PLAYER, SIDEBAR, BETWEEN_SECTIONS, FOOTER]
+        imageUrl:
+          type: string
+        targetUrl:
+          type: string
+        isActive:
+          type: boolean
+          default: true
+        startsAt:
+          type: string
+          format: date-time
+        endsAt:
+          type: string
+          format: date-time
+      required: [title, position, imageUrl]
+
+    Video:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        sourceType:
+          type: string
+          enum: [YOUTUBE, INSTAGRAM, INTERNAL]
+        videoUrl:
+          type: string
+        thumbnailUrl:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, title, sourceType, videoUrl, isActive, createdAt]
+
+    CreateVideoRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        sourceType:
+          type: string
+          enum: [YOUTUBE, INSTAGRAM, INTERNAL]
+        videoUrl:
+          type: string
+        thumbnailUrl:
+          type: string
+        isActive:
+          type: boolean
+          default: true
+      required: [title, sourceType, videoUrl]
+
+    DashboardStats:
+      type: object
+      properties:
+        totalNews:
+          type: integer
+        publishedNews:
+          type: integer
+        draftNews:
+          type: integer
+        archivedNews:
+          type: integer
+        totalViews:
+          type: integer
+        totalUsers:
+          type: integer
+        mostViewed:
+          type: array
+          items:
+            $ref: "#/components/schemas/NewsCard"
+        recentNews:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdminNewsDetail"
+      required: [totalNews, publishedNews, draftNews, archivedNews, totalViews, totalUsers, mostViewed, recentNews]
+
+    AuditLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+          nullable: true
+        action:
+          type: string
+        entityType:
+          type: string
+        entityId:
+          type: string
+          nullable: true
+        metadata:
+          type: object
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        user:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+          required: [id, name]
+      required: [id, action, entityType, createdAt]
+
+    PaginatedAuditLogs:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/AuditLog"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required: [data, total, page, limit, totalPages]
+
+    UploadResponse:
+      type: object
+      properties:
+        url:
+          type: string
+        filename:
+          type: string
+      required: [url, filename]
