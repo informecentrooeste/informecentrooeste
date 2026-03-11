@@ -1,0 +1,156 @@
+Create a responsive news portal frontend based on the attached layout.
+
+The portal name is: Informe Centro-Oeste.
+
+Primary brand color: #474085.
+
+Build the interface using React + Vite and TailwindCSS.
+
+The design must follow a professional news portal style with a clean layout similar to major news websites.
+
+Focus only on the frontend layout first. Do NOT create backend yet.
+
+--------------------------------
+
+MAIN HOMEPAGE STRUCTURE
+
+Header must include:
+
+- Portal logo (placeholder for now)
+- Navigation menu for categories
+- Search icon
+- Social media icons
+
+Social links:
+
+Instagram
+https://www.instagram.com/informecentrooeste
+
+Facebook
+https://www.facebook.com/share/14TiuW9h73u
+
+YouTube
+https://youtube.com/@informecentrooeste
+
+--------------------------------
+
+LIVE TV SECTION
+
+Add a large TV player section near the top of the page.
+
+Embed this live stream using iframe:
+
+https://player.logicahost.com.br/player.php?player=2050
+
+--------------------------------
+
+ADVERTISEMENT AREAS
+
+Include multiple advertisement banner sections:
+
+- top banner
+- banner below TV player
+- sidebar banners
+- banner between news sections
+- bottom banner
+
+--------------------------------
+
+NEWS CONTENT
+
+Create these sections:
+
+Featured News
+Latest News
+News Grid
+Category Sections
+
+Each news card must contain:
+
+- image
+- title
+- short excerpt
+- publication date
+
+--------------------------------
+
+RIGHT SIDEBAR
+
+Sidebar must contain:
+
+Advertisements
+
+Latest news list
+
+Weather widget
+
+Social media buttons
+
+WhatsApp community links
+
+WhatsApp VIP Formiga
+https://chat.whatsapp.com/EhLqmbJ7UndF7IKgYUFjCh
+
+WhatsApp VIP Córrego Fundo
+https://chat.whatsapp.com/IqL5s8VYgxW7Vxql1WTAo3
+
+Contact WhatsApp
+37998249936
+
+--------------------------------
+
+VIDEO SHORTS SECTION
+
+Create a horizontal section for short videos similar to reels.
+
+--------------------------------
+
+FOOTER
+
+Footer must include:
+
+Portal logo
+
+Social media links
+
+Links to mobile apps
+
+Google Play
+https://play.google.com/store/apps/details?id=com.logicahost.informetv
+
+App Store
+https://apps.apple.com/br/app/informe-tv/id6746223815
+
+Social media icons:
+
+Instagram
+Facebook
+YouTube
+
+--------------------------------
+
+DESIGN REQUIREMENTS
+
+Responsive design for desktop, tablet and mobile.
+
+Use modern card-based layout.
+
+Use TailwindCSS.
+
+Use reusable React components.
+
+Organize code into components such as:
+
+Header
+NewsCard
+Sidebar
+BannerAd
+LiveTV
+Footer
+VideoShorts
+
+--------------------------------
+
+Goal:
+
+Generate a complete frontend structure for a professional news portal based on the provided layout.
