@@ -2,6 +2,7 @@ import { PublicLayout } from "@/components/shared/PublicLayout";
 import { PublicSidebar } from "@/components/shared/PublicSidebar";
 import { NewsCard } from "@/components/shared/NewsCard";
 import { VideosCarousel } from "@/components/shared/VideosCarousel";
+import { BannerCarousel } from "@/components/shared/BannerCarousel";
 import { usePublicNews, usePublicFeaturedNews, usePublicLatestNews } from "@/hooks/use-public";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect, useCallback } from "react";
@@ -120,18 +121,14 @@ export default function Home() {
             </div>
           </section>
 
-          {/* 2. BANNER PROPAGANDA */}
-          <div className="w-full bg-gray-100 h-[90px] sm:h-[120px] flex items-center justify-center text-gray-400 font-bold text-xs sm:text-sm rounded-xl border-2 border-dashed border-gray-200">
-            BANNER PROPAGANDA
-          </div>
+          {/* 2. BANNER ACIMA DO DESTAQUE */}
+          <BannerCarousel position="ABOVE_DESTAQUE" />
 
           {/* 3. DESTAQUE - carrossel das últimas 5 notícias */}
           <DestaquesCarousel articles={Array.isArray(latestForCarousel) ? latestForCarousel : (latestForCarousel as any)?.data ?? []} />
 
-          {/* 4. BANNER PROPAGANDA */}
-          <div className="w-full bg-gray-100 h-[90px] sm:h-[120px] flex items-center justify-center text-gray-400 font-bold text-xs sm:text-sm rounded-xl border-2 border-dashed border-gray-200">
-            BANNER PROPAGANDA
-          </div>
+          {/* 4. BANNER ABAIXO DO DESTAQUE */}
+          <BannerCarousel position="BELOW_DESTAQUE" />
 
           {/* 5. TWO-COLUMN NEWS GRID (FORMIGA | REGIONAL) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
@@ -191,10 +188,8 @@ export default function Home() {
             </div>
           </section>
 
-          {/* BANNER PROPAGANDA abaixo dos articulistas */}
-          <div className="w-full bg-gray-100 h-[90px] sm:h-[120px] flex items-center justify-center text-gray-400 font-bold text-xs sm:text-sm rounded-xl border-2 border-dashed border-gray-200">
-            BANNER PROPAGANDA
-          </div>
+          {/* BANNER ABAIXO DOS ARTICULISTAS */}
+          <BannerCarousel position="BELOW_ARTICULISTAS" />
 
           {/* ESTADUAL | BRASIL */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
@@ -219,10 +214,8 @@ export default function Home() {
             ))}
           </div>
 
-          {/* BANNER PROPAGANDA */}
-          <div className="w-full bg-gray-100 h-[90px] sm:h-[120px] flex items-center justify-center text-gray-400 font-bold text-xs sm:text-sm rounded-xl border-2 border-dashed border-gray-200">
-            BANNER PROPAGANDA
-          </div>
+          {/* BANNER ACIMA DO POLÍTICA */}
+          <BannerCarousel position="ABOVE_POLITICA" />
 
           {/* POLÍTICA SECTION */}
           <section>
@@ -237,9 +230,7 @@ export default function Home() {
                 ))}
               </div>
               <div className="md:w-1/2">
-                <div className="w-full bg-gray-100 h-full min-h-[300px] flex items-center justify-center text-gray-400 font-bold text-sm rounded-xl border-2 border-dashed border-gray-200">
-                  BANNER PROPAGANDA
-                </div>
+                <BannerCarousel position="SIDE_POLITICA" fallbackHeight="h-full min-h-[300px]" />
               </div>
             </div>
             <Link href="/categoria/politica" className="inline-flex items-center text-primary font-bold text-sm mt-4 hover:underline group">
@@ -254,9 +245,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-1/2">
-                <div className="w-full bg-gray-100 h-full min-h-[300px] flex items-center justify-center text-gray-400 font-bold text-sm rounded-xl border-2 border-dashed border-gray-200">
-                  BANNER PROPAGANDA
-                </div>
+                <BannerCarousel position="SIDE_GERAL" fallbackHeight="h-full min-h-[300px]" />
               </div>
               <div className="md:w-1/2 flex flex-col gap-3">
                 {geralNews?.data?.[0] && <NewsCard article={geralNews.data[0]} large />}

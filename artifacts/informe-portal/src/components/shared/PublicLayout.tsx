@@ -6,6 +6,7 @@ import {
 import { FaWhatsapp, FaGooglePlay, FaApple } from "react-icons/fa";
 import { usePublicCategories } from "@/hooks/use-public";
 import logoInforme from "@assets/logo-informe.png";
+import { BannerCarousel } from "@/components/shared/BannerCarousel";
 
 export function PublicLayout({ children }: { children: ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,10 +30,8 @@ export function PublicLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-foreground font-sans">
-      {/* Top Banner Ad Placeholder */}
-      <div className="w-full bg-gray-200 h-[80px] sm:h-[100px] md:h-[120px] flex items-center justify-center text-gray-500 font-bold text-xs sm:text-sm">
-        BANNER PROPAGANDA
-      </div>
+      {/* Banner Topo */}
+      <BannerCarousel position="TOP" fallbackHeight="h-[80px] sm:h-[100px] md:h-[120px]" fallbackLabel="BANNER TOPO" />
 
       {/* Header */}
       <header className="bg-primary text-primary-foreground sticky top-0 z-50 shadow-md">

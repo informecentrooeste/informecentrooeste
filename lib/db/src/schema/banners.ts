@@ -1,8 +1,20 @@
-import { pgTable, serial, text, boolean, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, boolean, timestamp, pgEnum, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
-export const bannerPositionEnum = pgEnum("banner_position", ["TOP", "BELOW_PLAYER", "SIDEBAR", "BETWEEN_SECTIONS", "FOOTER"]);
+export const bannerPositionEnum = pgEnum("banner_position", [
+  "TOP",
+  "BELOW_PLAYER",
+  "SIDEBAR",
+  "BETWEEN_SECTIONS",
+  "FOOTER",
+  "ABOVE_DESTAQUE",
+  "BELOW_DESTAQUE",
+  "BELOW_ARTICULISTAS",
+  "ABOVE_POLITICA",
+  "SIDE_POLITICA",
+  "SIDE_GERAL",
+]);
 
 export const bannersTable = pgTable("banners", {
   id: serial("id").primaryKey(),
@@ -10,6 +22,7 @@ export const bannersTable = pgTable("banners", {
   position: bannerPositionEnum("position").notNull(),
   imageUrl: text("image_url").notNull(),
   targetUrl: text("target_url"),
+  sortOrder: integer("sort_order").default(0).notNull(),
   isActive: boolean("is_active").notNull().default(true),
   startsAt: timestamp("starts_at"),
   endsAt: timestamp("ends_at"),

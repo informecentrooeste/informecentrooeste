@@ -1,15 +1,15 @@
 import { Tv, Cloud, MapPin, Sun, ChevronRight, Youtube } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { Link } from "wouter";
-import { usePublicLatestNews, usePublicMostRead, usePublicBanners } from "@/hooks/use-public";
+import { usePublicLatestNews, usePublicMostRead } from "@/hooks/use-public";
 import { getImageUrl } from "@/lib/image-url";
+import { BannerCarousel } from "@/components/shared/BannerCarousel";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export function PublicSidebar() {
   const { data: latestNews } = usePublicLatestNews(4);
   const { data: mostRead } = usePublicMostRead(5);
-  const { data: sidebarBanners } = usePublicBanners({ position: "SIDEBAR" as any });
 
   return (
     <aside className="w-full flex flex-col gap-5 sm:gap-8 lg:sticky lg:top-24 h-fit">
@@ -26,11 +26,8 @@ export function PublicSidebar() {
         </span>
       </a>
 
-      {/* 2. PROPAGANDA BANNER VERTICAL */}
-      <div className="w-full bg-gray-200 h-[300px] flex flex-col items-center justify-center text-gray-500 font-bold text-sm rounded-xl border border-gray-300">
-        <span>BANNER PROPAGANDA</span>
-        <span className="text-xs font-normal mt-1">(300x300)</span>
-      </div>
+      {/* 2. BANNER LATERAL DIREITA */}
+      <BannerCarousel position="SIDEBAR" fallbackHeight="h-[300px]" fallbackLabel="BANNER LATERAL" />
 
       {/* 5. ÚLTIMAS NOTÍCIAS */}
       <section className="bg-white p-5 rounded-xl shadow-md shadow-black/5 border border-gray-100">
@@ -122,24 +119,8 @@ export function PublicSidebar() {
         </div>
       </section>
 
-      {/* 8. BANNER SIDEBAR (gerenciado pelo admin) */}
-      {(() => {
-        const bannerList = Array.isArray(sidebarBanners) ? sidebarBanners : (sidebarBanners as any)?.data;
-        const sidebarBanner = Array.isArray(bannerList) ? bannerList[0] : null;
-        if (sidebarBanner) {
-          return (
-            <a href={sidebarBanner.linkUrl || "#"} target="_blank" rel="noreferrer" className="block w-full rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow cursor-pointer">
-              <img src={getImageUrl(sidebarBanner.imageUrl)} alt={sidebarBanner.title || "Banner"} className="w-full h-auto object-cover" />
-            </a>
-          );
-        }
-        return (
-          <div className="w-full bg-gray-200 h-[300px] flex flex-col items-center justify-center text-gray-500 font-bold text-sm rounded-xl border border-gray-300">
-            <span>BANNER SIDEBAR</span>
-            <span className="text-xs font-normal mt-1">(Gerenciado pelo admin)</span>
-          </div>
-        );
-      })()}
+      {/* 8. BANNER SIDEBAR 2 */}
+      <BannerCarousel position="SIDEBAR" fallbackHeight="h-[300px]" fallbackLabel="BANNER SIDEBAR" />
 
       {/* 9. WHATSAPP SECTION */}
       <section className="bg-white p-6 rounded-xl shadow-md shadow-black/5 border border-gray-100 text-center">

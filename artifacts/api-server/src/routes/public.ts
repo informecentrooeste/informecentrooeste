@@ -249,9 +249,9 @@ router.get("/banners", async (req, res) => {
 
   const now = new Date();
   const conditions = [eq(bannersTable.isActive, true)];
-  if (position) conditions.push(eq(bannersTable.position, position as "TOP" | "BELOW_PLAYER" | "SIDEBAR" | "BETWEEN_SECTIONS" | "FOOTER"));
+  if (position) conditions.push(eq(bannersTable.position, position as any));
 
-  const banners = await db.select().from(bannersTable).where(and(...conditions)).orderBy(asc(bannersTable.id));
+  const banners = await db.select().from(bannersTable).where(and(...conditions)).orderBy(asc(bannersTable.sortOrder), asc(bannersTable.id));
   const filtered = banners.filter(b => (!b.startsAt || b.startsAt <= now) && (!b.endsAt || b.endsAt >= now));
   cache.set(cacheKey, filtered, TTL.SHORT);
   res.json(filtered);
