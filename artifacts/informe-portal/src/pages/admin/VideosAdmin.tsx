@@ -114,7 +114,8 @@ export default function VideosAdmin() {
             </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-gray-700 mb-1">URL da Thumbnail</label>
-              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.thumbnailUrl} onChange={e => setForm({ ...form, thumbnailUrl: e.target.value })} placeholder="Opcional" />
+              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.thumbnailUrl} onChange={e => setForm({ ...form, thumbnailUrl: e.target.value })} placeholder="Obrigatório para Instagram. YouTube extrai automático." />
+              <p className="text-xs text-gray-500 mt-1">Cole a URL de uma imagem de capa. Para Instagram, faça um print do vídeo e use um link de imagem.</p>
             </div>
             <div className="md:col-span-2 flex items-center gap-4">
               <label className="flex items-center gap-2 text-sm">

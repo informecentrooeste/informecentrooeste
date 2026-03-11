@@ -1,5 +1,6 @@
-import { useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRef, useState, useEffect, useCallback } from "react";
+import { ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { FaInstagram } from "react-icons/fa";
 import { usePublicVideos } from "@/hooks/use-public";
 import { getImageUrl } from "@/lib/image-url";
 
@@ -8,20 +9,11 @@ function getYoutubeThumbnail(url: string): string | null {
   return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
 }
 
-function getInstagramThumbnail(url: string): string | null {
-  const match = url.match(/instagram\.com\/(?:p|reel|tv)\/([a-zA-Z0-9_-]+)/);
-  return match ? `https://www.instagram.com/p/${match[1]}/media/?size=l` : null;
-}
-
 function getThumbnail(video: { thumbnailUrl?: string | null; videoUrl: string; sourceType: string }): string {
   if (video.thumbnailUrl) return getImageUrl(video.thumbnailUrl);
   if (video.sourceType === "YOUTUBE") {
     const yt = getYoutubeThumbnail(video.videoUrl);
     if (yt) return yt;
-  }
-  if (video.sourceType === "INSTAGRAM") {
-    const ig = getInstagramThumbnail(video.videoUrl);
-    if (ig) return ig;
   }
   return "";
 }
@@ -29,11 +21,36 @@ function getThumbnail(video: { thumbnailUrl?: string | null; videoUrl: string; s
 export function VideosCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { data: videosData } = usePublicVideos();
-  const videos = Array.isArray(videosData) ? videosData : (videosData as any)?.data ?? [];
+  const allVideos = Array.isArray(videosData) ? videosData : (videosData as any)?.data ?? [];
+  const videos = allVideos.slice(0, 15);
+
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkScroll = useCallback(() => {
+    if (!scrollRef.current) return;
+    const el = scrollRef.current;
+    setCanScrollLeft(el.scrollLeft > 5);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 5);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    checkScroll();
+    el.addEventListener("scroll", checkScroll, { passive: true });
+    window.addEventListener("resize", checkScroll);
+    return () => {
+      el.removeEventListener("scroll", checkScroll);
+      window.removeEventListener("resize", checkScroll);
+    };
+  }, [checkScroll, videos.length]);
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
-    const scrollAmount = 400;
+    const cardWidth = scrollRef.current.querySelector("[data-video-card]")?.clientWidth ?? 180;
+    const gap = 16;
+    const scrollAmount = (cardWidth + gap) * 3;
     scrollRef.current.scrollBy({
       left: direction === "left" ? -scrollAmount : scrollAmount,
       behavior: "smooth",
@@ -48,48 +65,73 @@ export function VideosCarousel() {
 
   return (
     <section className="bg-black text-white">
-      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-10">
-        <div
-          ref={scrollRef}
-          className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3 sm:gap-4"
-        >
-          {videos.map((video: any) => {
-            const thumb = getThumbnail(video);
-            return (
-              <div
-                key={video.id}
-                onClick={() => openVideo(video.videoUrl)}
-                className="cursor-pointer group"
-              >
-                <div className="aspect-[9/16] bg-gray-900 rounded-lg overflow-hidden relative">
-                  {thumb ? (
-                    <img
-                      src={thumb}
-                      alt={video.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gray-800" />
-                  )}
+      <div className="px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
+        <div className="relative">
+          <div
+            ref={scrollRef}
+            className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide scroll-smooth"
+            style={{ scrollSnapType: "x mandatory" }}
+          >
+            {videos.map((video: any) => {
+              const thumb = getThumbnail(video);
+              const isInstagram = video.sourceType === "INSTAGRAM";
+              return (
+                <div
+                  key={video.id}
+                  data-video-card
+                  onClick={() => openVideo(video.videoUrl)}
+                  className="shrink-0 w-[130px] sm:w-[155px] md:w-[170px] lg:w-[185px] cursor-pointer group"
+                  style={{ scrollSnapAlign: "start" }}
+                >
+                  <div className="aspect-[9/16] bg-gray-900 rounded-xl overflow-hidden relative shadow-lg shadow-black/50">
+                    {thumb ? (
+                      <img
+                        src={thumb}
+                        alt={video.title}
+                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center">
+                        {isInstagram ? (
+                          <FaInstagram className="h-10 w-10 text-white/30" />
+                        ) : (
+                          <Play className="h-10 w-10 text-white/30" />
+                        )}
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                      <div className="w-11 h-11 bg-white/25 backdrop-blur-sm rounded-full flex items-center justify-center">
+                        <Play className="h-5 w-5 text-white ml-0.5" fill="currentColor" />
+                      </div>
+                    </div>
+                    {isInstagram && (
+                      <div className="absolute top-2 right-2 z-10">
+                        <FaInstagram className="h-4 w-4 text-white drop-shadow-lg" />
+                      </div>
+                    )}
+                  </div>
+                  <p className="mt-2 text-[11px] sm:text-xs text-gray-400 leading-snug line-clamp-2 group-hover:text-white transition-colors">
+                    {video.title}
+                  </p>
                 </div>
-                <p className="mt-2 text-xs sm:text-sm text-gray-300 leading-tight line-clamp-3 group-hover:text-white transition-colors">
-                  {video.title}
-                </p>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
 
-        <div className="flex items-center justify-center gap-3 mt-6">
+        <div className="flex items-center justify-center gap-4 mt-5">
           <button
             onClick={() => scroll("left")}
-            className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors"
+            disabled={!canScrollLeft}
+            className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-20 disabled:cursor-default"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
           <button
             onClick={() => scroll("right")}
-            className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors"
+            disabled={!canScrollRight}
+            className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-20 disabled:cursor-default"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
