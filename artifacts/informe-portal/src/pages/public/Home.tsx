@@ -2,16 +2,88 @@ import { PublicLayout } from "@/components/shared/PublicLayout";
 import { PublicSidebar } from "@/components/shared/PublicSidebar";
 import { NewsCard } from "@/components/shared/NewsCard";
 import { VideosCarousel } from "@/components/shared/VideosCarousel";
-import { usePublicNews, usePublicFeaturedNews } from "@/hooks/use-public";
+import { usePublicNews, usePublicFeaturedNews, usePublicLatestNews } from "@/hooks/use-public";
 import { useQuery } from "@tanstack/react-query";
-import { Play, ChevronRight } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Play, ChevronRight, ChevronLeft } from "lucide-react";
 import { Link } from "wouter";
 import { getImageUrl } from "@/lib/image-url";
 
 const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
+function DestaquesCarousel({ articles }: { articles: any[] }) {
+  const [current, setCurrent] = useState(0);
+  const items = articles.slice(0, 5);
+
+  const next = useCallback(() => {
+    if (items.length <= 1) return;
+    setCurrent(prev => (prev + 1) % items.length);
+  }, [items.length]);
+
+  const prev = useCallback(() => {
+    if (items.length <= 1) return;
+    setCurrent(prev => (prev - 1 + items.length) % items.length);
+  }, [items.length]);
+
+  useEffect(() => {
+    if (items.length <= 1) return;
+    const timer = setInterval(next, 5000);
+    return () => clearInterval(timer);
+  }, [next, items.length]);
+
+  if (!items.length) return null;
+
+  const article = items[current];
+  const category = article.category;
+  const imageUrl = article.imageUrl ? getImageUrl(article.imageUrl) : null;
+
+  return (
+    <section>
+      <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-red-600 pl-3 sm:pl-4 mb-4 sm:mb-6 text-primary uppercase tracking-tight">Destaque</h2>
+      <div className="relative rounded-xl sm:rounded-2xl overflow-hidden bg-gray-900 shadow-xl group">
+        <Link href={`/noticia/${article.slug}`}>
+          <div className="relative aspect-[16/8] sm:aspect-[16/7]">
+            {imageUrl ? (
+              <img src={imageUrl} alt={article.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/80 to-gray-900" />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8">
+              {category && (
+                <span className="inline-block bg-primary text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded mb-2 sm:mb-3">{category.name}</span>
+              )}
+              <h3 className="text-white text-lg sm:text-2xl lg:text-3xl font-black leading-tight line-clamp-3 drop-shadow-lg">{article.title}</h3>
+              {article.summary && (
+                <p className="text-white/70 text-sm sm:text-base mt-2 line-clamp-2 max-w-2xl">{article.summary}</p>
+              )}
+            </div>
+          </div>
+        </Link>
+
+        {items.length > 1 && (
+          <>
+            <button onClick={(e) => { e.preventDefault(); prev(); }} className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all opacity-0 group-hover:opacity-100 z-10">
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+            <button onClick={(e) => { e.preventDefault(); next(); }} className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all opacity-0 group-hover:opacity-100 z-10">
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+            <div className="absolute bottom-2 sm:bottom-4 right-4 sm:right-8 flex gap-1.5 z-10">
+              {items.map((_: any, i: number) => (
+                <button key={i} onClick={(e) => { e.preventDefault(); setCurrent(i); }} className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all ${i === current ? "bg-white scale-125" : "bg-white/40 hover:bg-white/70"}`} />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   const { data: featured } = usePublicFeaturedNews();
+  const { data: latestForCarousel } = usePublicLatestNews(5);
   const { data: formigaNews } = usePublicNews({ category: "formiga", limit: 4 });
   const { data: regionalNews } = usePublicNews({ category: "regional", limit: 4 });
   const { data: estadualNews } = usePublicNews({ category: "estadual", limit: 4 });
@@ -53,13 +125,8 @@ export default function Home() {
             BANNER PROPAGANDA
           </div>
 
-          {/* 3. DESTAQUE - uma única notícia em destaque */}
-          {featured && featured.length > 0 && (
-            <section>
-              <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-red-600 pl-3 sm:pl-4 mb-4 sm:mb-6 text-primary uppercase tracking-tight">Destaque</h2>
-              <NewsCard article={featured[0]} large />
-            </section>
-          )}
+          {/* 3. DESTAQUE - carrossel das últimas 5 notícias */}
+          <DestaquesCarousel articles={Array.isArray(latestForCarousel) ? latestForCarousel : (latestForCarousel as any)?.data ?? []} />
 
           {/* 4. BANNER PROPAGANDA */}
           <div className="w-full bg-gray-100 h-[90px] sm:h-[120px] flex items-center justify-center text-gray-400 font-bold text-xs sm:text-sm rounded-xl border-2 border-dashed border-gray-200">
