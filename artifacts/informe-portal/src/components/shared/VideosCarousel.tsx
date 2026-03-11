@@ -8,9 +8,9 @@ function getYoutubeThumbnail(url: string): string | null {
   return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
 }
 
-function getInstagramEmbedUrl(url: string): string | null {
+function getInstagramThumbnail(url: string): string | null {
   const match = url.match(/instagram\.com\/(?:p|reel|tv)\/([a-zA-Z0-9_-]+)/);
-  return match ? `https://www.instagram.com/p/${match[1]}/embed/` : null;
+  return match ? `https://www.instagram.com/p/${match[1]}/media/?size=l` : null;
 }
 
 function getThumbnail(video: { thumbnailUrl?: string | null; videoUrl: string; sourceType: string }): string {
@@ -18,6 +18,10 @@ function getThumbnail(video: { thumbnailUrl?: string | null; videoUrl: string; s
   if (video.sourceType === "YOUTUBE") {
     const yt = getYoutubeThumbnail(video.videoUrl);
     if (yt) return yt;
+  }
+  if (video.sourceType === "INSTAGRAM") {
+    const ig = getInstagramThumbnail(video.videoUrl);
+    if (ig) return ig;
   }
   return "";
 }
@@ -47,26 +51,18 @@ export function VideosCarousel() {
       <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-10">
         <div
           ref={scrollRef}
-          className="flex gap-4 sm:gap-5 overflow-x-auto pb-4 scrollbar-hide snap-x"
+          className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3 sm:gap-4"
         >
           {videos.map((video: any) => {
             const thumb = getThumbnail(video);
-            const igEmbed = video.sourceType === "INSTAGRAM" ? getInstagramEmbedUrl(video.videoUrl) : null;
-
             return (
               <div
                 key={video.id}
-                className="snap-start shrink-0 w-[160px] sm:w-[180px] md:w-[200px] cursor-pointer group"
                 onClick={() => openVideo(video.videoUrl)}
+                className="cursor-pointer group"
               >
                 <div className="aspect-[9/16] bg-gray-900 rounded-lg overflow-hidden relative">
-                  {igEmbed ? (
-                    <iframe
-                      src={igEmbed}
-                      className="absolute inset-0 w-full h-full border-0 pointer-events-none"
-                      loading="lazy"
-                    />
-                  ) : thumb ? (
+                  {thumb ? (
                     <img
                       src={thumb}
                       alt={video.title}
@@ -84,7 +80,7 @@ export function VideosCarousel() {
           })}
         </div>
 
-        <div className="flex items-center justify-center gap-3 mt-4">
+        <div className="flex items-center justify-center gap-3 mt-6">
           <button
             onClick={() => scroll("left")}
             className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors"
