@@ -57,7 +57,8 @@ export function VideosCarousel() {
     });
   };
 
-  const openVideo = (url: string) => {
+  const openVideo = (video: any) => {
+    const url = video.redirectUrl || video.videoUrl;
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
@@ -79,7 +80,7 @@ export function VideosCarousel() {
                 <div
                   key={video.id}
                   data-video-card
-                  onClick={() => openVideo(video.videoUrl)}
+                  onClick={() => openVideo(video)}
                   className="shrink-0 w-[130px] sm:w-[155px] md:w-[170px] lg:w-[185px] cursor-pointer group"
                   style={{ scrollSnapAlign: "start" }}
                 >
@@ -112,7 +113,7 @@ export function VideosCarousel() {
                     )}
                   </div>
                   <p className="mt-2 text-[11px] sm:text-xs text-gray-400 leading-snug line-clamp-2 group-hover:text-white transition-colors">
-                    {video.title}
+                    {video.description || video.title}
                   </p>
                 </div>
               );

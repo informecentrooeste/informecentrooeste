@@ -12,13 +12,15 @@ const SOURCE_TYPES = [
 
 type VideoForm = {
   title: string;
+  description: string;
   sourceType: string;
   videoUrl: string;
   thumbnailUrl: string;
+  redirectUrl: string;
   isActive: boolean;
 };
 
-const emptyForm: VideoForm = { title: "", sourceType: "YOUTUBE", videoUrl: "", thumbnailUrl: "", isActive: true };
+const emptyForm: VideoForm = { title: "", description: "", sourceType: "INSTAGRAM", videoUrl: "", thumbnailUrl: "", redirectUrl: "", isActive: true };
 
 export default function VideosAdmin() {
   const { data: videos, isLoading, isError } = useAdminVideos();
@@ -33,7 +35,7 @@ export default function VideosAdmin() {
 
   const openNew = () => { setForm(emptyForm); setEditId(null); setShowForm(true); };
   const openEdit = (v: any) => {
-    setForm({ title: v.title, sourceType: v.sourceType, videoUrl: v.videoUrl, thumbnailUrl: v.thumbnailUrl || "", isActive: v.isActive });
+    setForm({ title: v.title, description: v.description || "", sourceType: v.sourceType, videoUrl: v.videoUrl, thumbnailUrl: v.thumbnailUrl || "", redirectUrl: v.redirectUrl || "", isActive: v.isActive });
     setEditId(v.id);
     setShowForm(true);
   };
@@ -42,9 +44,11 @@ export default function VideosAdmin() {
     e.preventDefault();
     const payload: any = {
       title: form.title,
+      description: form.description || undefined,
       sourceType: form.sourceType,
       videoUrl: form.videoUrl,
       thumbnailUrl: form.thumbnailUrl || undefined,
+      redirectUrl: form.redirectUrl || undefined,
       isActive: form.isActive,
     };
     try {
@@ -100,7 +104,11 @@ export default function VideosAdmin() {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-gray-700 mb-1">Título</label>
-              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required />
+              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required placeholder="Ex: PM prende suspeito em flagrante" />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Descrição</label>
+              <textarea className="w-full border rounded-lg px-3 py-2 text-sm" rows={2} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Texto que aparece abaixo do vídeo no portal" />
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Tipo de Fonte</label>
@@ -110,12 +118,17 @@ export default function VideosAdmin() {
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">URL do Vídeo</label>
-              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.videoUrl} onChange={e => setForm({ ...form, videoUrl: e.target.value })} required />
+              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.videoUrl} onChange={e => setForm({ ...form, videoUrl: e.target.value })} required placeholder="Link do vídeo (YouTube, upload, etc.)" />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">URL da Thumbnail</label>
-              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.thumbnailUrl} onChange={e => setForm({ ...form, thumbnailUrl: e.target.value })} placeholder="Obrigatório para Instagram. YouTube extrai automático." />
-              <p className="text-xs text-gray-500 mt-1">Cole a URL de uma imagem de capa. Para Instagram, faça um print do vídeo e use um link de imagem.</p>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">URL da Thumbnail (Capa)</label>
+              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.thumbnailUrl} onChange={e => setForm({ ...form, thumbnailUrl: e.target.value })} placeholder="Link da imagem de capa do vídeo" />
+              <p className="text-xs text-gray-500 mt-1">Para YouTube, a capa é extraída automaticamente. Para Instagram/Interno, cole o link de uma imagem.</p>
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Link de Redirecionamento (Post no Instagram)</label>
+              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.redirectUrl} onChange={e => setForm({ ...form, redirectUrl: e.target.value })} placeholder="https://www.instagram.com/p/... (ao clicar, redireciona para este link)" />
+              <p className="text-xs text-gray-500 mt-1">Quando o visitante clicar no vídeo, será direcionado para este link. Se vazio, abre o link do vídeo.</p>
             </div>
             <div className="md:col-span-2 flex items-center gap-4">
               <label className="flex items-center gap-2 text-sm">

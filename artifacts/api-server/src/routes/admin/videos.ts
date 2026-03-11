@@ -16,9 +16,9 @@ router.get("/", async (_req, res) => {
 });
 
 router.post("/", async (req: AuthRequest, res) => {
-  const { title, sourceType, videoUrl, thumbnailUrl, isActive } = req.body;
+  const { title, description, sourceType, videoUrl, thumbnailUrl, redirectUrl, isActive } = req.body;
   if (!title || !sourceType || !videoUrl) { res.status(400).json({ error: "title, sourceType, videoUrl required" }); return; }
-  const [video] = await db.insert(videosTable).values({ title, sourceType, videoUrl, thumbnailUrl, isActive: isActive ?? true }).returning();
+  const [video] = await db.insert(videosTable).values({ title, description, sourceType, videoUrl, thumbnailUrl, redirectUrl, isActive: isActive ?? true }).returning();
   cache.del("public:videos");
   await logAudit(req.user!.id, "CREATE_VIDEO", "video", video.id, { title });
   res.status(201).json(video);
@@ -26,8 +26,8 @@ router.post("/", async (req: AuthRequest, res) => {
 
 router.put("/:id", async (req: AuthRequest, res) => {
   const id = parseInt(req.params.id);
-  const { title, sourceType, videoUrl, thumbnailUrl, isActive } = req.body;
-  const [video] = await db.update(videosTable).set({ title, sourceType, videoUrl, thumbnailUrl, isActive, updatedAt: new Date() }).where(eq(videosTable.id, id)).returning();
+  const { title, description, sourceType, videoUrl, thumbnailUrl, redirectUrl, isActive } = req.body;
+  const [video] = await db.update(videosTable).set({ title, description, sourceType, videoUrl, thumbnailUrl, redirectUrl, isActive, updatedAt: new Date() }).where(eq(videosTable.id, id)).returning();
   if (!video) { res.status(404).json({ error: "Not found" }); return; }
   cache.del("public:videos");
   await logAudit(req.user!.id, "UPDATE_VIDEO", "video", id, { title });
