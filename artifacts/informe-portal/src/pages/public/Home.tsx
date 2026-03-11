@@ -105,6 +105,11 @@ export default function Home() {
             </div>
           </section>
 
+          {/* BANNER PROPAGANDA abaixo dos articulistas */}
+          <div className="w-full bg-gray-100 h-[90px] sm:h-[120px] flex items-center justify-center text-gray-400 font-bold text-xs sm:text-sm rounded-xl border-2 border-dashed border-gray-200">
+            BANNER PROPAGANDA
+          </div>
+
           {/* 9. POLÍTICA SECTION */}
           <section>
             <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 mb-4 sm:mb-6 text-primary uppercase">Política</h2>
