@@ -7,10 +7,10 @@ import { type NewsCard as NewsCardType } from "@workspace/api-client-react";
 export function NewsCard({ article, large = false, variant = "vertical" }: { article: NewsCardType, large?: boolean, variant?: "vertical" | "horizontal" }) {
   if (variant === "horizontal") {
     return (
-      <Link href={`/noticia/${article.slug}`} className="group cursor-pointer flex flex-row h-auto bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border">
-        <div className="w-[100px] sm:w-[120px] shrink-0 relative overflow-hidden bg-gray-100">
+      <Link href={`/noticia/${article.slug}`} className="group cursor-pointer flex flex-row bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border min-h-[80px]">
+        <div className="w-[80px] sm:w-[90px] shrink-0 relative overflow-hidden bg-gray-100">
           {article.category && (
-            <span className="absolute top-1.5 left-1.5 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded z-20 shadow-md">
+            <span className="absolute top-1 left-1 bg-primary text-primary-foreground text-[8px] font-bold px-1 py-0.5 rounded z-20 shadow-md">
               {article.category.name}
             </span>
           )}
@@ -20,12 +20,12 @@ export function NewsCard({ article, large = false, variant = "vertical" }: { art
             <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300" />
           )}
         </div>
-        <div className="p-2.5 sm:p-3 flex-grow flex flex-col justify-center min-w-0">
-          <h3 className="font-bold text-sm group-hover:text-primary transition-colors line-clamp-3 leading-snug">
+        <div className="p-2 sm:p-2.5 flex-1 flex flex-col justify-center min-w-0 overflow-hidden">
+          <h3 className="font-bold text-xs sm:text-sm group-hover:text-primary transition-colors leading-snug break-words" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {article.title}
           </h3>
           {article.publishedAt && (
-            <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mt-1.5">
+            <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mt-1">
               {formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true, locale: ptBR })}
             </span>
           )}
