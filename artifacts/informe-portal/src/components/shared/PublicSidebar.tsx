@@ -1,6 +1,6 @@
 import { Tv, Cloud, MapPin, Sun, ChevronRight, MessageCircle, Youtube } from "lucide-react";
 import { Link } from "wouter";
-import { usePublicLatestNews, usePublicMostRead } from "@/hooks/use-public";
+import { usePublicLatestNews, usePublicMostRead, usePublicBanners } from "@/hooks/use-public";
 import { getImageUrl } from "@/lib/image-url";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -8,6 +8,7 @@ import { ptBR } from "date-fns/locale";
 export function PublicSidebar() {
   const { data: latestNews } = usePublicLatestNews(4);
   const { data: mostRead } = usePublicMostRead(5);
+  const { data: sidebarBanners } = usePublicBanners({ position: "SIDEBAR" as any });
 
   return (
     <aside className="w-full flex flex-col gap-5 sm:gap-8 lg:sticky lg:top-24 h-fit">
@@ -120,14 +121,24 @@ export function PublicSidebar() {
         </div>
       </section>
 
-      {/* 8. APOIADOR CALL TO ACTION */}
-      <div className="w-full bg-gradient-to-b from-primary to-purple-900 rounded-xl p-6 sm:p-8 text-center text-white shadow-xl cursor-pointer transform transition hover:-translate-y-1">
-        <h3 className="font-black text-2xl sm:text-3xl mb-2 italic tracking-tight">SEJA UM APOIADOR</h3>
-        <p className="font-semibold text-purple-200 mb-4 sm:mb-6 text-sm">DO INFORME CENTRO-OESTE</p>
-        <a href="https://wa.me/5537999493124" target="_blank" rel="noreferrer" className="block bg-yellow-400 text-purple-950 font-black py-3 px-8 rounded-full hover:bg-yellow-300 transition-colors uppercase text-sm w-full shadow-lg hover:shadow-yellow-400/20 active:scale-95">
-          Saiba como
-        </a>
-      </div>
+      {/* 8. BANNER SIDEBAR (gerenciado pelo admin) */}
+      {(() => {
+        const bannerList = Array.isArray(sidebarBanners) ? sidebarBanners : (sidebarBanners as any)?.data;
+        const sidebarBanner = Array.isArray(bannerList) ? bannerList[0] : null;
+        if (sidebarBanner) {
+          return (
+            <a href={sidebarBanner.linkUrl || "#"} target="_blank" rel="noreferrer" className="block w-full rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow cursor-pointer">
+              <img src={getImageUrl(sidebarBanner.imageUrl)} alt={sidebarBanner.title || "Banner"} className="w-full h-auto object-cover" />
+            </a>
+          );
+        }
+        return (
+          <div className="w-full bg-gray-200 h-[300px] flex flex-col items-center justify-center text-gray-500 font-bold text-sm rounded-xl border border-gray-300">
+            <span>BANNER SIDEBAR</span>
+            <span className="text-xs font-normal mt-1">(Gerenciado pelo admin)</span>
+          </div>
+        );
+      })()}
 
       {/* 9. WHATSAPP SECTION */}
       <section className="bg-white p-6 rounded-xl shadow-md shadow-black/5 border border-gray-100 text-center">
