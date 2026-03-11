@@ -8,10 +8,12 @@ import { Link } from "wouter";
 
 export default function Home() {
   const { data: featured } = usePublicFeaturedNews();
-  const { data: formigaNews } = usePublicNews({ category: "formiga", limit: 3 });
-  const { data: regionalNews } = usePublicNews({ category: "regional", limit: 3 });
+  const { data: formigaNews } = usePublicNews({ category: "formiga", limit: 4 });
+  const { data: regionalNews } = usePublicNews({ category: "regional", limit: 4 });
+  const { data: estadualNews } = usePublicNews({ category: "estadual", limit: 4 });
+  const { data: brasilNews } = usePublicNews({ category: "brasil", limit: 4 });
   const { data: politicaNews } = usePublicNews({ category: "politica", limit: 4 });
-  const { data: geralNews } = usePublicNews({ category: "geral", limit: 3 });
+  const { data: geralNews } = usePublicNews({ category: "geral", limit: 4 });
 
   return (
     <PublicLayout>
@@ -57,38 +59,56 @@ export default function Home() {
 
           {/* 5. TWO-COLUMN NEWS GRID (FORMIGA | REGIONAL) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
-            {/* FORMIGA */}
-            <section>
-              <div className="flex items-center justify-between border-b-2 border-border mb-4 sm:mb-5 pb-2">
-                <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 text-primary uppercase">Formiga</h2>
-              </div>
-              <div className="flex flex-col gap-4 sm:gap-5">
-                {formigaNews?.data.map((item) => (
-                  <NewsCard key={item.id} article={item} />
-                ))}
-              </div>
-              <Link href="/categoria/formiga" className="inline-flex items-center text-primary font-bold text-sm mt-6 hover:underline group">
-                VER MAIS NOTÍCIAS <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </section>
-
-            {/* REGIONAL */}
-            <section>
-              <div className="flex items-center justify-between border-b-2 border-border mb-4 sm:mb-5 pb-2">
-                <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 text-primary uppercase">Regional</h2>
-              </div>
-              <div className="flex flex-col gap-4 sm:gap-5">
-                {regionalNews?.data.map((item) => (
-                  <NewsCard key={item.id} article={item} />
-                ))}
-              </div>
-              <Link href="/categoria/regional" className="inline-flex items-center text-primary font-bold text-sm mt-6 hover:underline group">
-                VER MAIS NOTÍCIAS <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </section>
+            {[
+              { title: "Formiga", slug: "formiga", data: formigaNews },
+              { title: "Regional", slug: "regional", data: regionalNews },
+            ].map(({ title, slug, data }) => (
+              <section key={slug}>
+                <div className="flex items-center justify-between border-b-2 border-border mb-4 sm:mb-5 pb-2">
+                  <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 text-primary uppercase">{title}</h2>
+                </div>
+                <div className="flex flex-col gap-3">
+                  {data?.data?.[0] && <NewsCard article={data.data[0]} large />}
+                  {data?.data?.slice(1, 4).map((item) => (
+                    <NewsCard key={item.id} article={item} variant="horizontal" />
+                  ))}
+                </div>
+                <Link href={`/categoria/${slug}`} className="inline-flex items-center text-primary font-bold text-sm mt-4 hover:underline group">
+                  VER MAIS NOTÍCIAS <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </section>
+            ))}
           </div>
 
-          {/* 6. ARTICULISTAS SECTION */}
+          {/* ESTADUAL | BRASIL */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
+            {[
+              { title: "Estadual", slug: "estadual", data: estadualNews },
+              { title: "Brasil", slug: "brasil", data: brasilNews },
+            ].map(({ title, slug, data }) => (
+              <section key={slug}>
+                <div className="flex items-center justify-between border-b-2 border-border mb-4 sm:mb-5 pb-2">
+                  <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 text-primary uppercase">{title}</h2>
+                </div>
+                <div className="flex flex-col gap-3">
+                  {data?.data?.[0] && <NewsCard article={data.data[0]} large />}
+                  {data?.data?.slice(1, 4).map((item) => (
+                    <NewsCard key={item.id} article={item} variant="horizontal" />
+                  ))}
+                </div>
+                <Link href={`/categoria/${slug}`} className="inline-flex items-center text-primary font-bold text-sm mt-4 hover:underline group">
+                  VER MAIS NOTÍCIAS <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </section>
+            ))}
+          </div>
+
+          {/* BANNER PROPAGANDA */}
+          <div className="w-full bg-gray-100 h-[90px] sm:h-[120px] flex items-center justify-center text-gray-400 font-bold text-xs sm:text-sm rounded-xl border-2 border-dashed border-gray-200">
+            BANNER PROPAGANDA
+          </div>
+
+          {/* ARTICULISTAS SECTION */}
           <section className="bg-card p-5 sm:p-8 rounded-xl sm:rounded-2xl shadow-lg shadow-black/5 border border-border">
             <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 mb-5 sm:mb-8 text-primary uppercase">Articulistas</h2>
             <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x">
@@ -110,12 +130,15 @@ export default function Home() {
             BANNER PROPAGANDA
           </div>
 
-          {/* 9. POLÍTICA SECTION */}
+          {/* POLÍTICA SECTION */}
           <section>
-            <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 mb-4 sm:mb-6 text-primary uppercase">Política</h2>
+            <div className="flex items-center justify-between border-b-2 border-border mb-4 sm:mb-5 pb-2">
+              <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 text-primary uppercase">Política</h2>
+            </div>
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-1/2 flex flex-col gap-3">
-                {politicaNews?.data.slice(0, 4).map((item) => (
+                {politicaNews?.data?.[0] && <NewsCard article={politicaNews.data[0]} large />}
+                {politicaNews?.data?.slice(1, 4).map((item) => (
                   <NewsCard key={item.id} article={item} variant="horizontal" />
                 ))}
               </div>
@@ -125,14 +148,16 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <Link href="/categoria/politica" className="inline-flex items-center text-primary font-bold text-sm mt-6 hover:underline group">
+            <Link href="/categoria/politica" className="inline-flex items-center text-primary font-bold text-sm mt-4 hover:underline group">
               VER MAIS NOTÍCIAS <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
             </Link>
           </section>
 
-          {/* 10. GERAL SECTION */}
+          {/* GERAL SECTION */}
           <section>
-            <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 mb-4 sm:mb-6 text-primary uppercase">Geral</h2>
+            <div className="flex items-center justify-between border-b-2 border-border mb-4 sm:mb-5 pb-2">
+              <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 text-primary uppercase">Geral</h2>
+            </div>
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-1/2">
                 <div className="w-full bg-gray-100 h-full min-h-[300px] flex items-center justify-center text-gray-400 font-bold text-sm rounded-xl border-2 border-dashed border-gray-200">
@@ -140,13 +165,14 @@ export default function Home() {
                 </div>
               </div>
               <div className="md:w-1/2 flex flex-col gap-3">
-                {geralNews?.data.slice(0, 4).map((item) => (
+                {geralNews?.data?.[0] && <NewsCard article={geralNews.data[0]} large />}
+                {geralNews?.data?.slice(1, 4).map((item) => (
                   <NewsCard key={item.id} article={item} variant="horizontal" />
                 ))}
               </div>
             </div>
             <div className="flex justify-end">
-              <Link href="/categoria/geral" className="inline-flex items-center text-primary font-bold text-sm mt-6 hover:underline group">
+              <Link href="/categoria/geral" className="inline-flex items-center text-primary font-bold text-sm mt-4 hover:underline group">
                 VER MAIS NOTÍCIAS <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
