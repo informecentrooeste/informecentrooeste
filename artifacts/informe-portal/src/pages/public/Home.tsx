@@ -146,40 +146,74 @@ export default function Home() {
             </Link>
           </section>
 
-          {/* 12. VÍDEOS DO INSTAGRAM */}
-          <section className="bg-primary p-5 sm:p-8 rounded-xl sm:rounded-2xl text-primary-foreground mb-6 sm:mb-8 shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12 scale-150">
-              <Instagram className="w-64 h-64" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-black flex items-center gap-2 sm:gap-3 mb-5 sm:mb-8 uppercase relative z-10">
-              <Instagram className="h-6 w-6 sm:h-8 sm:w-8" /> Vídeos do Instagram
-            </h2>
-            
-            <div className="flex gap-3 sm:gap-5 overflow-x-auto pb-4 scrollbar-hide snap-x relative z-10">
-              {[1, 2, 3, 4, 5, 6].map((item) => (
-                <div key={item} className="snap-start shrink-0 w-28 sm:w-40 aspect-[9/16] bg-black rounded-xl overflow-hidden relative group cursor-pointer border-2 border-white/20 hover:border-white/50 transition-colors shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"></div>
-                  <div className="absolute inset-0 bg-gray-800 opacity-50"></div>
-                  <div className="absolute inset-0 flex items-center justify-center z-20">
-                    <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm group-hover:bg-white/40 transition-colors group-hover:scale-110 duration-300">
-                      <Play className="h-6 w-6 text-white ml-1" fill="currentColor" />
-                    </div>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
-                    <p className="text-sm font-bold line-clamp-2 text-white drop-shadow-md leading-tight">
-                      Vídeo destaque {item}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
         </div>
 
         {/* RIGHT SIDEBAR (30%) */}
         <PublicSidebar />
       </main>
+
+      {/* VÍDEOS CURTOS - FULL WIDTH */}
+      <section className="bg-primary text-primary-foreground relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-8 opacity-5 rotate-12 scale-150">
+          <Instagram className="w-64 h-64" />
+        </div>
+        <div className="container mx-auto px-3 sm:px-4 py-8 sm:py-12">
+          <div className="flex items-center justify-between mb-6 sm:mb-8 relative z-10">
+            <div className="flex items-center gap-3">
+              <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight">Vídeos Curtos</h2>
+              <span className="bg-white/20 text-white text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded">15 VÍDEOS</span>
+            </div>
+            <div className="flex gap-2">
+              <button className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors">
+                <ChevronRight className="h-4 w-4 rotate-180" />
+              </button>
+              <button className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors">
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+          
+          <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x relative z-10">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+              <div key={item} className="snap-start shrink-0 w-[140px] sm:w-[160px] md:w-[180px] aspect-[9/16] bg-black rounded-xl overflow-hidden relative group cursor-pointer border-2 border-white/20 hover:border-white/50 transition-colors shadow-lg">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"></div>
+                <div className="absolute inset-0 bg-gray-800 opacity-50"></div>
+                <div className="absolute inset-0 flex items-center justify-center z-20">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm group-hover:bg-white/40 transition-colors group-hover:scale-110 duration-300">
+                    <Play className="h-5 w-5 sm:h-6 sm:w-6 text-white ml-0.5" fill="currentColor" />
+                  </div>
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-3 z-20">
+                  <p className="text-xs sm:text-sm font-bold line-clamp-2 text-white drop-shadow-md leading-tight">
+                    Vídeo destaque {item}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 sm:mt-8 relative z-10">
+            <h3 className="text-base sm:text-lg font-bold mb-4 lowercase">vídeos do instagram</h3>
+            <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide snap-x">
+              {[1, 2, 3, 4, 5, 6, 7].map((item) => (
+                <div key={item} className="snap-start shrink-0 w-[140px] sm:w-[160px] md:w-[180px]">
+                  <div className="aspect-square bg-black rounded-lg overflow-hidden relative group cursor-pointer border border-white/10 hover:border-white/30 transition-colors">
+                    <div className="absolute inset-0 bg-gray-700 opacity-60"></div>
+                    <div className="absolute inset-0 flex items-center justify-center z-10">
+                      <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm group-hover:bg-white/40 transition-colors">
+                        <Play className="h-4 w-4 text-white ml-0.5" fill="currentColor" />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-xs sm:text-sm font-medium mt-2 line-clamp-2 text-white/80 leading-tight">
+                    Vídeo Instagram {item}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     </PublicLayout>
   );
 }
