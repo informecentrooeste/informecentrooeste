@@ -13,7 +13,7 @@ export function PublicSidebar() {
     <aside className="w-full flex flex-col gap-8 lg:sticky lg:top-24 h-fit">
       
       {/* 1. TV AO VIVO BADGE */}
-      <div className="bg-red-600 text-white rounded-xl p-4 flex items-center justify-between shadow-lg shadow-red-600/20 cursor-pointer hover:bg-red-700 transition-colors">
+      <a href="https://player.logicahost.com.br/player.php?player=2050" target="_blank" rel="noreferrer" className="bg-red-600 text-white rounded-xl p-4 flex items-center justify-between shadow-lg shadow-red-600/20 cursor-pointer hover:bg-red-700 transition-colors">
         <div className="flex items-center gap-2">
           <Tv className="h-6 w-6" />
           <span className="font-bold text-lg uppercase tracking-wider">TV AO VIVO</span>
@@ -22,7 +22,7 @@ export function PublicSidebar() {
           <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-white opacity-75"></span>
           <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
         </span>
-      </div>
+      </a>
 
       {/* 2. PROPAGANDA BANNER VERTICAL */}
       <div className="w-full bg-gray-200 h-[250px] flex flex-col items-center justify-center text-gray-500 font-bold text-sm rounded-xl border border-gray-300">
