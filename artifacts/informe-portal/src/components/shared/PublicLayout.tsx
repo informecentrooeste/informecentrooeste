@@ -30,7 +30,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-foreground font-sans">
       {/* Top Banner Ad Placeholder */}
-      <div className="w-full bg-gray-200 h-20 hidden md:flex items-center justify-center text-gray-500 font-bold text-sm">
+      <div className="w-full bg-gray-200 h-[120px] hidden md:flex items-center justify-center text-gray-500 font-bold text-sm">
         BANNER PROPAGANDA
       </div>
 

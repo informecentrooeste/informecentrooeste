@@ -27,9 +27,9 @@ export function PublicSidebar() {
       </a>
 
       {/* 2. PROPAGANDA BANNER VERTICAL */}
-      <div className="w-full bg-gray-200 h-[250px] flex flex-col items-center justify-center text-gray-500 font-bold text-sm rounded-xl border border-gray-300">
+      <div className="w-full bg-gray-200 h-[300px] flex flex-col items-center justify-center text-gray-500 font-bold text-sm rounded-xl border border-gray-300">
         <span>BANNER PROPAGANDA</span>
-        <span className="text-xs font-normal mt-1">(300x250)</span>
+        <span className="text-xs font-normal mt-1">(300x300)</span>
       </div>
 
       {/* 5. ÚLTIMAS NOTÍCIAS */}

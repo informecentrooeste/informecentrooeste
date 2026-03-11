@@ -34,7 +34,7 @@ export default function Home() {
           </section>
 
           {/* 2. BANNER PROPAGANDA */}
-          <div className="w-full bg-gray-100 h-[60px] sm:h-[90px] flex items-center justify-center text-gray-400 font-bold text-xs sm:text-sm rounded-xl border-2 border-dashed border-gray-200">
+          <div className="w-full bg-gray-100 h-[90px] sm:h-[120px] flex items-center justify-center text-gray-400 font-bold text-xs sm:text-sm rounded-xl border-2 border-dashed border-gray-200">
             BANNER PROPAGANDA
           </div>
 
@@ -51,7 +51,7 @@ export default function Home() {
           )}
 
           {/* 4. BANNER PROPAGANDA */}
-          <div className="w-full bg-gray-100 h-[60px] sm:h-[90px] flex items-center justify-center text-gray-400 font-bold text-xs sm:text-sm rounded-xl border-2 border-dashed border-gray-200">
+          <div className="w-full bg-gray-100 h-[90px] sm:h-[120px] flex items-center justify-center text-gray-400 font-bold text-xs sm:text-sm rounded-xl border-2 border-dashed border-gray-200">
             BANNER PROPAGANDA
           </div>
 
