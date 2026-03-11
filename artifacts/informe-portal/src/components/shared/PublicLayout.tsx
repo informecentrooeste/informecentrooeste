@@ -1,8 +1,9 @@
 import { ReactNode, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { 
-  Tv, Search, Instagram, Facebook, Youtube, Menu, X, Smartphone, MessageCircle 
+  Tv, Search, Instagram, Facebook, Youtube, Menu, X, Smartphone 
 } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { usePublicCategories } from "@/hooks/use-public";
 import logoInforme from "@assets/logo-informe.png";
 
@@ -155,7 +156,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
               <h4 className="font-bold text-lg mb-4 uppercase tracking-wider mt-2">Entre em Contato</h4>
               <div className="flex flex-col gap-2 w-full max-w-[250px]">
                 <a href="https://wa.me/5537998249936" target="_blank" rel="noreferrer" className="bg-green-600 hover:bg-green-700 text-white text-sm font-bold py-2 px-4 rounded-lg transition-transform hover:-translate-y-0.5 flex items-center justify-center gap-2 shadow-lg">
-                  <MessageCircle className="h-4 w-4" /> (37) 99824-9936
+                  <FaWhatsapp className="h-4 w-4" /> (37) 99824-9936
                 </a>
                 <a href="https://chat.whatsapp.com/EhLqmbJ7UndF7IKgYUFjCh" target="_blank" rel="noreferrer" className="bg-white/10 hover:bg-white/20 text-white text-xs font-bold py-2 px-4 rounded-lg transition-colors text-center">
                   GRUPO VIP FORMIGA

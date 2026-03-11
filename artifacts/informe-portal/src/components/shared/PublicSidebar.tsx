@@ -1,4 +1,5 @@
-import { Tv, Cloud, MapPin, Sun, ChevronRight, MessageCircle, Youtube } from "lucide-react";
+import { Tv, Cloud, MapPin, Sun, ChevronRight, Youtube } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { Link } from "wouter";
 import { usePublicLatestNews, usePublicMostRead, usePublicBanners } from "@/hooks/use-public";
 import { getImageUrl } from "@/lib/image-url";
@@ -143,16 +144,16 @@ export function PublicSidebar() {
       {/* 9. WHATSAPP SECTION */}
       <section className="bg-white p-6 rounded-xl shadow-md shadow-black/5 border border-gray-100 text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 rounded-full text-white mb-4 shadow-lg shadow-green-500/30">
-          <MessageCircle className="h-8 w-8" />
+          <FaWhatsapp className="h-8 w-8" />
         </div>
         <h2 className="text-xl font-bold text-foreground mb-6">Participe dos nossos grupos!</h2>
         
         <div className="flex flex-col gap-3">
           <a href="https://chat.whatsapp.com/EhLqmbJ7UndF7IKgYUFjCh" target="_blank" rel="noreferrer" className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-xl transition-all hover:-translate-y-0.5 shadow-md flex items-center justify-center gap-2">
-            <MessageCircle className="h-5 w-5" /> GRUPO VIP FORMIGA
+            <FaWhatsapp className="h-5 w-5" /> GRUPO VIP FORMIGA
           </a>
           <a href="https://chat.whatsapp.com/IqL5s8VYgxW7Vxql1WTAo3" target="_blank" rel="noreferrer" className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-xl transition-all hover:-translate-y-0.5 shadow-md flex items-center justify-center gap-2">
-            <MessageCircle className="h-5 w-5" /> GRUPO VIP CÓRREGO FUNDO
+            <FaWhatsapp className="h-5 w-5" /> GRUPO VIP CÓRREGO FUNDO
           </a>
         </div>
         
