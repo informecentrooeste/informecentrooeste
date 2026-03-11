@@ -8,6 +8,11 @@ function getYoutubeThumbnail(url: string): string | null {
   return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
 }
 
+function getInstagramEmbedUrl(url: string): string | null {
+  const match = url.match(/instagram\.com\/(?:p|reel|tv)\/([a-zA-Z0-9_-]+)/);
+  return match ? `https://www.instagram.com/p/${match[1]}/embed/` : null;
+}
+
 function getThumbnail(video: { thumbnailUrl?: string | null; videoUrl: string; sourceType: string }): string {
   if (video.thumbnailUrl) return getImageUrl(video.thumbnailUrl);
   if (video.sourceType === "YOUTUBE") {
@@ -46,14 +51,22 @@ export function VideosCarousel() {
         >
           {videos.map((video: any) => {
             const thumb = getThumbnail(video);
+            const igEmbed = video.sourceType === "INSTAGRAM" ? getInstagramEmbedUrl(video.videoUrl) : null;
+
             return (
               <div
                 key={video.id}
-                onClick={() => openVideo(video.videoUrl)}
                 className="snap-start shrink-0 w-[160px] sm:w-[180px] md:w-[200px] cursor-pointer group"
+                onClick={() => openVideo(video.videoUrl)}
               >
                 <div className="aspect-[9/16] bg-gray-900 rounded-lg overflow-hidden relative">
-                  {thumb ? (
+                  {igEmbed ? (
+                    <iframe
+                      src={igEmbed}
+                      className="absolute inset-0 w-full h-full border-0 pointer-events-none"
+                      loading="lazy"
+                    />
+                  ) : thumb ? (
                     <img
                       src={thumb}
                       alt={video.title}
