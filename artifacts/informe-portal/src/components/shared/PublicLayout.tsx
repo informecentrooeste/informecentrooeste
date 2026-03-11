@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { 
   Tv, Search, Instagram, Facebook, Youtube, Menu, X, Smartphone 
 } from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp, FaGooglePlay, FaApple } from "react-icons/fa";
 import { usePublicCategories } from "@/hooks/use-public";
 import logoInforme from "@assets/logo-informe.png";
 
@@ -120,18 +120,18 @@ export function PublicLayout({ children }: { children: ReactNode }) {
           <div className="flex flex-col items-center gap-3">
             <h4 className="font-bold text-xs sm:text-sm uppercase tracking-widest text-center text-white">Tenha a Informe TV na palma da sua mão</h4>
             <div className="flex gap-3">
-              <a href="https://play.google.com/store/apps/details?id=com.logicahost.informetv" target="_blank" rel="noreferrer" className="bg-black hover:bg-gray-900 border border-white/20 rounded-lg px-4 py-2 flex items-center gap-2 transition-colors">
-                <Tv className="h-5 w-5" />
+              <a href="https://play.google.com/store/apps/details?id=com.logicahost.informetv" target="_blank" rel="noreferrer" className="bg-black hover:bg-gray-900 border border-white/20 rounded-lg px-4 py-2 flex items-center gap-3 text-white transition-colors">
+                <FaGooglePlay className="h-6 w-6" />
                 <div className="text-left">
-                  <div className="text-[9px] leading-tight text-gray-400 uppercase">Get it on</div>
-                  <div className="font-semibold text-sm leading-tight">Google Play</div>
+                  <div className="text-[9px] leading-tight text-white/80 uppercase">Get it on</div>
+                  <div className="font-semibold text-sm leading-tight text-white">Google Play</div>
                 </div>
               </a>
-              <a href="https://apps.apple.com/br/app/informe-tv/id6746223815" target="_blank" rel="noreferrer" className="bg-black hover:bg-gray-900 border border-white/20 rounded-lg px-4 py-2 flex items-center gap-2 transition-colors">
-                <Smartphone className="h-5 w-5" />
+              <a href="https://apps.apple.com/br/app/informe-tv/id6746223815" target="_blank" rel="noreferrer" className="bg-black hover:bg-gray-900 border border-white/20 rounded-lg px-4 py-2 flex items-center gap-3 text-white transition-colors">
+                <FaApple className="h-7 w-7" />
                 <div className="text-left">
-                  <div className="text-[9px] leading-tight text-gray-400 uppercase">Download on the</div>
-                  <div className="font-semibold text-sm leading-tight">App Store</div>
+                  <div className="text-[9px] leading-tight text-white/80 uppercase">Download on the</div>
+                  <div className="font-semibold text-sm leading-tight text-white">App Store</div>
                 </div>
               </a>
             </div>
@@ -139,14 +139,14 @@ export function PublicLayout({ children }: { children: ReactNode }) {
 
           <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
             <div className="flex items-center gap-3">
-              <span className="text-xs font-bold uppercase tracking-wider">Redes Sociais</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-white">Redes Sociais</span>
               <a href="https://www.facebook.com/share/14TiuW9h73u" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Facebook className="h-6 w-6" /></a>
               <a href="https://www.instagram.com/informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Instagram className="h-6 w-6" /></a>
               <a href="https://youtube.com/@informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Youtube className="h-6 w-6" /></a>
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="text-xs font-bold uppercase tracking-wider">Entre em Contato</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-white">Entre em Contato</span>
               <a href="https://wa.me/5537998249936" target="_blank" rel="noreferrer" className="border border-white/30 hover:bg-white/10 rounded-lg px-4 py-2 flex items-center gap-2 font-bold text-sm transition-colors">
                 <FaWhatsapp className="h-5 w-5" /> WhatsApp
               </a>
