@@ -33,9 +33,8 @@ export function Portal() {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <Tv className="h-8 w-8 text-white" />
-            <span className="font-bold text-xl tracking-wider uppercase">Informe TV</span>
+          <div className="flex items-center">
+            <img src="/__mockup/images/logo-informe.png" alt="Informe Centro-Oeste" className="h-10 w-auto" />
           </div>
 
           {/* Desktop Nav */}
@@ -647,9 +646,8 @@ export function Portal() {
             
             {/* Left: Logo & Tagline */}
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
-              <div className="flex items-center gap-2 mb-4">
-                <Tv className="h-10 w-10 text-white" />
-                <span className="font-bold text-2xl tracking-wider uppercase">Informe TV</span>
+              <div className="mb-4">
+                <img src="/__mockup/images/logo-informe.png" alt="Informe Centro-Oeste" className="h-14 w-auto" />
               </div>
               <p className="text-indigo-200 max-w-xs text-sm">
                 Tenha a Informe TV na palma da sua mão. Informação com credibilidade e agilidade para todo o Centro-Oeste.
