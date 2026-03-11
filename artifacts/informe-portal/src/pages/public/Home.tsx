@@ -159,7 +159,7 @@ export default function Home() {
           {/* ARTICULISTAS SECTION */}
           <section className="bg-card p-5 sm:p-8 rounded-xl sm:rounded-2xl shadow-lg shadow-black/5 border border-border">
             <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 mb-5 sm:mb-8 text-primary uppercase">Articulistas</h2>
-            <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x">
+            <div className="flex gap-4 sm:gap-6 overflow-x-auto pt-3 pb-4 scrollbar-hide snap-x">
               {(columnists.length > 0 ? columnists : [
                 { id: 1, name: 'João Silva', photoUrl: null, articleSlug: null },
                 { id: 2, name: 'Maria Clara', photoUrl: null, articleSlug: null },
