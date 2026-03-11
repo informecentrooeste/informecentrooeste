@@ -133,14 +133,23 @@ export default function Home() {
           {/* 10. GERAL SECTION */}
           <section>
             <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 mb-4 sm:mb-6 text-primary uppercase">Geral</h2>
-            <div className="grid grid-cols-1 min-[400px]:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
-              {geralNews?.data.map((item) => (
-                <NewsCard key={item.id} article={item} />
-              ))}
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="md:w-1/2">
+                <div className="w-full bg-gray-100 h-full min-h-[300px] flex items-center justify-center text-gray-400 font-bold text-sm rounded-xl border-2 border-dashed border-gray-200">
+                  BANNER PROPAGANDA
+                </div>
+              </div>
+              <div className="md:w-1/2 flex flex-col gap-3">
+                {geralNews?.data.slice(0, 4).map((item) => (
+                  <NewsCard key={item.id} article={item} variant="horizontal" />
+                ))}
+              </div>
             </div>
-            <Link href="/categoria/geral" className="inline-flex items-center text-primary font-bold text-sm mt-6 hover:underline group">
-              VER MAIS NOTÍCIAS <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-            </Link>
+            <div className="flex justify-end">
+              <Link href="/categoria/geral" className="inline-flex items-center text-primary font-bold text-sm mt-6 hover:underline group">
+                VER MAIS NOTÍCIAS <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </section>
 
         </div>
