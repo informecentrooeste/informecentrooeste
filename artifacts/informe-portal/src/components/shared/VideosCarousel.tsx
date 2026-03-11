@@ -1,8 +1,26 @@
 import { useRef } from "react";
-import { Play, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { usePublicVideos } from "@/hooks/use-public";
+import { getImageUrl } from "@/lib/image-url";
+
+function getYoutubeThumbnail(url: string): string | null {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([a-zA-Z0-9_-]{11})/);
+  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
+}
+
+function getThumbnail(video: { thumbnailUrl?: string | null; videoUrl: string; sourceType: string }): string {
+  if (video.thumbnailUrl) return getImageUrl(video.thumbnailUrl);
+  if (video.sourceType === "YOUTUBE") {
+    const yt = getYoutubeThumbnail(video.videoUrl);
+    if (yt) return yt;
+  }
+  return "";
+}
 
 export function VideosCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { data: videosData } = usePublicVideos();
+  const videos = Array.isArray(videosData) ? videosData : (videosData as any)?.data ?? [];
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
@@ -13,27 +31,44 @@ export function VideosCarousel() {
     });
   };
 
+  const openVideo = (url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  if (!videos.length) return null;
+
   return (
     <section className="bg-black text-white">
       <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-10">
         <div
           ref={scrollRef}
-          className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x"
+          className="flex gap-4 sm:gap-5 overflow-x-auto pb-4 scrollbar-hide snap-x"
         >
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
-            <div
-              key={item}
-              className="snap-start shrink-0 w-[140px] sm:w-[160px] md:w-[180px] aspect-[9/16] bg-gray-900 rounded-xl overflow-hidden relative group cursor-pointer border border-white/10 hover:border-white/30 transition-colors"
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-              <div className="absolute inset-0 bg-gray-800"></div>
-              <div className="absolute inset-0 flex items-center justify-center z-20">
-                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/40 transition-colors group-hover:scale-110 duration-300">
-                  <Play className="h-5 w-5 text-white ml-0.5" fill="currentColor" />
+          {videos.map((video: any) => {
+            const thumb = getThumbnail(video);
+            return (
+              <div
+                key={video.id}
+                onClick={() => openVideo(video.videoUrl)}
+                className="snap-start shrink-0 w-[160px] sm:w-[180px] md:w-[200px] cursor-pointer group"
+              >
+                <div className="aspect-[9/16] bg-gray-900 rounded-lg overflow-hidden relative">
+                  {thumb ? (
+                    <img
+                      src={thumb}
+                      alt={video.title}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gray-800" />
+                  )}
                 </div>
+                <p className="mt-2 text-xs sm:text-sm text-gray-300 leading-tight line-clamp-3 group-hover:text-white transition-colors">
+                  {video.title}
+                </p>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="flex items-center justify-center gap-3 mt-4">
