@@ -8,7 +8,7 @@ export function NewsCard({ article, large = false, variant = "vertical" }: { art
   if (variant === "horizontal") {
     return (
       <Link href={`/noticia/${article.slug}`} className="group cursor-pointer flex flex-row h-auto bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border">
-        <div className="w-[120px] sm:w-[140px] shrink-0 relative overflow-hidden bg-gray-100">
+        <div className="w-[100px] sm:w-[120px] shrink-0 relative overflow-hidden bg-gray-100">
           {article.category && (
             <span className="absolute top-1.5 left-1.5 bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded z-20 shadow-md">
               {article.category.name}
@@ -21,7 +21,7 @@ export function NewsCard({ article, large = false, variant = "vertical" }: { art
           )}
         </div>
         <div className="p-2.5 sm:p-3 flex-grow flex flex-col justify-center min-w-0">
-          <h3 className="font-bold text-xs sm:text-sm group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+          <h3 className="font-bold text-sm group-hover:text-primary transition-colors line-clamp-3 leading-snug">
             {article.title}
           </h3>
           {article.publishedAt && (
