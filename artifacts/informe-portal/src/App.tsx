@@ -19,6 +19,7 @@ import NewsList from "@/pages/admin/NewsList";
 import NewsForm from "@/pages/admin/NewsForm";
 import BannersAdmin from "@/pages/admin/BannersAdmin";
 import VideosAdmin from "@/pages/admin/VideosAdmin";
+import InstagramVideosAdmin from "@/pages/admin/InstagramVideosAdmin";
 import UsersAdmin from "@/pages/admin/UsersAdmin";
 import SettingsAdmin from "@/pages/admin/SettingsAdmin";
 import AuditAdmin from "@/pages/admin/AuditAdmin";
@@ -73,6 +74,9 @@ function Router() {
       </Route>
       <Route path="/admin/videos">
         <ProtectedRoute component={VideosAdmin} />
+      </Route>
+      <Route path="/admin/instagram-videos">
+        <ProtectedRoute component={InstagramVideosAdmin} />
       </Route>
       <Route path="/admin/usuarios">
         <ProtectedRoute component={UsersAdmin} adminOnly />

@@ -2,14 +2,17 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { FaInstagram } from "react-icons/fa";
 import { usePublicVideos } from "@/hooks/use-public";
+import { useQuery } from "@tanstack/react-query";
 import { getImageUrl } from "@/lib/image-url";
+
+const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
 function getYoutubeThumbnail(url: string): string | null {
   const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([a-zA-Z0-9_-]{11})/);
   return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
 }
 
-function getThumbnail(video: { thumbnailUrl?: string | null; videoUrl: string; sourceType: string }): string {
+function getThumbnail(video: any): string {
   if (video.thumbnailUrl) return getImageUrl(video.thumbnailUrl);
   if (video.sourceType === "YOUTUBE") {
     const yt = getYoutubeThumbnail(video.videoUrl);
@@ -20,9 +23,29 @@ function getThumbnail(video: { thumbnailUrl?: string | null; videoUrl: string; s
 
 export function VideosCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { data: videosData } = usePublicVideos();
-  const allVideos = Array.isArray(videosData) ? videosData : (videosData as any)?.data ?? [];
-  const videos = allVideos.slice(0, 15);
+  const { data: regularData } = usePublicVideos();
+  const { data: instagramData } = useQuery({
+    queryKey: ["/api/public/instagram-videos"],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE}/public/instagram-videos`);
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
+  const regularVideos = (Array.isArray(regularData) ? regularData : (regularData as any)?.data ?? []).map((v: any) => ({ ...v, _type: "regular" }));
+  const instagramVideos = (Array.isArray(instagramData) ? instagramData : []).map((v: any) => ({
+    id: `ig-${v.id}`,
+    title: v.title,
+    description: v.description,
+    sourceType: "INSTAGRAM",
+    videoUrl: v.instagramUrl,
+    thumbnailUrl: v.thumbnailUrl,
+    redirectUrl: v.instagramUrl,
+    _type: "instagram",
+  }));
+
+  const allVideos = [...instagramVideos, ...regularVideos].slice(0, 15);
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -44,7 +67,7 @@ export function VideosCarousel() {
       el.removeEventListener("scroll", checkScroll);
       window.removeEventListener("resize", checkScroll);
     };
-  }, [checkScroll, videos.length]);
+  }, [checkScroll, allVideos.length]);
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
@@ -62,7 +85,7 @@ export function VideosCarousel() {
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  if (!videos.length) return null;
+  if (!allVideos.length) return null;
 
   return (
     <section className="bg-black text-white">
@@ -73,7 +96,7 @@ export function VideosCarousel() {
             className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide scroll-smooth"
             style={{ scrollSnapType: "x mandatory" }}
           >
-            {videos.map((video: any) => {
+            {allVideos.map((video: any) => {
               const thumb = getThumbnail(video);
               const isInstagram = video.sourceType === "INSTAGRAM";
               return (
@@ -90,6 +113,7 @@ export function VideosCarousel() {
                         src={thumb}
                         alt={video.title}
                         className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
                       />
                     ) : (
                       <div className="absolute inset-0 bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center">

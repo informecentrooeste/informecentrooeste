@@ -11,6 +11,7 @@ import adminSettingsRouter from "./admin/settings.js";
 import adminDashboardRouter from "./admin/dashboard.js";
 import adminAuditRouter from "./admin/audit.js";
 import adminUploadRouter from "./admin/upload.js";
+import adminInstagramVideosRouter from "./admin/instagram-videos.js";
 
 const router: IRouter = Router();
 
@@ -22,6 +23,7 @@ router.use("/admin/users", adminUsersRouter);
 router.use("/admin/news", adminNewsRouter);
 router.use("/admin/banners", adminBannersRouter);
 router.use("/admin/videos", adminVideosRouter);
+router.use("/admin/instagram-videos", adminInstagramVideosRouter);
 router.use("/admin/settings", adminSettingsRouter);
 router.use("/admin/dashboard", adminDashboardRouter);
 router.use("/admin/audit-logs", adminAuditRouter);

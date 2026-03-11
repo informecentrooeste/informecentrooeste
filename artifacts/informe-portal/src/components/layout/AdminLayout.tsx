@@ -17,6 +17,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
     { href: "/admin/categorias", icon: Tags, label: "Categorias" },
     { href: "/admin/banners", icon: Image, label: "Banners" },
     { href: "/admin/videos", icon: VideoIcon, label: "Vídeos" },
+    { href: "/admin/instagram-videos", icon: VideoIcon, label: "Instagram Videos" },
   ];
 
   if (user?.role === "ADMIN") {

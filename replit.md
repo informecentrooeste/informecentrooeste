@@ -99,7 +99,7 @@ React + Vite frontend for Informe Centro-Oeste news portal. Brand color: `#47408
 - Home, Article (`/noticia/:slug`), Category (`/categoria/:slug`), Search (`/busca`)
 
 **Admin pages** (at `/admin/*`, JWT-protected):
-- Login, Dashboard, Notícias (list + form), Categorias, Banners, Vídeos, Usuários (admin-only), Configurações (admin-only), Logs de Auditoria (admin-only)
+- Login, Dashboard, Notícias (list + form), Categorias, Banners, Vídeos, Instagram Videos, Usuários (admin-only), Configurações (admin-only), Logs de Auditoria (admin-only)
 
 **Admin credentials**: `admin@informecentrooeste.com.br` / `admin@2024Informe!`
 

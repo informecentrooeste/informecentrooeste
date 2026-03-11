@@ -3,5 +3,6 @@ export * from "./categories";
 export * from "./news";
 export * from "./banners";
 export * from "./videos";
+export * from "./instagram-videos";
 export * from "./settings";
 export * from "./audit";

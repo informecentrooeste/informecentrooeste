@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { newsTable, categoriesTable, usersTable, bannersTable, videosTable, siteSettingsTable, newsTagsTable, newsToTagsTable } from "@workspace/db";
+import { newsTable, categoriesTable, usersTable, bannersTable, videosTable, instagramVideosTable, siteSettingsTable, newsTagsTable, newsToTagsTable } from "@workspace/db";
 import { eq, and, desc, asc, sql, ilike, or } from "drizzle-orm";
 import { cache, TTL } from "../lib/cache.js";
 import { rateLimit } from "express-rate-limit";
@@ -214,6 +214,15 @@ router.get("/videos", async (_req, res) => {
   if (cached) { res.json(cached); return; }
   const videos = await db.select().from(videosTable).where(eq(videosTable.isActive, true)).orderBy(desc(videosTable.createdAt));
   cache.set("public:videos", videos, TTL.MEDIUM);
+  res.json(videos);
+});
+
+// GET /api/public/instagram-videos
+router.get("/instagram-videos", async (_req, res) => {
+  const cached = cache.get("public:instagram-videos");
+  if (cached) { res.json(cached); return; }
+  const videos = await db.select().from(instagramVideosTable).where(eq(instagramVideosTable.isActive, true)).orderBy(desc(instagramVideosTable.createdAt)).limit(15);
+  cache.set("public:instagram-videos", videos, TTL.MEDIUM);
   res.json(videos);
 });
 
