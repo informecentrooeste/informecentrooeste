@@ -10,6 +10,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app: Express = express();
 
+app.set("trust proxy", 1);
+
 // Security headers
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" },

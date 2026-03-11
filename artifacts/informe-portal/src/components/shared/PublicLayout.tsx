@@ -4,6 +4,7 @@ import {
   Tv, Search, Instagram, Facebook, Youtube, Menu, X, Smartphone, MessageCircle 
 } from "lucide-react";
 import { usePublicCategories } from "@/hooks/use-public";
+import logoInforme from "@assets/logo-informe.png";
 
 export function PublicLayout({ children }: { children: ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -36,7 +37,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
       <header className="bg-primary text-primary-foreground sticky top-0 z-50 shadow-md">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
-            <img src={`${import.meta.env.BASE_URL}images/logo-informe.png`} alt="Informe Centro-Oeste" className="h-10 w-auto" />
+            <img src={logoInforme} alt="Informe Centro-Oeste" className="h-10 w-auto" />
           </Link>
 
           {/* Desktop Nav */}
@@ -116,7 +117,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
             
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
               <div className="mb-4">
-                <img src={`${import.meta.env.BASE_URL}images/logo-informe.png`} alt="Informe Centro-Oeste" className="h-14 w-auto" />
+                <img src={logoInforme} alt="Informe Centro-Oeste" className="h-14 w-auto" />
               </div>
               <p className="text-indigo-200 max-w-xs text-sm">
                 Tenha a Informe TV na palma da sua mão. Informação com credibilidade e agilidade para todo o Centro-Oeste.
