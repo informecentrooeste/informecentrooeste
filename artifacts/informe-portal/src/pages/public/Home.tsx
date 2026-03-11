@@ -114,25 +114,16 @@ export default function Home() {
           <section>
             <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 mb-4 sm:mb-6 text-primary uppercase">Política</h2>
             <div className="flex flex-col md:flex-row gap-6">
-              <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                {politicaNews?.data.slice(0, 2).map((item) => (
-                  <NewsCard key={item.id} article={item} />
+              <div className="md:w-1/2 flex flex-col gap-3">
+                {politicaNews?.data.slice(0, 4).map((item) => (
+                  <NewsCard key={item.id} article={item} variant="horizontal" />
                 ))}
               </div>
-              {politicaNews?.data[2] && (
-                <div className="md:w-1/3">
-                  <Link href={`/noticia/${politicaNews.data[2].slug}`} className="group cursor-pointer block h-full min-h-[300px] bg-gradient-to-br from-primary to-purple-900 rounded-2xl overflow-hidden relative shadow-lg">
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors z-10"></div>
-                    <div className="absolute inset-0 z-0 opacity-50 mix-blend-overlay"></div>
-                    <div className="relative z-20 h-full flex flex-col justify-end p-6">
-                      <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded mb-3 self-start shadow-md uppercase tracking-wider">Destaque</span>
-                      <h3 className="font-black text-white text-xl leading-tight drop-shadow-lg group-hover:underline decoration-white/50">
-                        {politicaNews.data[2].title}
-                      </h3>
-                    </div>
-                  </Link>
+              <div className="md:w-1/2">
+                <div className="w-full bg-gray-100 h-full min-h-[300px] flex items-center justify-center text-gray-400 font-bold text-sm rounded-xl border-2 border-dashed border-gray-200">
+                  BANNER PROPAGANDA
                 </div>
-              )}
+              </div>
             </div>
             <Link href="/categoria/politica" className="inline-flex items-center text-primary font-bold text-sm mt-6 hover:underline group">
               VER MAIS NOTÍCIAS <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
