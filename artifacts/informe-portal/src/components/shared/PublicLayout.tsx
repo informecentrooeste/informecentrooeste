@@ -118,7 +118,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
           <img src={logoInforme} alt="Informe Centro-Oeste" className="h-16 sm:h-20 w-auto" />
 
           <div className="flex flex-col items-center gap-3">
-            <h4 className="font-bold text-xs sm:text-sm uppercase tracking-widest text-center">Tenha a Informe TV na palma da sua mão</h4>
+            <h4 className="font-bold text-xs sm:text-sm uppercase tracking-widest text-center text-white">Tenha a Informe TV na palma da sua mão</h4>
             <div className="flex gap-3">
               <a href="https://play.google.com/store/apps/details?id=com.logicahost.informetv" target="_blank" rel="noreferrer" className="bg-black hover:bg-gray-900 border border-white/20 rounded-lg px-4 py-2 flex items-center gap-2 transition-colors">
                 <Tv className="h-5 w-5" />
