@@ -91,6 +91,26 @@ Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`). Used b
 
 Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`).
 
+### `artifacts/informe-portal` (`@workspace/informe-portal`)
+
+React + Vite frontend for Informe Centro-Oeste news portal. Brand color: `#474085`.
+
+**Public pages** (at `/`):
+- Home, Article (`/noticia/:slug`), Category (`/categoria/:slug`), Search (`/busca`)
+
+**Admin pages** (at `/admin/*`, JWT-protected):
+- Login, Dashboard, Notícias (list + form), Categorias, Banners, Vídeos, Usuários (admin-only), Configurações (admin-only), Logs de Auditoria (admin-only)
+
+**Admin credentials**: `admin@informecentrooeste.com.br` / `admin@2024Informe!`
+
+**Key files**:
+- `src/App.tsx` — routing, ProtectedRoute
+- `src/hooks/use-auth.ts` — JWT auth state
+- `src/hooks/use-admin.ts` — all admin CRUD hooks (wraps generated API client with auth headers)
+- `src/hooks/use-public.ts` — public data hooks
+- `src/components/layout/AdminLayout.tsx` — admin sidebar + header
+- `src/components/shared/PublicLayout.tsx` — public nav + footer
+
 ### `scripts` (`@workspace/scripts`)
 
 Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.

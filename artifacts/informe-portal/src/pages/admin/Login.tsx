@@ -22,8 +22,8 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="mx-auto mb-6">
-          <img src={logoInforme} alt="Informe Centro-Oeste" className="h-16 w-auto mx-auto" />
+        <div className="mx-auto mb-6 bg-primary rounded-2xl px-6 py-4 inline-block shadow-xl shadow-primary/30">
+          <img src={logoInforme} alt="Informe Centro-Oeste" className="h-12 w-auto" />
         </div>
         <h2 className="text-3xl font-black text-gray-900 tracking-tight">INFORME ADMIN</h2>
         <p className="mt-2 text-sm text-gray-600 font-medium">Acesso restrito à equipe</p>

@@ -94,7 +94,7 @@ export function Portal() {
               <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-sm mr-2 flex items-center gap-1 animate-pulse">
                 <span className="w-2 h-2 bg-white rounded-full"></span> AO VIVO
               </span>
-              <h2 className="text-2xl font-bold border-l-4 border-[#474085] pl-3 text-[#474085]">TV INFORME</h2>
+              <h2 className="text-2xl font-bold border-l-4 border-[#474085] pl-3 text-[#474085]">INFORME TV</h2>
             </div>
             <div className="relative w-full aspect-video bg-gradient-to-br from-gray-900 to-black rounded-lg overflow-hidden flex flex-col items-center justify-center group cursor-pointer shadow-lg">
               <Play className="h-20 w-20 text-white/80 group-hover:text-white group-hover:scale-110 transition-all duration-300 drop-shadow-lg" />

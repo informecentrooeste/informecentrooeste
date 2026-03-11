@@ -25,7 +25,7 @@ export default function Home() {
               <span className="bg-red-600 text-white text-[10px] sm:text-xs font-black px-2 sm:px-3 py-1 rounded mr-2 sm:mr-3 flex items-center gap-1 sm:gap-1.5 animate-pulse shadow-sm">
                 <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full"></span> AO VIVO
               </span>
-              <h2 className="text-lg sm:text-2xl font-black text-primary tracking-tight">TV INFORME</h2>
+              <h2 className="text-lg sm:text-2xl font-black text-primary tracking-tight">INFORME TV </h2>
             </div>
             <div className="w-full aspect-video rounded-xl sm:rounded-2xl overflow-hidden shadow-xl border-2 sm:border-4 border-gray-900 bg-black">
               <iframe src="https://player.logicahost.com.br/player.php?player=2050" className="w-full h-full border-0" allowFullScreen></iframe>

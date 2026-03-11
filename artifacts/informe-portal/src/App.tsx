@@ -17,19 +17,11 @@ import Dashboard from "@/pages/admin/Dashboard";
 import CategoriesAdmin from "@/pages/admin/CategoriesAdmin";
 import NewsList from "@/pages/admin/NewsList";
 import NewsForm from "@/pages/admin/NewsForm";
-
-import { AdminLayout } from "@/components/layout/AdminLayout";
-
-const PlaceholderAdmin = ({ title }: { title: string }) => {
-  return (
-    <AdminLayout>
-      <div className="bg-white p-4 sm:p-8 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100">
-        <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4">{title}</h1>
-        <p className="text-gray-500 text-sm">Módulo em desenvolvimento. Interface CRUD padrão a ser implementada.</p>
-      </div>
-    </AdminLayout>
-  );
-};
+import BannersAdmin from "@/pages/admin/BannersAdmin";
+import VideosAdmin from "@/pages/admin/VideosAdmin";
+import UsersAdmin from "@/pages/admin/UsersAdmin";
+import SettingsAdmin from "@/pages/admin/SettingsAdmin";
+import AuditAdmin from "@/pages/admin/AuditAdmin";
 
 const ProtectedRoute = ({ component: Component, adminOnly = false }: any) => {
   const { user, isLoading } = useAuth();
@@ -77,19 +69,19 @@ function Router() {
       
       {/* Additional Admin Modules */}
       <Route path="/admin/banners">
-        <ProtectedRoute component={() => <PlaceholderAdmin title="Gerenciar Banners" />} />
+        <ProtectedRoute component={BannersAdmin} />
       </Route>
       <Route path="/admin/videos">
-        <ProtectedRoute component={() => <PlaceholderAdmin title="Gerenciar Vídeos" />} />
+        <ProtectedRoute component={VideosAdmin} />
       </Route>
       <Route path="/admin/usuarios">
-        <ProtectedRoute component={() => <PlaceholderAdmin title="Gerenciar Usuários" />} adminOnly />
+        <ProtectedRoute component={UsersAdmin} adminOnly />
       </Route>
       <Route path="/admin/configuracoes">
-        <ProtectedRoute component={() => <PlaceholderAdmin title="Configurações do Portal" />} adminOnly />
+        <ProtectedRoute component={SettingsAdmin} adminOnly />
       </Route>
       <Route path="/admin/audit">
-        <ProtectedRoute component={() => <PlaceholderAdmin title="Logs de Auditoria" />} adminOnly />
+        <ProtectedRoute component={AuditAdmin} adminOnly />
       </Route>
 
       <Route component={NotFound} />
