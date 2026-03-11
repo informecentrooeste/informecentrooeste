@@ -42,8 +42,8 @@ export default function Article() {
     <PublicLayout>
       <main className="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-10">
         <div className="w-full lg:w-[70%]">
-          <article className="bg-card rounded-2xl shadow-lg border border-border overflow-hidden">
-            <div className="p-8 pb-6">
+          <article className="bg-card rounded-xl sm:rounded-2xl shadow-lg border border-border overflow-hidden">
+            <div className="p-4 sm:p-8 pb-4 sm:pb-6">
               <div className="flex items-center gap-3 mb-6">
                 {article.category && (
                   <Link href={`/categoria/${article.category.slug}`}>
@@ -54,17 +54,17 @@ export default function Article() {
                 )}
               </div>
               
-              <h1 className="text-3xl md:text-5xl font-black text-foreground mb-4 leading-tight tracking-tight">
+              <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-foreground mb-4 leading-tight tracking-tight">
                 {article.title}
               </h1>
               
               {article.summary && (
-                <p className="text-xl text-muted-foreground font-medium mb-8 leading-relaxed">
+                <p className="text-base sm:text-xl text-muted-foreground font-medium mb-6 sm:mb-8 leading-relaxed">
                   {article.summary}
                 </p>
               )}
               
-              <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground font-semibold border-y border-border py-4 mb-8">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-xs sm:text-sm text-muted-foreground font-semibold border-y border-border py-3 sm:py-4 mb-6 sm:mb-8">
                 {article.author && (
                   <div className="flex items-center gap-2">
                     <div className="bg-primary/10 p-1.5 rounded-full"><User className="h-4 w-4 text-primary" /></div>
@@ -94,15 +94,15 @@ export default function Article() {
               </div>
             )}
 
-            <div className="p-8 pt-10">
+            <div className="p-4 sm:p-8 pt-6 sm:pt-10">
               <div 
-                className="prose prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline"
+                className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline"
                 dangerouslySetInnerHTML={{ __html: article.content.replace(/\n/g, '<br/>') }}
               />
             </div>
             
             {article.tags && article.tags.length > 0 && (
-              <div className="px-8 pb-8 flex flex-wrap gap-2">
+              <div className="px-4 sm:px-8 pb-6 sm:pb-8 flex flex-wrap gap-2">
                 {article.tags.map(tag => (
                   <span key={tag.id} className="bg-secondary text-secondary-foreground text-sm font-bold px-3 py-1 rounded-md">
                     #{tag.name}

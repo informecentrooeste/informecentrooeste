@@ -21,8 +21,8 @@ export default function Category() {
     <PublicLayout>
       <main className="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-10">
         <div className="w-full lg:w-[70%]">
-          <div className="bg-card rounded-2xl shadow-sm border border-border p-8 mb-8">
-            <h1 className="text-4xl font-black text-primary uppercase tracking-tight">
+          <div className="bg-card rounded-xl sm:rounded-2xl shadow-sm border border-border p-5 sm:p-8 mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-4xl font-black text-primary uppercase tracking-tight">
               {category ? category.name : categorySlug}
             </h1>
             {category?.description && (
@@ -35,7 +35,7 @@ export default function Category() {
               <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
             </div>
           ) : news?.data && news.data.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-3 sm:gap-6">
               {news.data.map(article => (
                 <NewsCard key={article.id} article={article} />
               ))}

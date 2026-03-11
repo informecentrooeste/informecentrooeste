@@ -94,18 +94,18 @@ export default function NewsForm() {
 
   return (
     <AdminLayout>
-      <div className="mb-8 flex items-center gap-4">
-        <Link href="/admin/noticias" className="p-2 bg-white rounded-lg shadow-sm border border-gray-200 hover:bg-gray-50 transition-colors">
+      <div className="mb-5 sm:mb-8 flex items-center gap-3 sm:gap-4">
+        <Link href="/admin/noticias" className="p-2 bg-white rounded-lg shadow-sm border border-gray-200 hover:bg-gray-50 transition-colors shrink-0">
           <ArrowLeft className="h-5 w-5 text-gray-600" />
         </Link>
         <div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tight">{isEdit ? 'Editar Notícia' : 'Nova Notícia'}</h1>
+          <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">{isEdit ? 'Editar Notícia' : 'Nova Notícia'}</h1>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-8">
-        <div className="w-full lg:w-2/3 flex flex-col gap-6">
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-6">
+      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-5 sm:gap-8">
+        <div className="w-full lg:w-2/3 flex flex-col gap-5 sm:gap-6">
+          <div className="bg-white p-4 sm:p-8 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-5 sm:gap-6">
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-1">Título da Notícia</label>
               <input required name="title" value={formData.title} onChange={handleChange} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-primary focus:border-primary text-lg font-semibold" placeholder="Ex: Nova lei é aprovada na câmara..." />
@@ -136,8 +136,8 @@ export default function NewsForm() {
           </div>
         </div>
 
-        <div className="w-full lg:w-1/3 flex flex-col gap-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-6">
+        <div className="w-full lg:w-1/3 flex flex-col gap-5 sm:gap-6">
+          <div className="bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-5 sm:gap-6">
             <h3 className="font-black text-lg border-b border-gray-100 pb-3">Publicação</h3>
             
             <div>
@@ -177,7 +177,7 @@ export default function NewsForm() {
             </button>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-6">
+          <div className="bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-5 sm:gap-6">
             <h3 className="font-black text-lg border-b border-gray-100 pb-3">Imagem de Capa</h3>
             
             {formData.featuredImage ? (

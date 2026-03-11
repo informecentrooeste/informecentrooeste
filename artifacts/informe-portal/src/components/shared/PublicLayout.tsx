@@ -111,9 +111,9 @@ export function PublicLayout({ children }: { children: ReactNode }) {
       </div>
 
       {/* Footer */}
-      <footer className="bg-primary text-primary-foreground mt-12 pt-12 pb-6 border-t-[6px] border-red-600">
+      <footer className="bg-primary text-primary-foreground mt-8 sm:mt-12 pt-8 sm:pt-12 pb-6 border-t-4 sm:border-t-[6px] border-red-600">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-10 lg:gap-0">
+          <div className="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-8 lg:gap-0">
             
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
               <div className="mb-4">

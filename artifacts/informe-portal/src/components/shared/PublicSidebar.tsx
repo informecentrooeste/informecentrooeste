@@ -10,7 +10,7 @@ export function PublicSidebar() {
   const { data: mostRead } = usePublicMostRead(5);
 
   return (
-    <aside className="w-full flex flex-col gap-8 lg:sticky lg:top-24 h-fit">
+    <aside className="w-full flex flex-col gap-5 sm:gap-8 lg:sticky lg:top-24 h-fit">
       
       {/* 1. TV AO VIVO BADGE */}
       <a href="https://player.logicahost.com.br/player.php?player=2050" target="_blank" rel="noreferrer" className="bg-red-600 text-white rounded-xl p-4 flex items-center justify-between shadow-lg shadow-red-600/20 cursor-pointer hover:bg-red-700 transition-colors">
@@ -121,9 +121,9 @@ export function PublicSidebar() {
       </section>
 
       {/* 8. APOIADOR CALL TO ACTION */}
-      <div className="w-full bg-gradient-to-b from-primary to-purple-900 rounded-xl p-8 text-center text-white shadow-xl cursor-pointer transform transition hover:-translate-y-1">
-        <h3 className="font-black text-3xl mb-2 italic tracking-tight">SEJA UM APOIADOR</h3>
-        <p className="font-semibold text-purple-200 mb-6 text-sm">DO INFORME CENTRO-OESTE</p>
+      <div className="w-full bg-gradient-to-b from-primary to-purple-900 rounded-xl p-6 sm:p-8 text-center text-white shadow-xl cursor-pointer transform transition hover:-translate-y-1">
+        <h3 className="font-black text-2xl sm:text-3xl mb-2 italic tracking-tight">SEJA UM APOIADOR</h3>
+        <p className="font-semibold text-purple-200 mb-4 sm:mb-6 text-sm">DO INFORME CENTRO-OESTE</p>
         <a href="https://wa.me/5537999493124" target="_blank" rel="noreferrer" className="block bg-yellow-400 text-purple-950 font-black py-3 px-8 rounded-full hover:bg-yellow-300 transition-colors uppercase text-sm w-full shadow-lg hover:shadow-yellow-400/20 active:scale-95">
           Saiba como
         </a>

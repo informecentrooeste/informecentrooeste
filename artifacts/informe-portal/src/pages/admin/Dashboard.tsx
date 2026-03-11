@@ -18,28 +18,28 @@ export default function Dashboard() {
 
   return (
     <AdminLayout>
-      <div className="mb-8">
-        <h1 className="text-3xl font-black text-gray-900 tracking-tight">Visão Geral</h1>
-        <p className="text-gray-500 font-medium">Bem-vindo ao painel de controle do Informe Centro-Oeste.</p>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">Visão Geral</h1>
+        <p className="text-gray-500 font-medium text-sm">Bem-vindo ao painel de controle do Informe Centro-Oeste.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-10">
         {cards.map((card, i) => (
-          <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center gap-5 hover:shadow-md transition-shadow">
-            <div className={`w-14 h-14 ${card.color} rounded-xl flex items-center justify-center text-white shadow-inner`}>
-              <card.icon className="h-7 w-7" />
+          <div key={i} className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-5 hover:shadow-md transition-shadow">
+            <div className={`w-10 h-10 sm:w-14 sm:h-14 ${card.color} rounded-lg sm:rounded-xl flex items-center justify-center text-white shadow-inner shrink-0`}>
+              <card.icon className="h-5 w-5 sm:h-7 sm:w-7" />
             </div>
             <div>
-              <p className="text-sm font-bold text-gray-500 uppercase tracking-wider">{card.title}</p>
-              <h3 className="text-3xl font-black text-gray-900 leading-none mt-1">{card.value}</h3>
+              <p className="text-[10px] sm:text-sm font-bold text-gray-500 uppercase tracking-wider">{card.title}</p>
+              <h3 className="text-xl sm:text-3xl font-black text-gray-900 leading-none mt-0.5 sm:mt-1">{card.value}</h3>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-black text-gray-900 mb-5 border-b border-gray-100 pb-4">Últimas Notícias Adicionadas</h2>
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-8">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+          <h2 className="text-base sm:text-lg font-black text-gray-900 mb-4 sm:mb-5 border-b border-gray-100 pb-3 sm:pb-4">Últimas Notícias Adicionadas</h2>
           <div className="flex flex-col gap-4">
             {stats?.recentNews.map(news => (
               <div key={news.id} className="flex justify-between items-center p-3 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100 cursor-pointer">
@@ -60,8 +60,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-black text-gray-900 mb-5 border-b border-gray-100 pb-4">Artigos Mais Acessados</h2>
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+          <h2 className="text-base sm:text-lg font-black text-gray-900 mb-4 sm:mb-5 border-b border-gray-100 pb-3 sm:pb-4">Artigos Mais Acessados</h2>
           <div className="flex flex-col gap-4">
             {stats?.mostViewed.map(news => (
               <div key={news.id} className="flex items-center gap-4 p-3 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100 cursor-pointer">

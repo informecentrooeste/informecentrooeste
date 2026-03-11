@@ -18,14 +18,14 @@ import CategoriesAdmin from "@/pages/admin/CategoriesAdmin";
 import NewsList from "@/pages/admin/NewsList";
 import NewsForm from "@/pages/admin/NewsForm";
 
-// Simulated Admin Pages to fulfill completeness
+import { AdminLayout } from "@/components/layout/AdminLayout";
+
 const PlaceholderAdmin = ({ title }: { title: string }) => {
-  const { AdminLayout } = require("@/components/layout/AdminLayout");
   return (
     <AdminLayout>
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-        <h1 className="text-3xl font-black text-gray-900 mb-4">{title}</h1>
-        <p className="text-gray-500">Módulo em desenvolvimento. Interface CRUD padrão a ser implementada.</p>
+      <div className="bg-white p-4 sm:p-8 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100">
+        <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4">{title}</h1>
+        <p className="text-gray-500 text-sm">Módulo em desenvolvimento. Interface CRUD padrão a ser implementada.</p>
       </div>
     </AdminLayout>
   );
