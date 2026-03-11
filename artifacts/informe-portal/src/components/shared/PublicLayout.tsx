@@ -113,61 +113,55 @@ export function PublicLayout({ children }: { children: ReactNode }) {
 
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-8 sm:py-10">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center lg:items-center gap-8 lg:gap-12">
+        <div className="container mx-auto px-4 flex flex-col items-center gap-6">
 
-            <div className="shrink-0">
-              <img src={logoInforme} alt="Informe Centro-Oeste" className="h-16 sm:h-20 w-auto" />
+          <img src={logoInforme} alt="Informe Centro-Oeste" className="h-16 sm:h-20 w-auto" />
+
+          <div className="flex flex-col items-center gap-3">
+            <h4 className="font-bold text-xs sm:text-sm uppercase tracking-widest text-center">Tenha a Informe TV na palma da sua mão</h4>
+            <div className="flex gap-3">
+              <a href="https://play.google.com/store/apps/details?id=com.logicahost.informetv" target="_blank" rel="noreferrer" className="bg-black hover:bg-gray-900 border border-white/20 rounded-lg px-4 py-2 flex items-center gap-2 transition-colors">
+                <Tv className="h-5 w-5" />
+                <div className="text-left">
+                  <div className="text-[9px] leading-tight text-gray-400 uppercase">Get it on</div>
+                  <div className="font-semibold text-sm leading-tight">Google Play</div>
+                </div>
+              </a>
+              <a href="https://apps.apple.com/br/app/informe-tv/id6746223815" target="_blank" rel="noreferrer" className="bg-black hover:bg-gray-900 border border-white/20 rounded-lg px-4 py-2 flex items-center gap-2 transition-colors">
+                <Smartphone className="h-5 w-5" />
+                <div className="text-left">
+                  <div className="text-[9px] leading-tight text-gray-400 uppercase">Download on the</div>
+                  <div className="font-semibold text-sm leading-tight">App Store</div>
+                </div>
+              </a>
             </div>
-
-            <div className="flex flex-col items-center lg:items-start gap-5 flex-1">
-              <div className="flex flex-col items-center lg:items-start gap-3">
-                <h4 className="font-bold text-xs sm:text-sm uppercase tracking-widest">Tenha a Informe TV na palma da sua mão</h4>
-                <div className="flex gap-3">
-                  <a href="https://play.google.com/store/apps/details?id=com.logicahost.informetv" target="_blank" rel="noreferrer" className="bg-black hover:bg-gray-900 border border-white/20 rounded-lg px-4 py-2 flex items-center gap-2 transition-colors">
-                    <Tv className="h-5 w-5" />
-                    <div className="text-left">
-                      <div className="text-[9px] leading-tight text-gray-400 uppercase">Get it on</div>
-                      <div className="font-semibold text-sm leading-tight">Google Play</div>
-                    </div>
-                  </a>
-                  <a href="https://apps.apple.com/br/app/informe-tv/id6746223815" target="_blank" rel="noreferrer" className="bg-black hover:bg-gray-900 border border-white/20 rounded-lg px-4 py-2 flex items-center gap-2 transition-colors">
-                    <Smartphone className="h-5 w-5" />
-                    <div className="text-left">
-                      <div className="text-[9px] leading-tight text-gray-400 uppercase">Download on the</div>
-                      <div className="font-semibold text-sm leading-tight">App Store</div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-bold uppercase tracking-wider">Redes Sociais</span>
-                  <a href="https://www.facebook.com/share/14TiuW9h73u" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Facebook className="h-6 w-6" /></a>
-                  <a href="https://www.instagram.com/informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Instagram className="h-6 w-6" /></a>
-                  <a href="https://youtube.com/@informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Youtube className="h-6 w-6" /></a>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-bold uppercase tracking-wider">Entre em Contato</span>
-                  <a href="https://wa.me/5537998249936" target="_blank" rel="noreferrer" className="border border-white/30 hover:bg-white/10 rounded-lg px-4 py-2 flex items-center gap-2 font-bold text-sm transition-colors">
-                    <FaWhatsapp className="h-5 w-5" /> WhatsApp
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center gap-3">
-                <a href="https://chat.whatsapp.com/EhLqmbJ7UndF7IKgYUFjCh" target="_blank" rel="noreferrer" className="border border-white/30 hover:bg-white/10 rounded-lg px-5 py-2.5 flex items-center gap-2 font-bold text-sm uppercase tracking-wider transition-colors">
-                  <FaWhatsapp className="h-5 w-5" /> Grupo VIP Formiga
-                </a>
-                <a href="https://chat.whatsapp.com/IqL5s8VYgxW7Vxql1WTAo3" target="_blank" rel="noreferrer" className="border border-white/30 hover:bg-white/10 rounded-lg px-5 py-2.5 flex items-center gap-2 font-bold text-sm uppercase tracking-wider transition-colors">
-                  <FaWhatsapp className="h-5 w-5" /> Grupo VIP Córrego Fundo
-                </a>
-              </div>
-            </div>
-
           </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-bold uppercase tracking-wider">Redes Sociais</span>
+              <a href="https://www.facebook.com/share/14TiuW9h73u" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Facebook className="h-6 w-6" /></a>
+              <a href="https://www.instagram.com/informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Instagram className="h-6 w-6" /></a>
+              <a href="https://youtube.com/@informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Youtube className="h-6 w-6" /></a>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-bold uppercase tracking-wider">Entre em Contato</span>
+              <a href="https://wa.me/5537998249936" target="_blank" rel="noreferrer" className="border border-white/30 hover:bg-white/10 rounded-lg px-4 py-2 flex items-center gap-2 font-bold text-sm transition-colors">
+                <FaWhatsapp className="h-5 w-5" /> WhatsApp
+              </a>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <a href="https://chat.whatsapp.com/EhLqmbJ7UndF7IKgYUFjCh" target="_blank" rel="noreferrer" className="border border-white/30 hover:bg-white/10 rounded-lg px-5 py-2.5 flex items-center gap-2 font-bold text-sm uppercase tracking-wider transition-colors">
+              <FaWhatsapp className="h-5 w-5" /> Grupo VIP Formiga
+            </a>
+            <a href="https://chat.whatsapp.com/IqL5s8VYgxW7Vxql1WTAo3" target="_blank" rel="noreferrer" className="border border-white/30 hover:bg-white/10 rounded-lg px-5 py-2.5 flex items-center gap-2 font-bold text-sm uppercase tracking-wider transition-colors">
+              <FaWhatsapp className="h-5 w-5" /> Grupo VIP Córrego Fundo
+            </a>
+          </div>
+
         </div>
       </footer>
     </div>
