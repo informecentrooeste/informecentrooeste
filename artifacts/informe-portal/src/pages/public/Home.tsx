@@ -53,15 +53,11 @@ export default function Home() {
             BANNER PROPAGANDA
           </div>
 
-          {/* 3. DESTAQUES */}
+          {/* 3. DESTAQUE - uma única notícia em destaque */}
           {featured && featured.length > 0 && (
             <section>
-              <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-red-600 pl-3 sm:pl-4 mb-4 sm:mb-6 text-primary uppercase tracking-tight">Destaques</h2>
-              <div className="grid grid-cols-1 min-[400px]:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-5">
-                {featured.slice(0, 4).map(article => (
-                  <NewsCard key={article.id} article={article} />
-                ))}
-              </div>
+              <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-red-600 pl-3 sm:pl-4 mb-4 sm:mb-6 text-primary uppercase tracking-tight">Destaque</h2>
+              <NewsCard article={featured[0]} large />
             </section>
           )}
 
