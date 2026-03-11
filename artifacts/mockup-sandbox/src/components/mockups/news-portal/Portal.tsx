@@ -45,7 +45,6 @@ export function Portal() {
             <a href="#" className="hover:text-gray-300 transition-colors">ESTADUAL</a>
             <a href="#" className="hover:text-gray-300 transition-colors">BRASIL</a>
             <a href="#" className="hover:text-gray-300 transition-colors">POLÍTICA</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">CÓRREGO FUNDO</a>
           </nav>
 
           {/* Right actions */}
@@ -78,8 +77,7 @@ export function Portal() {
             <a href="#" className="py-3 border-b border-white/10">REGIONAL</a>
             <a href="#" className="py-3 border-b border-white/10">ESTADUAL</a>
             <a href="#" className="py-3 border-b border-white/10">BRASIL</a>
-            <a href="#" className="py-3 border-b border-white/10">POLÍTICA</a>
-            <a href="#" className="py-3">CÓRREGO FUNDO</a>
+            <a href="#" className="py-3">POLÍTICA</a>
           </nav>
         </div>
       )}
