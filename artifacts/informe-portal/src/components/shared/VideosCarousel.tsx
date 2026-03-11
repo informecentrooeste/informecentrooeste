@@ -81,7 +81,7 @@ export function VideosCarousel() {
                   key={video.id}
                   data-video-card
                   onClick={() => openVideo(video)}
-                  className="shrink-0 w-[130px] sm:w-[155px] md:w-[170px] lg:w-[185px] cursor-pointer group"
+                  className="min-w-[130px] sm:min-w-[155px] md:min-w-[170px] lg:min-w-[185px] flex-1 cursor-pointer group"
                   style={{ scrollSnapAlign: "start" }}
                 >
                   <div className="aspect-[9/16] bg-gray-900 rounded-xl overflow-hidden relative shadow-lg shadow-black/50">
