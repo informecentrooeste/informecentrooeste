@@ -4,5 +4,6 @@ export * from "./news";
 export * from "./banners";
 export * from "./videos";
 export * from "./instagram-videos";
+export * from "./columnists";
 export * from "./settings";
 export * from "./audit";

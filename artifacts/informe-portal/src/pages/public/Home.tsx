@@ -3,8 +3,12 @@ import { PublicSidebar } from "@/components/shared/PublicSidebar";
 import { NewsCard } from "@/components/shared/NewsCard";
 import { VideosCarousel } from "@/components/shared/VideosCarousel";
 import { usePublicNews, usePublicFeaturedNews } from "@/hooks/use-public";
+import { useQuery } from "@tanstack/react-query";
 import { Play, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
+import { getImageUrl } from "@/lib/image-url";
+
+const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
 export default function Home() {
   const { data: featured } = usePublicFeaturedNews();
@@ -14,6 +18,15 @@ export default function Home() {
   const { data: brasilNews } = usePublicNews({ category: "brasil", limit: 4 });
   const { data: politicaNews } = usePublicNews({ category: "politica", limit: 4 });
   const { data: geralNews } = usePublicNews({ category: "geral", limit: 4 });
+  const { data: columnistsData } = useQuery({
+    queryKey: ["/api/public/columnists"],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE}/public/columnists`);
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+  const columnists = Array.isArray(columnistsData) ? columnistsData : [];
 
   return (
     <PublicLayout>
@@ -84,16 +97,34 @@ export default function Home() {
           <section className="bg-card p-5 sm:p-8 rounded-xl sm:rounded-2xl shadow-lg shadow-black/5 border border-border">
             <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 mb-5 sm:mb-8 text-primary uppercase">Articulistas</h2>
             <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x">
-              {['João Silva', 'Maria Clara', 'Pedro Santos', 'Ana Beatriz', 'Carlos Eduardo', 'Luciana Costa'].map((name, i) => (
-                <div key={i} className="flex flex-col items-center gap-2 sm:gap-3 cursor-pointer group min-w-[85px] sm:min-w-[110px] snap-start">
-                  <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-primary to-accent p-1 transition-transform duration-300 group-hover:-translate-y-2 group-hover:shadow-xl">
-                    <div className="w-full h-full bg-white rounded-full border-4 border-white overflow-hidden flex items-center justify-center">
-                      <div className="text-xl sm:text-2xl font-black text-primary/40">{name.charAt(0)}</div>
+              {(columnists.length > 0 ? columnists : [
+                { id: 1, name: 'João Silva', photoUrl: null, articleSlug: null },
+                { id: 2, name: 'Maria Clara', photoUrl: null, articleSlug: null },
+                { id: 3, name: 'Pedro Santos', photoUrl: null, articleSlug: null },
+                { id: 4, name: 'Ana Beatriz', photoUrl: null, articleSlug: null },
+                { id: 5, name: 'Carlos Eduardo', photoUrl: null, articleSlug: null },
+                { id: 6, name: 'Luciana Costa', photoUrl: null, articleSlug: null },
+              ]).map((c: any) => {
+                const content = (
+                  <div className="flex flex-col items-center gap-2 sm:gap-3 cursor-pointer group min-w-[85px] sm:min-w-[110px] snap-start">
+                    <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-primary to-accent p-1 transition-transform duration-300 group-hover:-translate-y-2 group-hover:shadow-xl">
+                      <div className="w-full h-full bg-white rounded-full border-4 border-white overflow-hidden flex items-center justify-center">
+                        {c.photoUrl ? (
+                          <img src={getImageUrl(c.photoUrl)} alt={c.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="text-xl sm:text-2xl font-black text-primary/40">{c.name.charAt(0)}</div>
+                        )}
+                      </div>
                     </div>
+                    <span className="font-bold text-xs sm:text-sm text-center group-hover:text-primary transition-colors">{c.name}</span>
                   </div>
-                  <span className="font-bold text-xs sm:text-sm text-center group-hover:text-primary transition-colors">{name}</span>
-                </div>
-              ))}
+                );
+                return c.articleSlug ? (
+                  <Link key={c.id} href={`/noticia/${c.articleSlug}`}>{content}</Link>
+                ) : (
+                  <div key={c.id}>{content}</div>
+                );
+              })}
             </div>
           </section>
 
