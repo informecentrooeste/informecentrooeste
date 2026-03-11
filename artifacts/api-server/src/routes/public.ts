@@ -294,4 +294,76 @@ router.get("/settings", async (_req, res) => {
   res.json(result);
 });
 
+router.get("/weather", async (_req, res) => {
+  try {
+    const cacheKey = "public:weather";
+    const cached = cache.get(cacheKey);
+    if (cached) { res.json(cached); return; }
+
+    const lat = -20.4644;
+    const lon = -45.4269;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=America/Sao_Paulo&forecast_days=4`;
+
+    const response = await fetch(url);
+    if (!response.ok) { res.status(502).json({ error: "Weather API unavailable" }); return; }
+    const data = await response.json() as any;
+
+    const weatherDescriptions: Record<number, string> = {
+      0: "Céu limpo", 1: "Predominantemente limpo", 2: "Parcialmente nublado", 3: "Nublado",
+      45: "Nevoeiro", 48: "Nevoeiro com geada", 51: "Garoa leve", 53: "Garoa moderada",
+      55: "Garoa intensa", 61: "Chuva leve", 63: "Chuva moderada", 65: "Chuva forte",
+      71: "Neve leve", 73: "Neve moderada", 75: "Neve forte",
+      80: "Pancadas leves", 81: "Pancadas moderadas", 82: "Pancadas fortes",
+      95: "Tempestade", 96: "Tempestade com granizo", 99: "Tempestade forte com granizo",
+    };
+
+    const weatherIcons: Record<number, string> = {
+      0: "sun", 1: "sun", 2: "cloud-sun", 3: "cloud",
+      45: "cloud-fog", 48: "cloud-fog",
+      51: "cloud-drizzle", 53: "cloud-drizzle", 55: "cloud-drizzle",
+      61: "cloud-rain", 63: "cloud-rain", 65: "cloud-rain",
+      71: "snowflake", 73: "snowflake", 75: "snowflake",
+      80: "cloud-rain", 81: "cloud-rain", 82: "cloud-rain",
+      95: "cloud-lightning", 96: "cloud-lightning", 99: "cloud-lightning",
+    };
+
+    const current = data.current;
+    const daily = data.daily;
+
+    const dayNames = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+
+    const forecast = [];
+    for (let i = 1; i < Math.min(daily.time.length, 4); i++) {
+      const date = new Date(daily.time[i] + "T12:00:00");
+      forecast.push({
+        day: dayNames[date.getDay()],
+        maxTemp: Math.round(daily.temperature_2m_max[i]),
+        minTemp: Math.round(daily.temperature_2m_min[i]),
+        weatherCode: daily.weather_code[i],
+        description: weatherDescriptions[daily.weather_code[i]] || "Indisponível",
+        icon: weatherIcons[daily.weather_code[i]] || "cloud",
+      });
+    }
+
+    const result = {
+      city: "Formiga",
+      state: "MG",
+      current: {
+        temp: Math.round(current.temperature_2m),
+        weatherCode: current.weather_code,
+        description: weatherDescriptions[current.weather_code] || "Indisponível",
+        icon: weatherIcons[current.weather_code] || "cloud",
+        humidity: current.relative_humidity_2m,
+        windSpeed: Math.round(current.wind_speed_10m),
+      },
+      forecast,
+    };
+
+    cache.set(cacheKey, result, 1800000);
+    res.json(result);
+  } catch (e) {
+    res.status(500).json({ error: "Failed to fetch weather" });
+  }
+});
+
 export default router;

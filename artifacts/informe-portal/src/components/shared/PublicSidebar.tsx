@@ -1,20 +1,46 @@
-import { Tv, Cloud, MapPin, Sun, ChevronRight, Youtube } from "lucide-react";
+import { Tv, Cloud, MapPin, Sun, ChevronRight, CloudRain, CloudLightning, CloudDrizzle, CloudSun, Snowflake, CloudFog, Droplets, Wind } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { Link } from "wouter";
 import { usePublicLatestNews, usePublicMostRead } from "@/hooks/use-public";
+import { useQuery } from "@tanstack/react-query";
 import { getImageUrl } from "@/lib/image-url";
 import { BannerCarousel } from "@/components/shared/BannerCarousel";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
+
+function WeatherIcon({ icon, className = "h-6 w-6" }: { icon: string; className?: string }) {
+  switch (icon) {
+    case "sun": return <Sun className={`${className} text-yellow-300`} />;
+    case "cloud-sun": return <CloudSun className={`${className} text-yellow-200`} />;
+    case "cloud": return <Cloud className={`${className} text-white`} />;
+    case "cloud-rain": return <CloudRain className={`${className} text-blue-200`} />;
+    case "cloud-drizzle": return <CloudDrizzle className={`${className} text-blue-200`} />;
+    case "cloud-lightning": return <CloudLightning className={`${className} text-yellow-400`} />;
+    case "cloud-fog": return <CloudFog className={`${className} text-gray-300`} />;
+    case "snowflake": return <Snowflake className={`${className} text-white`} />;
+    default: return <Cloud className={`${className} text-white`} />;
+  }
+}
+
 export function PublicSidebar() {
   const { data: latestNews } = usePublicLatestNews(4);
   const { data: mostRead } = usePublicMostRead(5);
+  const { data: weather } = useQuery({
+    queryKey: ["/api/public/weather"],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE}/public/weather`);
+      if (!res.ok) return null;
+      return res.json();
+    },
+    staleTime: 1000 * 60 * 15,
+    refetchInterval: 1000 * 60 * 30,
+  });
 
   return (
     <aside className="w-full flex flex-col gap-5 sm:gap-8 lg:sticky lg:top-24 h-fit">
       
-      {/* 1. TV AO VIVO BADGE */}
       <a href="https://player.logicahost.com.br/player.php?player=2050" target="_blank" rel="noreferrer" className="bg-red-600 text-white rounded-xl p-4 flex items-center justify-between shadow-lg shadow-red-600/20 cursor-pointer hover:bg-red-700 transition-colors">
         <div className="flex items-center gap-2">
           <Tv className="h-6 w-6" />
@@ -26,10 +52,8 @@ export function PublicSidebar() {
         </span>
       </a>
 
-      {/* 2. BANNER LATERAL DIREITA */}
       <BannerCarousel position="SIDEBAR" fallbackHeight="h-[300px]" fallbackLabel="BANNER LATERAL" />
 
-      {/* 5. ÚLTIMAS NOTÍCIAS */}
       <section className="bg-white p-5 rounded-xl shadow-md shadow-black/5 border border-gray-100">
         <h2 className="text-xl font-bold border-l-4 border-primary pl-3 mb-5 text-primary uppercase">Últimas Notícias</h2>
         
@@ -58,43 +82,53 @@ export function PublicSidebar() {
         </div>
       </section>
 
-      {/* 6. PREVISÃO DO TEMPO */}
       <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white p-6 rounded-xl shadow-lg">
         <h2 className="text-sm font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
           <Cloud className="h-4 w-4" /> Previsão do Tempo
         </h2>
         
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <div className="flex items-center gap-1 font-semibold text-blue-100 mb-1">
-              <MapPin className="h-4 w-4" /> Formiga, MG
+        {weather ? (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <div className="flex items-center gap-1 font-semibold text-blue-100 mb-1">
+                  <MapPin className="h-4 w-4" /> {weather.city}, {weather.state}
+                </div>
+                <div className="text-5xl font-black tracking-tighter">{weather.current.temp}°C</div>
+                <div className="text-sm text-blue-100 mt-1">{weather.current.description}</div>
+                <div className="flex items-center gap-3 mt-2 text-xs text-blue-200">
+                  <span className="flex items-center gap-1"><Droplets className="h-3 w-3" /> {weather.current.humidity}%</span>
+                  <span className="flex items-center gap-1"><Wind className="h-3 w-3" /> {weather.current.windSpeed} km/h</span>
+                </div>
+              </div>
+              <WeatherIcon icon={weather.current.icon} className="h-16 w-16 drop-shadow-xl" />
             </div>
-            <div className="text-5xl font-black tracking-tighter">28°C</div>
-            <div className="text-sm text-blue-100 mt-1">Ensolarado com nuvens</div>
-          </div>
-          <Sun className="h-16 w-16 text-yellow-300 drop-shadow-xl" />
-        </div>
-        
-        <div className="grid grid-cols-3 gap-2 border-t border-blue-400/30 pt-4">
-          <div className="text-center">
-            <span className="text-xs text-blue-100 block mb-1">Amanhã</span>
-            <Cloud className="h-6 w-6 mx-auto mb-1 text-white" />
-            <span className="font-bold text-sm">26° <span className="text-blue-200 text-xs font-normal">19°</span></span>
-          </div>
-          <div className="text-center">
-            <span className="text-xs text-blue-100 block mb-1">Sexta</span>
-            <Sun className="h-6 w-6 mx-auto mb-1 text-yellow-300" />
-            <span className="font-bold text-sm">30° <span className="text-blue-200 text-xs font-normal">21°</span></span>
-          </div>
-          <div className="text-center">
-            <span className="text-xs text-blue-100 block mb-1">Sábado</span>
-            <Sun className="h-6 w-6 mx-auto mb-1 text-yellow-300" />
-            <span className="font-bold text-sm">32° <span className="text-blue-200 text-xs font-normal">22°</span></span>
-          </div>
-        </div>
+            
+            <div className="grid grid-cols-3 gap-2 border-t border-blue-400/30 pt-4">
+              {weather.forecast?.map((day: any, i: number) => (
+                <div key={i} className="text-center">
+                  <span className="text-xs text-blue-100 block mb-1">{day.day}</span>
+                  <WeatherIcon icon={day.icon} className="h-6 w-6 mx-auto mb-1" />
+                  <span className="font-bold text-sm">{day.maxTemp}° <span className="text-blue-200 text-xs font-normal">{day.minTemp}°</span></span>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <div className="flex items-center gap-1 font-semibold text-blue-100 mb-1">
+                  <MapPin className="h-4 w-4" /> Formiga, MG
+                </div>
+                <div className="text-3xl font-black tracking-tighter mt-2">Carregando...</div>
+              </div>
+              <Cloud className="h-16 w-16 text-blue-300/50 animate-pulse" />
+            </div>
+          </>
+        )}
       </section>
 
-      {/* 7. MAIS LIDAS */}
       <section className="bg-white p-5 rounded-xl shadow-md shadow-black/5 border border-gray-100">
         <h2 className="text-xl font-bold border-l-4 border-red-600 pl-3 mb-6 text-primary uppercase">Mais Lidas</h2>
         
@@ -119,10 +153,8 @@ export function PublicSidebar() {
         </div>
       </section>
 
-      {/* 8. BANNER SIDEBAR 2 */}
       <BannerCarousel position="SIDEBAR" fallbackHeight="h-[300px]" fallbackLabel="BANNER SIDEBAR" />
 
-      {/* 9. WHATSAPP SECTION */}
       <section className="bg-white p-6 rounded-xl shadow-md shadow-black/5 border border-gray-100 text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 rounded-full text-white mb-4 shadow-lg shadow-green-500/30">
           <FaWhatsapp className="h-8 w-8" />
@@ -146,7 +178,6 @@ export function PublicSidebar() {
         </div>
       </section>
 
-      {/* 11. NAVEGAR */}
       <section className="bg-white p-6 rounded-xl shadow-md shadow-black/5 border border-gray-100">
         <h2 className="text-xl font-bold border-l-4 border-primary pl-3 mb-5 text-primary uppercase">Navegar</h2>
         <ul className="grid grid-cols-2 gap-y-3 text-sm font-semibold text-muted-foreground">
