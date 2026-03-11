@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { Tv, Lock, Mail } from "lucide-react";
+import { Lock, Mail } from "lucide-react";
+import logoInforme from "@assets/logo-informe.png";
 
 export default function Login() {
   const { login, isLoggingIn } = useAuth();
@@ -21,8 +22,8 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="mx-auto h-16 w-16 bg-primary rounded-2xl flex items-center justify-center shadow-xl shadow-primary/30 mb-6">
-          <Tv className="h-8 w-8 text-white" />
+        <div className="mx-auto mb-6">
+          <img src={logoInforme} alt="Informe Centro-Oeste" className="h-16 w-auto mx-auto" />
         </div>
         <h2 className="text-3xl font-black text-gray-900 tracking-tight">INFORME ADMIN</h2>
         <p className="mt-2 text-sm text-gray-600 font-medium">Acesso restrito à equipe</p>
