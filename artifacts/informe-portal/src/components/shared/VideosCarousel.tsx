@@ -89,11 +89,12 @@ export function VideosCarousel() {
 
   return (
     <section className="bg-black text-white">
-      <div className="px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
+      <div className="px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
+        <h2 className="text-lg sm:text-xl font-black uppercase tracking-wider text-center mb-6 sm:mb-8 text-white/90">Vídeos</h2>
         <div className="relative">
           <div
             ref={scrollRef}
-            className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide scroll-smooth"
+            className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide scroll-smooth items-center justify-start"
             style={{ scrollSnapType: "x mandatory" }}
           >
             {allVideos.map((video: any) => {
