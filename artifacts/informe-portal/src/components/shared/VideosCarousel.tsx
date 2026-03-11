@@ -90,7 +90,6 @@ export function VideosCarousel() {
   return (
     <section className="bg-black text-white">
       <div className="px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
-        <h2 className="text-lg sm:text-xl font-black uppercase tracking-wider text-center mb-6 sm:mb-8 text-white/90">Vídeos</h2>
         <div className="relative">
           <div
             ref={scrollRef}
