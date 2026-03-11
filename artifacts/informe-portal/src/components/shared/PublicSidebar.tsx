@@ -52,7 +52,7 @@ export function PublicSidebar() {
         </span>
       </a>
 
-      <BannerCarousel position="SIDEBAR" fallbackHeight="h-[300px]" fallbackLabel="BANNER LATERAL" />
+      <BannerCarousel position="ABOVE_ULTIMAS_NOTICIAS" fallbackHeight="h-[250px]" fallbackLabel="BANNER ACIMA DAS ÚLTIMAS NOTÍCIAS" />
 
       <section className="bg-white p-5 rounded-xl shadow-md shadow-black/5 border border-gray-100">
         <h2 className="text-xl font-bold border-l-4 border-primary pl-3 mb-5 text-primary uppercase">Últimas Notícias</h2>
@@ -153,7 +153,7 @@ export function PublicSidebar() {
         </div>
       </section>
 
-      <BannerCarousel position="SIDEBAR" fallbackHeight="h-[300px]" fallbackLabel="BANNER SIDEBAR" />
+      <BannerCarousel position="BELOW_MAIS_LIDAS" fallbackHeight="h-[250px]" fallbackLabel="BANNER ABAIXO DAS MAIS LIDAS" />
 
       <section className="bg-white p-6 rounded-xl shadow-md shadow-black/5 border border-gray-100 text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 rounded-full text-white mb-4 shadow-lg shadow-green-500/30">

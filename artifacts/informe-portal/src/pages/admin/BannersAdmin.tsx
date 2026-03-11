@@ -6,15 +6,14 @@ import { useToast } from "@/hooks/use-toast";
 
 const POSITIONS = [
   { value: "TOP", label: "Banner Topo", description: "Banner no topo do site, acima do menu", size: "970×90" },
-  { value: "ABOVE_DESTAQUE", label: "Banner Acima do Destaque", description: "Entre o player e a seção de destaque", size: "970×120" },
+  { value: "ABOVE_DESTAQUE", label: "Banner Acima do Destaque", description: "Entre o player de TV e a seção de destaque", size: "970×120" },
   { value: "BELOW_DESTAQUE", label: "Banner Abaixo do Destaque", description: "Logo abaixo do carrossel de destaque", size: "970×120" },
   { value: "BELOW_ARTICULISTAS", label: "Banner Abaixo dos Articulistas", description: "Após a seção de articulistas", size: "970×120" },
   { value: "ABOVE_POLITICA", label: "Banner Acima do Política", description: "Antes da seção Política", size: "970×120" },
   { value: "SIDE_POLITICA", label: "Banner ao Lado do Política", description: "Na lateral direita, ao lado da seção Política", size: "300×250" },
   { value: "SIDE_GERAL", label: "Banner ao Lado do Geral", description: "Na lateral direita, ao lado da seção Geral", size: "300×250" },
-  { value: "SIDEBAR", label: "Banner Lateral Direita", description: "Banner fixo na sidebar direita", size: "300×300" },
-  { value: "BETWEEN_SECTIONS", label: "Banner Entre Seções", description: "Banners entre seções de notícias", size: "970×120" },
-  { value: "BELOW_PLAYER", label: "Banner Abaixo do Player", description: "Abaixo do player de TV ao vivo", size: "970×120" },
+  { value: "ABOVE_ULTIMAS_NOTICIAS", label: "Banner Acima das Últimas Notícias", description: "Na sidebar, acima da seção Últimas Notícias", size: "300×250" },
+  { value: "BELOW_MAIS_LIDAS", label: "Banner Abaixo das Mais Lidas", description: "Na sidebar, abaixo da seção Mais Lidas", size: "300×250" },
 ] as const;
 
 type BannerForm = {
