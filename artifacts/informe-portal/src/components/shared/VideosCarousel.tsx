@@ -76,7 +76,7 @@ export function VideosCarousel() {
 
   return (
     <section className="bg-black text-white">
-      <div className="px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
+      <div className="px-4 sm:px-6 lg:px-10 py-4 sm:py-5">
         <div className="relative">
           <div
             ref={scrollRef}
@@ -90,7 +90,7 @@ export function VideosCarousel() {
                   key={video.id}
                   data-video-card
                   onClick={() => window.open(video.instagramUrl, "_blank", "noopener,noreferrer")}
-                  className="min-w-[130px] sm:min-w-[155px] md:min-w-[170px] lg:min-w-[185px] flex-1 cursor-pointer group"
+                  className="min-w-[90px] sm:min-w-[100px] md:min-w-[110px] lg:min-w-[120px] flex-1 cursor-pointer group"
                   style={{ scrollSnapAlign: "start" }}
                 >
                   <div className="aspect-[9/16] bg-gray-900 rounded-xl overflow-hidden relative shadow-lg shadow-black/50">
