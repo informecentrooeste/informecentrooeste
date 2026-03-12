@@ -52,7 +52,33 @@ export function PublicSidebar() {
         </span>
       </a>
 
-      <BannerCarousel position="ABOVE_ULTIMAS_NOTICIAS" fallbackHeight="h-[250px]" fallbackLabel="BANNER ACIMA DAS ÚLTIMAS NOTÍCIAS" />
+      <BannerCarousel position="ABOVE_PROGRAMAS" fallbackHeight="h-[250px]" fallbackLabel="BANNER ACIMA DO PROGRAMAS" />
+
+      <section className="bg-white p-5 rounded-xl shadow-md shadow-black/5 border border-gray-100">
+        <h2 className="text-xl font-bold border-l-4 border-primary pl-3 mb-5 text-primary uppercase">Programas</h2>
+        <div className="flex flex-col gap-3">
+          {[
+            { name: "Informe Notícias", description: "Principais notícias da região" },
+            { name: "Informe Saúde", description: "Informações sobre saúde e bem-estar" },
+            { name: "Microfonia", description: "Entrevistas e debates ao vivo" },
+          ].map((programa) => (
+            <div key={programa.name} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-primary/5 transition-colors cursor-pointer group border border-gray-100">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Tv className="h-5 w-5 text-primary" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{programa.name}</h3>
+                <p className="text-xs text-muted-foreground truncate">{programa.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <Link href="/categoria/programas" className="flex items-center justify-center gap-1 mt-4 text-sm font-semibold text-primary hover:underline">
+          Ver mais <ChevronRight className="h-4 w-4" />
+        </Link>
+      </section>
+
+      <BannerCarousel position="ABOVE_ULTIMAS_NOTICIAS_NEW" fallbackHeight="h-[250px]" fallbackLabel="BANNER ACIMA DAS ÚLTIMAS NOTÍCIAS" />
 
       <section className="bg-white p-5 rounded-xl shadow-md shadow-black/5 border border-gray-100">
         <h2 className="text-xl font-bold border-l-4 border-primary pl-3 mb-5 text-primary uppercase">Últimas Notícias</h2>
