@@ -240,6 +240,38 @@ router.get("/columnists", async (_req, res) => {
   }
 });
 
+// GET /api/public/columnists/:id
+router.get("/columnists/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+    const cached = cache.get(`public:columnist:${id}`);
+    if (cached) { res.json(cached); return; }
+    const [columnist] = await db.select().from(columnistsTable).where(and(eq(columnistsTable.id, id), eq(columnistsTable.isActive, true)));
+    if (!columnist) { res.status(404).json({ error: "Columnist not found" }); return; }
+    let article = null;
+    if (columnist.articleSlug) {
+      const [found] = await db.select({
+        id: newsTable.id,
+        title: newsTable.title,
+        slug: newsTable.slug,
+        summary: newsTable.summary,
+        content: newsTable.content,
+        featuredImage: newsTable.featuredImage,
+        publishedAt: newsTable.publishedAt,
+        viewCount: newsTable.viewCount,
+      }).from(newsTable).where(and(eq(newsTable.slug, columnist.articleSlug), eq(newsTable.status, "PUBLISHED")));
+      article = found || null;
+    }
+    const result = { ...columnist, article };
+    cache.set(`public:columnist:${id}`, result, TTL.MEDIUM);
+    res.json(result);
+  } catch (err) {
+    console.error("public columnist detail error", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // GET /api/public/banners
 router.get("/banners", async (req, res) => {
   const position = req.query.position as string | undefined;

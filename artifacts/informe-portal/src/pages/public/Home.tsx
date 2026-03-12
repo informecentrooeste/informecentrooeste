@@ -179,10 +179,8 @@ export default function Home() {
                     <span className="font-bold text-xs sm:text-sm text-center group-hover:text-primary transition-colors">{c.name}</span>
                   </div>
                 );
-                return c.articleSlug ? (
-                  <Link key={c.id} href={`/noticia/${c.articleSlug}`}>{content}</Link>
-                ) : (
-                  <div key={c.id}>{content}</div>
+                return (
+                  <Link key={c.id} href={`/articulista/${c.id}`}>{content}</Link>
                 );
               })}
             </div>

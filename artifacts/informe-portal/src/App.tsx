@@ -10,6 +10,7 @@ import Home from "@/pages/public/Home";
 import Article from "@/pages/public/Article";
 import Category from "@/pages/public/Category";
 import Search from "@/pages/public/Search";
+import Columnist from "@/pages/public/Columnist";
 
 // Admin Pages
 import Login from "@/pages/admin/Login";
@@ -44,6 +45,7 @@ function Router() {
       <Route path="/noticia/:slug" component={Article} />
       <Route path="/categoria/:slug" component={Category} />
       <Route path="/busca" component={Search} />
+      <Route path="/articulista/:id" component={Columnist} />
 
       {/* Admin Auth Route */}
       <Route path="/admin/login" component={Login} />
