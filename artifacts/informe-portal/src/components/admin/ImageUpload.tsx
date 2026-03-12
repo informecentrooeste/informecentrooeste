@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Upload, X, Loader2 } from "lucide-react";
 import { getImageUrl } from "@/lib/image-url";
+import { getAuthHeaders } from "@/hooks/use-auth";
 
 const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
@@ -22,12 +23,11 @@ export function ImageUpload({ value, onChange, label = "Imagem", hint, shape = "
     setError("");
     setUploading(true);
     try {
-      const token = localStorage.getItem("auth_token");
       const formData = new FormData();
       formData.append("file", file);
       const res = await fetch(`${API_BASE}/admin/upload`, {
         method: "POST",
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        headers: getAuthHeaders(),
         body: formData,
       });
       if (!res.ok) {

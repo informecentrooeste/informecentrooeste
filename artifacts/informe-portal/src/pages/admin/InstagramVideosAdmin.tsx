@@ -4,12 +4,12 @@ import { Plus, Pencil, Trash2, ToggleLeft, ToggleRight, ExternalLink } from "luc
 import { FaInstagram } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getAuthHeaders as getAuth } from "@/hooks/use-auth";
 
 const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
 function getAuthHeaders() {
-  const token = localStorage.getItem("auth_token");
-  return { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) };
+  return { "Content-Type": "application/json", ...getAuth() };
 }
 
 async function apiFetch(path: string, opts?: RequestInit) {
