@@ -21,6 +21,7 @@ import NewsForm from "@/pages/admin/NewsForm";
 import BannersAdmin from "@/pages/admin/BannersAdmin";
 import InstagramVideosAdmin from "@/pages/admin/InstagramVideosAdmin";
 import ColumnistsAdmin from "@/pages/admin/ColumnistsAdmin";
+import ProgramsAdmin from "@/pages/admin/ProgramsAdmin";
 import UsersAdmin from "@/pages/admin/UsersAdmin";
 import SettingsAdmin from "@/pages/admin/SettingsAdmin";
 import AuditAdmin from "@/pages/admin/AuditAdmin";
@@ -79,6 +80,9 @@ function Router() {
       </Route>
       <Route path="/admin/articulistas">
         <ProtectedRoute component={ColumnistsAdmin} />
+      </Route>
+      <Route path="/admin/programas">
+        <ProtectedRoute component={ProgramsAdmin} />
       </Route>
       <Route path="/admin/usuarios">
         <ProtectedRoute component={UsersAdmin} adminOnly />

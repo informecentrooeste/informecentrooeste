@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { newsTable, categoriesTable, usersTable, bannersTable, videosTable, instagramVideosTable, columnistsTable, siteSettingsTable, newsTagsTable, newsToTagsTable } from "@workspace/db";
+import { newsTable, categoriesTable, usersTable, bannersTable, videosTable, instagramVideosTable, columnistsTable, siteSettingsTable, newsTagsTable, newsToTagsTable, programsTable } from "@workspace/db";
 import { eq, and, desc, asc, sql, ilike, or } from "drizzle-orm";
 import { cache, TTL } from "../lib/cache.js";
 import { rateLimit } from "express-rate-limit";
@@ -224,6 +224,22 @@ router.get("/instagram-videos", async (_req, res) => {
   const videos = await db.select().from(instagramVideosTable).where(eq(instagramVideosTable.isActive, true)).orderBy(desc(instagramVideosTable.createdAt)).limit(15);
   cache.set("public:instagram-videos", videos, TTL.MEDIUM);
   res.json(videos);
+});
+
+// GET /api/public/programs
+router.get("/programs", async (_req, res) => {
+  try {
+    const cached = cache.get("public:programs");
+    if (cached) { res.json(cached); return; }
+    const programs = await db.select().from(programsTable)
+      .where(eq(programsTable.isActive, true))
+      .orderBy(asc(programsTable.sortOrder));
+    cache.set("public:programs", programs, TTL.SHORT);
+    res.json(programs);
+  } catch (err) {
+    console.error("public programs error", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // GET /api/public/columnists

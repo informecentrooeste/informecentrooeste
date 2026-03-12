@@ -27,6 +27,15 @@ function WeatherIcon({ icon, className = "h-6 w-6" }: { icon: string; className?
 export function PublicSidebar() {
   const { data: latestNews } = usePublicLatestNews(4);
   const { data: mostRead } = usePublicMostRead(5);
+  const { data: programs } = useQuery({
+    queryKey: ["/api/public/programs"],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE}/public/programs`);
+      if (!res.ok) return [];
+      return res.json();
+    },
+    staleTime: 1000 * 60 * 5,
+  });
   const { data: weather } = useQuery({
     queryKey: ["/api/public/weather"],
     queryFn: async () => {
@@ -57,21 +66,34 @@ export function PublicSidebar() {
       <section className="bg-white p-5 rounded-xl shadow-md shadow-black/5 border border-gray-100">
         <h2 className="text-xl font-bold border-l-4 border-primary pl-3 mb-5 text-primary uppercase">Programas</h2>
         <div className="flex flex-col gap-3">
-          {[
-            { name: "Informe Notícias", description: "Principais notícias da região" },
-            { name: "Informe Saúde", description: "Informações sobre saúde e bem-estar" },
-            { name: "Microfonia", description: "Entrevistas e debates ao vivo" },
-          ].map((programa) => (
-            <div key={programa.name} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-primary/5 transition-colors cursor-pointer group border border-gray-100">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                <Tv className="h-5 w-5 text-primary" />
+          {(programs && programs.length > 0 ? programs : [
+            { id: 1, name: "Informe Notícias", description: "Principais notícias da região", coverUrl: null, linkUrl: null },
+            { id: 2, name: "Informe Saúde", description: "Informações sobre saúde e bem-estar", coverUrl: null, linkUrl: null },
+            { id: 3, name: "Microfonia", description: "Entrevistas e debates ao vivo", coverUrl: null, linkUrl: null },
+          ]).map((programa: any) => {
+            const content = (
+              <div key={programa.id} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-primary/5 transition-colors cursor-pointer group border border-gray-100">
+                {programa.coverUrl ? (
+                  <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0">
+                    <img src={getImageUrl(programa.coverUrl)} alt={programa.name} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <Tv className="h-5 w-5 text-primary" />
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <h3 className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{programa.name}</h3>
+                  <p className="text-xs text-muted-foreground truncate">{programa.description}</p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <h3 className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{programa.name}</h3>
-                <p className="text-xs text-muted-foreground truncate">{programa.description}</p>
-              </div>
-            </div>
-          ))}
+            );
+            return programa.linkUrl ? (
+              <a key={programa.id} href={programa.linkUrl} target="_blank" rel="noreferrer">{content}</a>
+            ) : (
+              <div key={programa.id}>{content}</div>
+            );
+          })}
         </div>
         <Link href="/categoria/programas" className="flex items-center justify-center gap-1 mt-4 text-sm font-semibold text-primary hover:underline">
           Ver mais <ChevronRight className="h-4 w-4" />
