@@ -18,7 +18,6 @@ import CategoriesAdmin from "@/pages/admin/CategoriesAdmin";
 import NewsList from "@/pages/admin/NewsList";
 import NewsForm from "@/pages/admin/NewsForm";
 import BannersAdmin from "@/pages/admin/BannersAdmin";
-import VideosAdmin from "@/pages/admin/VideosAdmin";
 import InstagramVideosAdmin from "@/pages/admin/InstagramVideosAdmin";
 import ColumnistsAdmin from "@/pages/admin/ColumnistsAdmin";
 import UsersAdmin from "@/pages/admin/UsersAdmin";
@@ -72,9 +71,6 @@ function Router() {
       {/* Additional Admin Modules */}
       <Route path="/admin/banners">
         <ProtectedRoute component={BannersAdmin} />
-      </Route>
-      <Route path="/admin/videos">
-        <ProtectedRoute component={VideosAdmin} />
       </Route>
       <Route path="/admin/instagram-videos">
         <ProtectedRoute component={InstagramVideosAdmin} />
