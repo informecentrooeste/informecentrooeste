@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { FaInstagram } from "react-icons/fa";
+import { usePublicVideos } from "@/hooks/use-public";
 import { useQuery } from "@tanstack/react-query";
 import { getImageUrl } from "@/lib/image-url";
 
@@ -8,6 +9,7 @@ const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
 export function VideosCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { data: regularData } = usePublicVideos();
   const { data: instagramData } = useQuery({
     queryKey: ["/api/public/instagram-videos"],
     queryFn: async () => {
@@ -17,13 +19,25 @@ export function VideosCarousel() {
     },
   });
 
-  const videos = (Array.isArray(instagramData) ? instagramData : []).map((v: any) => ({
-    id: v.id,
+  const regularInstagramVideos = (Array.isArray(regularData) ? regularData : (regularData as any)?.data ?? [])
+    .filter((v: any) => v.sourceType === "INSTAGRAM")
+    .map((v: any) => ({
+      id: `vid-${v.id}`,
+      title: v.title,
+      description: v.description,
+      instagramUrl: v.videoUrl,
+      thumbnailUrl: v.thumbnailUrl,
+    }));
+
+  const dedicatedInstagramVideos = (Array.isArray(instagramData) ? instagramData : []).map((v: any) => ({
+    id: `ig-${v.id}`,
     title: v.title,
     description: v.description,
     instagramUrl: v.instagramUrl,
     thumbnailUrl: v.thumbnailUrl,
   }));
+
+  const videos = [...dedicatedInstagramVideos, ...regularInstagramVideos].slice(0, 15);
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
