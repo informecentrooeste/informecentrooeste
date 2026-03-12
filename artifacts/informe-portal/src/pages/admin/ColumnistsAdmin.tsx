@@ -4,6 +4,7 @@ import { Plus, Pencil, Trash2, ToggleLeft, ToggleRight, GripVertical } from "luc
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getImageUrl } from "@/lib/image-url";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
@@ -133,17 +134,15 @@ export default function ColumnistsAdmin() {
               <input type="number" className="w-full border rounded-lg px-3 py-2 text-sm" value={form.sortOrder} onChange={e => setForm({ ...form, sortOrder: parseInt(e.target.value) || 0 })} placeholder="0" />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">URL da Foto</label>
-              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.photoUrl} onChange={e => setForm({ ...form, photoUrl: e.target.value })} placeholder="https://... (link da foto do articulista)" />
+              <ImageUpload
+                value={form.photoUrl}
+                onChange={(url) => setForm({ ...form, photoUrl: url })}
+                label="Foto do Articulista"
+                hint="Foto que aparece no perfil e na seção de articulistas."
+                shape="circle"
+                previewSize="w-24 h-24"
+              />
             </div>
-            {form.photoUrl && (
-              <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Preview da Foto</label>
-                <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-primary/20">
-                  <img src={getImageUrl(form.photoUrl)} alt="Preview" className="w-full h-full object-cover" onError={(e) => (e.currentTarget.style.display = "none")} />
-                </div>
-              </div>
-            )}
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-gray-700 mb-1">Slug do Artigo</label>
               <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.articleSlug} onChange={e => setForm({ ...form, articleSlug: e.target.value })} placeholder="slug-do-artigo (será usado em /noticia/slug-do-artigo)" />

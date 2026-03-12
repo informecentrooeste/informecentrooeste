@@ -4,6 +4,7 @@ import { Plus, Pencil, Trash2, ToggleLeft, ToggleRight, Tv } from "lucide-react"
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getImageUrl } from "@/lib/image-url";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
@@ -141,18 +142,13 @@ export default function ProgramsAdmin() {
               <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Breve descrição do programa" />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">URL da Capa</label>
-              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.coverUrl} onChange={e => setForm({ ...form, coverUrl: e.target.value })} placeholder="https://... (link da imagem de capa)" />
-              <p className="text-xs text-gray-500 mt-1">Imagem de capa que aparece ao lado do nome na sidebar. Tamanho ideal: 80×80px ou quadrado.</p>
+              <ImageUpload
+                value={form.coverUrl}
+                onChange={(url) => setForm({ ...form, coverUrl: url })}
+                label="Capa do Programa"
+                hint="Imagem que aparece ao lado do nome na sidebar. Tamanho ideal: 80×80px ou quadrado."
+              />
             </div>
-            {form.coverUrl && (
-              <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Preview da Capa</label>
-                <div className="w-20 h-20 rounded-lg overflow-hidden border-2 border-primary/20">
-                  <img src={getImageUrl(form.coverUrl)} alt="Preview" className="w-full h-full object-cover" onError={(e) => (e.currentTarget.style.display = "none")} />
-                </div>
-              </div>
-            )}
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-gray-700 mb-1">Link (opcional)</label>
               <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.linkUrl} onChange={e => setForm({ ...form, linkUrl: e.target.value })} placeholder="https://... (link ao clicar no programa)" />

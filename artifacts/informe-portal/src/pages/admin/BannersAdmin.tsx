@@ -3,6 +3,7 @@ import { useAdminBanners, useCreateBanner, useUpdateBanner, useDeleteBanner, use
 import { useState } from "react";
 import { Plus, Pencil, Trash2, ExternalLink, ToggleLeft, ToggleRight, ChevronDown, ChevronUp, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 const POSITIONS = [
   { value: "TOP", label: "Banner Topo", description: "Banner no topo do site, acima do menu", size: "970×90" },
@@ -137,8 +138,12 @@ export default function BannersAdmin() {
               </select>
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">URL da Imagem</label>
-              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.imageUrl} onChange={e => setForm({ ...form, imageUrl: e.target.value })} required placeholder="https://..." />
+              <ImageUpload
+                value={form.imageUrl}
+                onChange={(url) => setForm({ ...form, imageUrl: url })}
+                label="Imagem do Banner"
+                hint="Imagem que será exibida como banner na posição selecionada."
+              />
             </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-gray-700 mb-1">Link de Direcionamento</label>
