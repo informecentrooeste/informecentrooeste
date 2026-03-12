@@ -15,6 +15,7 @@ const POSITIONS = [
   { value: "ABOVE_PROGRAMAS", label: "Banner Acima do Programas", description: "Na sidebar, acima da seção Programas", size: "300×250" },
   { value: "ABOVE_ULTIMAS_NOTICIAS_NEW", label: "Banner Acima das Últimas Notícias", description: "Na sidebar, entre Programas e Últimas Notícias", size: "300×250" },
   { value: "BELOW_MAIS_LIDAS", label: "Banner Abaixo das Mais Lidas", description: "Na sidebar, abaixo da seção Mais Lidas", size: "300×250" },
+  { value: "ABOVE_NAVEGAR", label: "Banner Acima do Navegar", description: "Na sidebar, acima da seção Navegar", size: "300×250" },
 ] as const;
 
 type BannerForm = {

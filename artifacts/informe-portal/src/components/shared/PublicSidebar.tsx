@@ -204,6 +204,8 @@ export function PublicSidebar() {
         </div>
       </section>
 
+      <BannerCarousel position="ABOVE_NAVEGAR" fallbackHeight="h-[250px]" fallbackLabel="BANNER ACIMA DO NAVEGAR" />
+
       <section className="bg-white p-6 rounded-xl shadow-md shadow-black/5 border border-gray-100">
         <h2 className="text-xl font-bold border-l-4 border-primary pl-3 mb-5 text-primary uppercase">Navegar</h2>
         <ul className="grid grid-cols-2 gap-y-3 text-sm font-semibold text-muted-foreground">
