@@ -82,23 +82,63 @@ export default function Article() {
               </div>
             )}
 
-            {(article as any).videoUrl && (
-              <div className="px-4 sm:px-8 pt-6">
-                <a href={(article as any).videoUrl} target="_blank" rel="noreferrer" className="block relative rounded-xl overflow-hidden bg-black/5 border border-gray-200 hover:border-primary/50 transition-colors group max-w-md">
-                  <div className="aspect-video flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 relative">
-                    {article.featuredImage && (
-                      <img src={getImageUrl(article.featuredImage)} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
-                    )}
-                    <div className="relative z-10 bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:bg-primary/80 transition-colors shadow-xl">
-                      <Play className="h-8 w-8 text-white fill-white" />
+            {(article as any).videoUrl && (() => {
+              const url = (article as any).videoUrl as string;
+              const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]+)/);
+              const igReelMatch = url.match(/instagram\.com\/(reel|p)\/([a-zA-Z0-9_-]+)/);
+
+              if (ytMatch) {
+                return (
+                  <div className="px-4 sm:px-8 pt-6">
+                    <div className="rounded-xl overflow-hidden border border-gray-200 max-w-2xl">
+                      <div className="aspect-video">
+                        <iframe
+                          src={`https://www.youtube.com/embed/${ytMatch[1]}`}
+                          className="w-full h-full"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          title="Vídeo"
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className="p-3 bg-white flex items-center gap-2 text-sm font-semibold text-primary">
-                    <ExternalLink className="h-4 w-4" /> Assistir vídeo completo
+                );
+              }
+
+              if (igReelMatch) {
+                return (
+                  <div className="px-4 sm:px-8 pt-6">
+                    <div className="rounded-xl overflow-hidden border border-gray-200 max-w-md">
+                      <iframe
+                        src={`https://www.instagram.com/${igReelMatch[1]}/${igReelMatch[2]}/embed`}
+                        className="w-full border-0"
+                        style={{ minHeight: 480 }}
+                        allowFullScreen
+                        title="Vídeo Instagram"
+                      />
+                      <a href={url} target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 bg-white text-sm font-semibold text-primary hover:bg-gray-50 transition-colors border-t border-gray-200">
+                        <ExternalLink className="h-4 w-4" /> Ver no Instagram
+                      </a>
+                    </div>
                   </div>
-                </a>
-              </div>
-            )}
+                );
+              }
+
+              return (
+                <div className="px-4 sm:px-8 pt-6">
+                  <a href={url} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 transition-colors group max-w-md">
+                    <div className="bg-primary/20 p-3 rounded-lg">
+                      <Play className="h-6 w-6 text-primary fill-primary" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-foreground group-hover:text-primary transition-colors">Assistir vídeo</p>
+                      <p className="text-xs text-muted-foreground truncate max-w-xs">{url}</p>
+                    </div>
+                    <ExternalLink className="h-4 w-4 text-primary ml-auto" />
+                  </a>
+                </div>
+              );
+            })()}
 
             <div className="p-4 sm:p-8 pt-6 sm:pt-10">
               <div 
