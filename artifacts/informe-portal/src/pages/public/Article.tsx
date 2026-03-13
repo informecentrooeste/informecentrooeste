@@ -8,7 +8,7 @@ import { getImageUrl } from "@/lib/image-url";
 import { Calendar, User, Eye, ArrowLeft, ExternalLink, FileText, Play } from "lucide-react";
 import { Link } from "wouter";
 import { NewsCard } from "@/components/shared/NewsCard";
-import { InstagramEmbed } from "@/components/shared/InstagramEmbed";
+import { VideoEmbed } from "@/components/shared/VideoEmbed";
 
 export default function Article() {
   const params = useParams<{ slug: string }>();
@@ -85,7 +85,7 @@ export default function Article() {
 
             {(article as any).videoUrl && (
               <div className="px-4 sm:px-8 pt-6">
-                <InstagramEmbed url={(article as any).videoUrl} />
+                <VideoEmbed url={(article as any).videoUrl} />
               </div>
             )}
 
