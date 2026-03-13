@@ -82,7 +82,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-primary text-primary-foreground border-t border-white/10 shadow-lg absolute w-full z-40">
+        <div className="lg:hidden bg-primary text-primary-foreground border-t border-white/10 shadow-lg fixed top-16 left-0 w-full z-40">
           <div className="p-4 border-b border-white/10">
             <form onSubmit={handleSearch} className="flex items-center bg-white/10 rounded px-3 py-2">
               <input 
