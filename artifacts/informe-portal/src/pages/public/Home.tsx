@@ -36,7 +36,7 @@ function DestaquesCarousel({ articles }: { articles: any[] }) {
 
   const article = items[current];
   const category = article.category;
-  const imageUrl = article.imageUrl ? getImageUrl(article.imageUrl) : null;
+  const imageUrl = (article.featuredImage || article.imageUrl) ? getImageUrl(article.featuredImage || article.imageUrl) : null;
 
   return (
     <section>
