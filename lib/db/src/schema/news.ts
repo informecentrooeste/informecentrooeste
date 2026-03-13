@@ -24,6 +24,11 @@ export const newsTable = pgTable("news", {
   seoDescription: text("seo_description"),
   seoKeywords: text("seo_keywords"),
   viewCount: integer("view_count").notNull().default(0),
+  redirectUrl: text("redirect_url"),
+  videoUrl: text("video_url"),
+  galleryImages: text("gallery_images"),
+  attachmentUrl: text("attachment_url"),
+  attachmentName: text("attachment_name"),
 });
 
 export const newsTagsTable = pgTable("news_tags", {

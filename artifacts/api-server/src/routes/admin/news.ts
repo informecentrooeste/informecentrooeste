@@ -77,7 +77,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req: AuthRequest, res) => {
-  const { title, slug, summary, content, featuredImage, status, categoryId, isFeatured, seoTitle, seoDescription, seoKeywords, tagIds } = req.body;
+  const { title, slug, summary, content, featuredImage, status, categoryId, isFeatured, seoTitle, seoDescription, seoKeywords, tagIds, redirectUrl, videoUrl, galleryImages, attachmentUrl, attachmentName } = req.body;
   if (!title || !content || !categoryId) { res.status(400).json({ error: "title, content, and categoryId required" }); return; }
 
   const finalSlug = slug || slugify(title);
@@ -89,6 +89,11 @@ router.post("/", async (req: AuthRequest, res) => {
     categoryId: parseInt(categoryId), authorId, isFeatured: isFeatured || false,
     publishedAt: finalStatus === "PUBLISHED" ? new Date() : undefined,
     seoTitle, seoDescription, seoKeywords,
+    redirectUrl: redirectUrl || null,
+    videoUrl: videoUrl || null,
+    galleryImages: galleryImages || null,
+    attachmentUrl: attachmentUrl || null,
+    attachmentName: attachmentName || null,
   }).returning();
 
   if (tagIds?.length) {
@@ -107,12 +112,17 @@ router.put("/:id", async (req: AuthRequest, res) => {
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   if (req.user!.role === "AUTHOR" && existing.authorId !== req.user!.id) { res.status(403).json({ error: "Forbidden" }); return; }
 
-  const { title, slug, summary, content, featuredImage, categoryId, isFeatured, seoTitle, seoDescription, seoKeywords, tagIds } = req.body;
+  const { title, slug, summary, content, featuredImage, categoryId, isFeatured, seoTitle, seoDescription, seoKeywords, tagIds, redirectUrl, videoUrl, galleryImages, attachmentUrl, attachmentName } = req.body;
 
   await db.update(newsTable).set({
     title, slug, summary, content, featuredImage,
     categoryId: parseInt(categoryId), isFeatured,
     seoTitle, seoDescription, seoKeywords, updatedAt: new Date(),
+    ...(redirectUrl !== undefined && { redirectUrl: redirectUrl || null }),
+    ...(videoUrl !== undefined && { videoUrl: videoUrl || null }),
+    ...(galleryImages !== undefined && { galleryImages: galleryImages || null }),
+    ...(attachmentUrl !== undefined && { attachmentUrl: attachmentUrl || null }),
+    ...(attachmentName !== undefined && { attachmentName: attachmentName || null }),
   }).where(eq(newsTable.id, id));
 
   if (tagIds !== undefined) {

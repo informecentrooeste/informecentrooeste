@@ -11,8 +11,13 @@ router.use(requireAuth);
 const UPLOAD_DIR = "./uploads";
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
-const ALLOWED_MIMES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_MIMES = [
+  "image/jpeg", "image/png", "image/webp", "image/gif",
+  "application/pdf",
+  "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+];
+const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, UPLOAD_DIR),
@@ -27,7 +32,7 @@ const upload = multer({
   limits: { fileSize: MAX_SIZE },
   fileFilter: (_req, file, cb) => {
     if (!ALLOWED_MIMES.includes(file.mimetype)) {
-      cb(new Error("Only image files are allowed (JPEG, PNG, WebP, GIF)"));
+      cb(new Error("Formato não permitido. Use imagens (JPEG, PNG, WebP, GIF) ou documentos (PDF, DOC, XLS)"));
       return;
     }
     cb(null, true);

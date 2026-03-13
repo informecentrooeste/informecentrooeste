@@ -5,7 +5,7 @@ import { usePublicArticle } from "@/hooks/use-public";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { getImageUrl } from "@/lib/image-url";
-import { Calendar, User, Eye, ArrowLeft } from "lucide-react";
+import { Calendar, User, Eye, ArrowLeft, ExternalLink, FileText, Play } from "lucide-react";
 import { Link } from "wouter";
 import { NewsCard } from "@/components/shared/NewsCard";
 
@@ -94,12 +94,77 @@ export default function Article() {
               </div>
             )}
 
+            {(article as any).videoUrl && (
+              <div className="px-4 sm:px-8 pt-6">
+                <a href={(article as any).videoUrl} target="_blank" rel="noreferrer" className="block relative rounded-xl overflow-hidden bg-black/5 border border-gray-200 hover:border-primary/50 transition-colors group max-w-md">
+                  <div className="aspect-video flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 relative">
+                    {article.featuredImage && (
+                      <img src={getImageUrl(article.featuredImage)} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+                    )}
+                    <div className="relative z-10 bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:bg-primary/80 transition-colors shadow-xl">
+                      <Play className="h-8 w-8 text-white fill-white" />
+                    </div>
+                  </div>
+                  <div className="p-3 bg-white flex items-center gap-2 text-sm font-semibold text-primary">
+                    <ExternalLink className="h-4 w-4" /> Assistir vídeo completo
+                  </div>
+                </a>
+              </div>
+            )}
+
             <div className="p-4 sm:p-8 pt-6 sm:pt-10">
               <div 
                 className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline"
                 dangerouslySetInnerHTML={{ __html: article.content.replace(/\n/g, '<br/>') }}
               />
             </div>
+
+            {(() => {
+              let gallery: string[] = [];
+              try { if ((article as any).galleryImages) gallery = JSON.parse((article as any).galleryImages); } catch {}
+              if (!gallery.length) return null;
+              return (
+                <div className="px-4 sm:px-8 pb-4">
+                  <h3 className="text-lg font-black text-foreground mb-4 border-l-4 border-primary pl-3">Galeria de Fotos</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {gallery.map((img, i) => (
+                      <a key={i} href={getImageUrl(img)} target="_blank" rel="noreferrer" className="rounded-xl overflow-hidden aspect-video border border-gray-200 hover:border-primary transition-colors group">
+                        <img src={getImageUrl(img)} alt={`Foto ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {(article as any).attachmentUrl && (
+              <div className="px-4 sm:px-8 pb-4">
+                <a href={`/api${(article as any).attachmentUrl}`} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4 bg-primary/5 border border-primary/20 rounded-xl hover:bg-primary/10 transition-colors group">
+                  <div className="bg-primary/20 p-3 rounded-lg">
+                    <FileText className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-foreground group-hover:text-primary transition-colors">{(article as any).attachmentName || "Documento anexado"}</p>
+                    <p className="text-xs text-muted-foreground">Clique para baixar</p>
+                  </div>
+                  <ExternalLink className="h-4 w-4 text-primary ml-auto" />
+                </a>
+              </div>
+            )}
+
+            {(article as any).redirectUrl && (
+              <div className="px-4 sm:px-8 pb-4">
+                <a href={(article as any).redirectUrl} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4 bg-blue-50 border border-blue-200 rounded-xl hover:bg-blue-100 transition-colors group">
+                  <div className="bg-blue-200 p-3 rounded-lg">
+                    <ExternalLink className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-foreground group-hover:text-blue-600 transition-colors">Acessar link</p>
+                    <p className="text-xs text-muted-foreground truncate max-w-xs">{(article as any).redirectUrl}</p>
+                  </div>
+                </a>
+              </div>
+            )}
             
             {article.tags && article.tags.length > 0 && (
               <div className="px-4 sm:px-8 pb-6 sm:pb-8 flex flex-wrap gap-2">
