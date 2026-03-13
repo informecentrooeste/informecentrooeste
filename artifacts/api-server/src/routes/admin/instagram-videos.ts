@@ -10,7 +10,7 @@ const router = Router();
 router.use(requireAuth);
 router.use(requireRole("ADMIN", "EDITOR"));
 
-const INSTAGRAM_URL_REGEX = /^https?:\/\/(www\.)?instagram\.com\/(p|reel)\/[\w-]+\/?/;
+const VIDEO_URL_REGEX = /^https?:\/\/(www\.)?(instagram\.com\/(p|reel)\/[\w-]+\/?|youtu\.?be(\.com)?\/(watch\?v=|embed\/|shorts\/)?[\w-]+)/;
 
 function parseId(raw: string): number | null {
   const n = parseInt(raw, 10);
@@ -29,10 +29,10 @@ router.get("/", async (_req, res) => {
 
 router.post("/", async (req: AuthRequest, res) => {
   try {
-    const { title, description, instagramUrl, thumbnailUrl, isActive } = req.body;
+    const { title, description, instagramUrl, thumbnailUrl, platform, isActive } = req.body;
     if (!title || !instagramUrl) { res.status(400).json({ error: "title and instagramUrl are required" }); return; }
-    if (!INSTAGRAM_URL_REGEX.test(instagramUrl)) { res.status(400).json({ error: "Invalid Instagram URL. Only instagram.com/p/ and instagram.com/reel/ are allowed." }); return; }
-    const [video] = await db.insert(instagramVideosTable).values({ title, description, instagramUrl, thumbnailUrl, isActive: isActive ?? true }).returning();
+    if (!VIDEO_URL_REGEX.test(instagramUrl)) { res.status(400).json({ error: "Invalid URL. Use Instagram (instagram.com/reel/...) or YouTube (youtube.com/watch?v=...)" }); return; }
+    const [video] = await db.insert(instagramVideosTable).values({ title, description, instagramUrl, thumbnailUrl, platform: platform || "instagram", isActive: isActive ?? true }).returning();
     cache.del("public:instagram-videos");
     await logAudit(req.user!.id, "CREATE_INSTAGRAM_VIDEO", "instagram_video", video.id, { title });
     res.status(201).json(video);
@@ -46,9 +46,9 @@ router.put("/:id", async (req: AuthRequest, res) => {
   try {
     const id = parseId(req.params.id);
     if (!id) { res.status(400).json({ error: "Invalid ID" }); return; }
-    const { title, description, instagramUrl, thumbnailUrl, isActive } = req.body;
-    if (instagramUrl && !INSTAGRAM_URL_REGEX.test(instagramUrl)) { res.status(400).json({ error: "Invalid Instagram URL. Only instagram.com/p/ and instagram.com/reel/ are allowed." }); return; }
-    const [video] = await db.update(instagramVideosTable).set({ title, description, instagramUrl, thumbnailUrl, isActive, updatedAt: new Date() }).where(eq(instagramVideosTable.id, id)).returning();
+    const { title, description, instagramUrl, thumbnailUrl, platform, isActive } = req.body;
+    if (instagramUrl && !VIDEO_URL_REGEX.test(instagramUrl)) { res.status(400).json({ error: "Invalid URL. Use Instagram or YouTube links." }); return; }
+    const [video] = await db.update(instagramVideosTable).set({ title, description, instagramUrl, thumbnailUrl, platform, isActive, updatedAt: new Date() }).where(eq(instagramVideosTable.id, id)).returning();
     if (!video) { res.status(404).json({ error: "Not found" }); return; }
     cache.del("public:instagram-videos");
     await logAudit(req.user!.id, "UPDATE_INSTAGRAM_VIDEO", "instagram_video", id, { title });
