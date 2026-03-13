@@ -87,54 +87,37 @@ export default function Article() {
               const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]+)/);
               const igReelMatch = url.match(/instagram\.com\/(reel|p)\/([a-zA-Z0-9_-]+)/);
 
-              if (ytMatch) {
-                return (
-                  <div className="px-4 sm:px-8 pt-6">
-                    <div className="rounded-xl overflow-hidden border border-gray-200 max-w-2xl">
-                      <div className="aspect-video">
-                        <iframe
-                          src={`https://www.youtube.com/embed/${ytMatch[1]}`}
-                          className="w-full h-full"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          title="Vídeo"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                );
-              }
+              let embedSrc = "";
+              if (ytMatch) embedSrc = `https://www.youtube.com/embed/${ytMatch[1]}`;
+              else if (igReelMatch) embedSrc = `https://www.instagram.com/${igReelMatch[1]}/${igReelMatch[2]}/embed`;
 
-              if (igReelMatch) {
+              if (embedSrc) {
                 return (
                   <div className="px-4 sm:px-8 pt-6">
-                    <div className="rounded-xl overflow-hidden border border-gray-200 max-w-md">
-                      <iframe
-                        src={`https://www.instagram.com/${igReelMatch[1]}/${igReelMatch[2]}/embed`}
-                        className="w-full border-0"
-                        style={{ minHeight: 480 }}
-                        allowFullScreen
-                        title="Vídeo Instagram"
-                      />
-                      <a href={url} target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 bg-white text-sm font-semibold text-primary hover:bg-gray-50 transition-colors border-t border-gray-200">
-                        <ExternalLink className="h-4 w-4" /> Ver no Instagram
-                      </a>
+                    <div className="w-full aspect-video rounded-xl sm:rounded-2xl overflow-hidden shadow-xl border-2 sm:border-4 border-gray-900 bg-black">
+                      <iframe src={embedSrc} className="w-full h-full border-0" allowFullScreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" title="Vídeo" />
                     </div>
+                    <a href={url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 mt-3 text-sm font-semibold text-primary hover:underline">
+                      <ExternalLink className="h-4 w-4" /> {igReelMatch ? "Ver no Instagram" : "Ver no YouTube"}
+                    </a>
                   </div>
                 );
               }
 
               return (
                 <div className="px-4 sm:px-8 pt-6">
-                  <a href={url} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 transition-colors group max-w-md">
-                    <div className="bg-primary/20 p-3 rounded-lg">
-                      <Play className="h-6 w-6 text-primary fill-primary" />
+                  <a href={url} target="_blank" rel="noreferrer" className="block w-full aspect-video rounded-xl sm:rounded-2xl overflow-hidden shadow-xl border-2 sm:border-4 border-gray-900 bg-black relative group">
+                    {article.featuredImage && (
+                      <img src={getImageUrl(article.featuredImage)} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+                    )}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-full p-5 group-hover:bg-primary/80 transition-colors shadow-xl">
+                        <Play className="h-10 w-10 text-white fill-white" />
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-bold text-foreground group-hover:text-primary transition-colors">Assistir vídeo</p>
-                      <p className="text-xs text-muted-foreground truncate max-w-xs">{url}</p>
-                    </div>
-                    <ExternalLink className="h-4 w-4 text-primary ml-auto" />
+                  </a>
+                  <a href={url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 mt-3 text-sm font-semibold text-primary hover:underline">
+                    <ExternalLink className="h-4 w-4" /> Assistir vídeo completo
                   </a>
                 </div>
               );
