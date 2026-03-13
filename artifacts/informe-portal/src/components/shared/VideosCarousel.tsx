@@ -1,104 +1,19 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { FaInstagram, FaYoutube } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
+import { getImageUrl } from "@/lib/image-url";
 
 const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
-function detectPlatform(url: string): "youtube" | "instagram" {
-  if (/youtube|youtu\.be/i.test(url)) return "youtube";
-  return "instagram";
-}
-
-function getYouTubeId(url: string): string {
-  const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match?.[1] || "";
-}
-
-function getInstagramEmbedUrl(url: string): string {
-  const match = url.match(/instagram\.com\/(p|reel)\/([\w-]+)/);
-  return match ? `https://www.instagram.com/${match[1]}/${match[2]}/embed` : "";
-}
-
-function VideoCard({ video, isVisible }: { video: any; isVisible: boolean }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const platform = video.platform || detectPlatform(video.videoUrl);
-  const ytId = platform === "youtube" ? getYouTubeId(video.videoUrl) : "";
-  const igEmbed = platform === "instagram" ? getInstagramEmbedUrl(video.videoUrl) : "";
-
-  return (
-    <div
-      ref={cardRef}
-      data-video-card
-      className="min-w-[220px] sm:min-w-[260px] md:min-w-[280px] lg:min-w-[300px] flex-shrink-0 group"
-      style={{ scrollSnapAlign: "start" }}
-    >
-      <div className="aspect-[9/16] bg-gray-900 rounded-xl overflow-hidden relative shadow-lg shadow-black/50">
-        {isVisible ? (
-          platform === "youtube" && ytId ? (
-            <iframe
-              src={`https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&modestbranding=1&rel=0&showinfo=0&playsinline=1`}
-              className="absolute inset-0 w-full h-full border-0"
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-              title={video.title}
-              loading="lazy"
-            />
-          ) : igEmbed ? (
-            <iframe
-              src={igEmbed}
-              className="absolute inset-0 w-full h-full border-0"
-              allowFullScreen
-              title={video.title}
-              loading="lazy"
-            />
-          ) : (
-            <div className="absolute inset-0 bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center">
-              <FaInstagram className="h-10 w-10 text-white/30" />
-            </div>
-          )
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center">
-            {platform === "youtube" ? (
-              <FaYoutube className="h-10 w-10 text-white/30" />
-            ) : (
-              <FaInstagram className="h-10 w-10 text-white/30" />
-            )}
-          </div>
-        )}
-
-        <div className="absolute top-2 right-2 z-10">
-          {platform === "youtube" ? (
-            <FaYoutube className="h-4 w-4 text-red-500 drop-shadow-lg" />
-          ) : (
-            <FaInstagram className="h-4 w-4 text-white drop-shadow-lg" />
-          )}
-        </div>
-      </div>
-
-      {(video.title || video.description) && (
-        <div className="mt-2">
-          {video.title && (
-            <p className="text-xs sm:text-sm font-semibold text-white leading-snug line-clamp-1">
-              {video.title}
-            </p>
-          )}
-          {video.description && (
-            <p className="text-[11px] sm:text-xs text-gray-400 leading-snug line-clamp-2 mt-0.5">
-              {video.description}
-            </p>
-          )}
-        </div>
-      )}
-    </div>
-  );
+function getThumbnail(video: any): string {
+  if (video.thumbnailUrl) return getImageUrl(video.thumbnailUrl);
+  return "";
 }
 
 export function VideosCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
-
-  const { data: videosData } = useQuery({
+  const { data: instagramData } = useQuery({
     queryKey: ["/api/public/instagram-videos"],
     queryFn: async () => {
       const res = await fetch(`${API_BASE}/public/instagram-videos`);
@@ -107,67 +22,17 @@ export function VideosCarousel() {
     },
   });
 
-  const allVideos = (Array.isArray(videosData) ? videosData : []).map((v: any) => ({
-    id: v.id,
+  const instagramVideos = (Array.isArray(instagramData) ? instagramData : []).map((v: any) => ({
+    id: `ig-${v.id}`,
     title: v.title,
     description: v.description,
-    platform: v.platform || detectPlatform(v.instagramUrl),
+    sourceType: "INSTAGRAM",
     videoUrl: v.instagramUrl,
+    thumbnailUrl: v.thumbnailUrl,
+    redirectUrl: v.instagramUrl,
   }));
 
-  const [displayCount, setDisplayCount] = useState(4);
-
-  const displayVideos = allVideos.slice(0, displayCount);
-
-  useEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        setVisibleCards((prev) => {
-          const next = new Set(prev);
-          entries.forEach((entry) => {
-            const idx = Number(entry.target.getAttribute("data-idx"));
-            if (entry.isIntersecting) {
-              next.add(idx);
-            } else {
-              next.delete(idx);
-            }
-          });
-          return next;
-        });
-      },
-      {
-        root: container,
-        rootMargin: "100px",
-        threshold: 0.3,
-      }
-    );
-
-    const cards = container.querySelectorAll("[data-video-card]");
-    cards.forEach((card, idx) => {
-      card.setAttribute("data-idx", String(idx));
-      observer.observe(card);
-    });
-
-    return () => observer.disconnect();
-  }, [displayVideos.length]);
-
-  useEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const { scrollLeft, scrollWidth, clientWidth } = container;
-      if (scrollLeft + clientWidth > scrollWidth - 200) {
-        setDisplayCount((c) => Math.min(c + 4, allVideos.length));
-      }
-    };
-
-    container.addEventListener("scroll", handleScroll, { passive: true });
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, [allVideos.length]);
+  const allVideos = instagramVideos.slice(0, 15);
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -189,31 +54,38 @@ export function VideosCarousel() {
       el.removeEventListener("scroll", checkScroll);
       window.removeEventListener("resize", checkScroll);
     };
-  }, [checkScroll, displayVideos.length]);
+  }, [checkScroll, allVideos.length]);
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
-    const cardWidth = scrollRef.current.querySelector("[data-video-card]")?.clientWidth ?? 280;
+    const cardWidth = scrollRef.current.querySelector("[data-video-card]")?.clientWidth ?? 180;
     const gap = 16;
-    const scrollAmount = (cardWidth + gap) * 2;
+    const scrollAmount = (cardWidth + gap) * 3;
     scrollRef.current.scrollBy({
       left: direction === "left" ? -scrollAmount : scrollAmount,
       behavior: "smooth",
     });
   };
 
+  const openVideo = (video: any) => {
+    const url = video.redirectUrl || video.videoUrl;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   const placeholders = allVideos.length === 0
-    ? Array.from({ length: 4 }, (_, i) => ({
+    ? Array.from({ length: 6 }, (_, i) => ({
         id: `placeholder-${i}`,
         title: "",
         description: "",
-        platform: "instagram" as const,
+        sourceType: "INSTAGRAM",
         videoUrl: "",
+        thumbnailUrl: "",
+        redirectUrl: "",
         _placeholder: true,
       }))
     : [];
 
-  const finalVideos = allVideos.length > 0 ? displayVideos : placeholders;
+  const displayVideos = allVideos.length > 0 ? allVideos : placeholders;
 
   return (
     <section className="bg-black text-white">
@@ -221,33 +93,52 @@ export function VideosCarousel() {
         <div className="relative">
           <div
             ref={scrollRef}
-            className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide scroll-smooth items-start justify-start"
+            className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide scroll-smooth items-center justify-start"
             style={{ scrollSnapType: "x mandatory" }}
           >
-            {finalVideos.map((video: any, idx: number) => {
-              if (video._placeholder) {
-                return (
-                  <div
-                    key={video.id}
-                    data-video-card
-                    className="min-w-[220px] sm:min-w-[260px] md:min-w-[280px] lg:min-w-[300px] flex-shrink-0"
-                    style={{ scrollSnapAlign: "start" }}
-                  >
-                    <div className="aspect-[9/16] bg-gray-900 rounded-xl overflow-hidden relative shadow-lg shadow-black/50">
+            {displayVideos.map((video: any) => {
+              const thumb = video._placeholder ? "" : getThumbnail(video);
+              return (
+                <div
+                  key={video.id}
+                  data-video-card
+                  onClick={() => !video._placeholder && openVideo(video)}
+                  className={`min-w-[130px] sm:min-w-[155px] md:min-w-[170px] lg:min-w-[185px] flex-1 ${video._placeholder ? 'cursor-default' : 'cursor-pointer'} group`}
+                  style={{ scrollSnapAlign: "start" }}
+                >
+                  <div className="aspect-[9/16] bg-gray-900 rounded-xl overflow-hidden relative shadow-lg shadow-black/50">
+                    {thumb ? (
+                      <img
+                        src={thumb}
+                        alt={video.title}
+                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    ) : (
                       <div className="absolute inset-0 bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center">
                         <FaInstagram className="h-10 w-10 text-white/30" />
                       </div>
+                    )}
+                    {!video._placeholder && (
+                      <>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                          <div className="w-11 h-11 bg-white/25 backdrop-blur-sm rounded-full flex items-center justify-center">
+                            <FaInstagram className="h-5 w-5 text-white" />
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    <div className="absolute top-2 right-2 z-10">
+                      <FaInstagram className="h-4 w-4 text-white drop-shadow-lg" />
                     </div>
                   </div>
-                );
-              }
-
-              return (
-                <VideoCard
-                  key={video.id}
-                  video={video}
-                  isVisible={visibleCards.has(idx)}
-                />
+                  {(video.description || video.title) && (
+                    <p className="mt-2 text-[11px] sm:text-xs text-gray-400 leading-snug line-clamp-2 group-hover:text-white transition-colors">
+                      {video.description || video.title}
+                    </p>
+                  )}
+                </div>
               );
             })}
           </div>

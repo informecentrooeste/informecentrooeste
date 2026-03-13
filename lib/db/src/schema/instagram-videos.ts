@@ -8,7 +8,6 @@ export const instagramVideosTable = pgTable("instagram_videos", {
   description: text("description"),
   instagramUrl: text("instagram_url").notNull(),
   thumbnailUrl: text("thumbnail_url"),
-  platform: text("platform").default("instagram"),
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
