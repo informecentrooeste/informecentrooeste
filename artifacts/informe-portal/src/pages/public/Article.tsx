@@ -64,24 +64,12 @@ export default function Article() {
                 </p>
               )}
               
-              <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-xs sm:text-sm text-muted-foreground font-semibold border-y border-border py-3 sm:py-4 mb-6 sm:mb-8">
-                {article.author && (
-                  <div className="flex items-center gap-2">
-                    <div className="bg-primary/10 p-1.5 rounded-full"><User className="h-4 w-4 text-primary" /></div>
-                    Por {article.author.name}
-                  </div>
-                )}
-                {article.publishedAt && (
-                  <div className="flex items-center gap-2">
-                    <div className="bg-primary/10 p-1.5 rounded-full"><Calendar className="h-4 w-4 text-primary" /></div>
-                    {format(new Date(article.publishedAt), "dd 'de' MMMM 'de' yyyy 'às' HH:mm", { locale: ptBR })}
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  <div className="bg-primary/10 p-1.5 rounded-full"><Eye className="h-4 w-4 text-primary" /></div>
-                  {article.viewCount} acessos
+              {article.publishedAt && (
+                <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground font-semibold border-y border-border py-3 sm:py-4 mb-6 sm:mb-8">
+                  <div className="bg-primary/10 p-1.5 rounded-full"><Calendar className="h-4 w-4 text-primary" /></div>
+                  {format(new Date(article.publishedAt), "dd 'de' MMMM 'de' yyyy 'às' HH:mm", { locale: ptBR })}
                 </div>
-              </div>
+              )}
             </div>
 
             {article.featuredImage && (
