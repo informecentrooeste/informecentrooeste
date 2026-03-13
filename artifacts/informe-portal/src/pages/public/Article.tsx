@@ -8,6 +8,7 @@ import { getImageUrl } from "@/lib/image-url";
 import { Calendar, User, Eye, ArrowLeft, ExternalLink, FileText, Play } from "lucide-react";
 import { Link } from "wouter";
 import { NewsCard } from "@/components/shared/NewsCard";
+import { InstagramEmbed } from "@/components/shared/InstagramEmbed";
 
 export default function Article() {
   const params = useParams<{ slug: string }>();
@@ -84,19 +85,7 @@ export default function Article() {
 
             {(article as any).videoUrl && (
               <div className="px-4 sm:px-8 pt-6">
-                <a href={(article as any).videoUrl} target="_blank" rel="noreferrer" className="block relative rounded-xl overflow-hidden bg-black/5 border border-gray-200 hover:border-primary/50 transition-colors group max-w-md">
-                  <div className="aspect-video flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 relative">
-                    {article.featuredImage && (
-                      <img src={getImageUrl(article.featuredImage)} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
-                    )}
-                    <div className="relative z-10 bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:bg-primary/80 transition-colors shadow-xl">
-                      <Play className="h-8 w-8 text-white fill-white" />
-                    </div>
-                  </div>
-                  <div className="p-3 bg-white flex items-center gap-2 text-sm font-semibold text-primary">
-                    <ExternalLink className="h-4 w-4" /> Assistir vídeo completo
-                  </div>
-                </a>
+                <InstagramEmbed url={(article as any).videoUrl} />
               </div>
             )}
 
