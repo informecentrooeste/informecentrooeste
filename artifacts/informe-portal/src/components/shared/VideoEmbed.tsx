@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Play } from "lucide-react";
 
 function extractInstagramId(url: string): string | null {
   const patterns = [
@@ -35,12 +35,37 @@ function detectPlatform(url: string): "instagram" | "youtube" | "unknown" {
 }
 
 function YouTubeEmbed({ videoId }: { videoId: string }) {
+  const [playing, setPlaying] = useState(false);
+
+  if (!playing) {
+    return (
+      <div className="max-w-[560px] w-full">
+        <div
+          className="relative w-full rounded-xl overflow-hidden shadow-lg border border-gray-200 cursor-pointer group"
+          style={{ paddingBottom: "56.25%" }}
+          onClick={() => setPlaying(true)}
+        >
+          <img
+            src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+            alt="Vídeo YouTube"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-colors">
+            <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+              <Play className="h-8 w-8 text-white fill-white ml-1" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-[560px] w-full">
       <div className="relative w-full rounded-xl overflow-hidden shadow-lg border border-gray-200" style={{ paddingBottom: "56.25%" }}>
         <iframe
           className="absolute inset-0 w-full h-full"
-          src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&rel=0`}
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
           title="YouTube video"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
