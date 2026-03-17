@@ -60,24 +60,29 @@ function VideoCard({ video }: { video: any }) {
 
   if (!thumbSrc && igId) {
     return (
-      <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
-        <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-white aspect-[9/16] relative">
-          <iframe src={`https://www.instagram.com/reel/${igId}/embed/`} className="absolute inset-0 w-full h-full border-0 pointer-events-none" title={video.title || "Instagram video"} loading="lazy" />
-          <div className="absolute inset-0 z-10 cursor-pointer" onClick={openLink}>
-            <div className="absolute top-3 right-3 z-20">
-              <div className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 rounded-lg p-1.5">
-                <FaInstagram className="h-3.5 w-3.5 text-white" />
-              </div>
+      <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0 group" style={{ scrollSnapAlign: "start" }}>
+        <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 aspect-[9/16] relative cursor-pointer bg-gradient-to-br from-purple-700 via-pink-600 to-orange-500" onClick={openLink}>
+          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center z-10 gap-4">
+            <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/40 group-hover:scale-110 group-hover:bg-white/30 transition-all duration-300">
+              <Play className="h-8 w-8 text-white fill-white ml-1" />
+            </div>
+            <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
+              <FaInstagram className="h-4 w-4 text-white" />
+              <span className="text-white text-xs font-bold">Assistir no Instagram</span>
             </div>
           </div>
+          <div className="absolute top-3 right-3 z-20">
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-1.5">
+              <FaInstagram className="h-4 w-4 text-white" />
+            </div>
+          </div>
+          {(video.title || video.description) && (
+            <div className="absolute bottom-0 left-0 right-0 p-4 z-10 bg-gradient-to-t from-black/60 to-transparent">
+              <p className="text-white text-sm font-bold leading-snug line-clamp-2 drop-shadow-lg">{video.title || video.description}</p>
+            </div>
+          )}
         </div>
-        {video.title && (
-          <p className="mt-3 text-sm sm:text-base font-bold text-white leading-snug line-clamp-2 text-center">{video.title}</p>
-        )}
-        <button onClick={openLink} className="mt-1 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto">
-          <FaInstagram className="h-3 w-3" />
-          Assistir no Instagram
-        </button>
       </div>
     );
   }
