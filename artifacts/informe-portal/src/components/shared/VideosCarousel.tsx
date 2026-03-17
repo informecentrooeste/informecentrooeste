@@ -84,7 +84,7 @@ function VideoCard({ video }: { video: any }) {
           </div>
         </div>
         {video.title && (
-          <p className="mt-2 text-[11px] sm:text-xs text-gray-400 leading-snug line-clamp-2 text-center">{video.title}</p>
+          <p className="mt-3 text-sm sm:text-base font-bold text-white leading-snug line-clamp-2 text-center">{video.title}</p>
         )}
       </div>
     );
@@ -122,7 +122,7 @@ function VideoCard({ video }: { video: any }) {
           </div>
         )}
       </div>
-      <button onClick={openLink} className="mt-2 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto">
+      <button onClick={openLink} className="mt-1 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto">
         <ExternalLink className="h-3 w-3" />
         {isYouTube ? "Abrir no YouTube" : "Abrir no Instagram"}
       </button>
