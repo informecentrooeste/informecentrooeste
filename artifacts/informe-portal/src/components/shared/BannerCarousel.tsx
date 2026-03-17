@@ -61,7 +61,7 @@ export function BannerCarousel({ position, className = "", fallbackHeight = "h-[
       <img
         src={getImageUrl(banner.imageUrl)}
         alt={banner.title}
-        className="w-full object-cover block min-h-[100px] sm:min-h-0 sm:h-auto"
+        className="w-full h-auto object-cover block"
       />
       {activeBanners.length > 1 && (
         <div className="absolute bottom-1.5 right-3 flex gap-1 z-10">
