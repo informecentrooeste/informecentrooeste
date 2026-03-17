@@ -14,6 +14,7 @@ import adminUploadRouter from "./admin/upload.js";
 import adminInstagramVideosRouter from "./admin/instagram-videos.js";
 import adminColumnistsRouter from "./admin/columnists.js";
 import adminProgramsRouter from "./admin/programs.js";
+import adminWpImportRouter from "./admin/wp-import.js";
 
 const router: IRouter = Router();
 
@@ -32,5 +33,6 @@ router.use("/admin/settings", adminSettingsRouter);
 router.use("/admin/dashboard", adminDashboardRouter);
 router.use("/admin/audit-logs", adminAuditRouter);
 router.use("/admin/upload", adminUploadRouter);
+router.use("/admin/wp-import", adminWpImportRouter);
 
 export default router;

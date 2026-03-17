@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { 
   LayoutDashboard, FileText, Tags, Image, Video as VideoIcon, 
-  Users, Settings, LogOut, ShieldAlert, Menu, X, ChevronRight, UserCircle, Tv
+  Users, Settings, LogOut, ShieldAlert, Menu, X, ChevronRight, UserCircle, Tv, Globe
 } from "lucide-react";
 
 export function AdminLayout({ children }: { children: ReactNode }) {
@@ -25,7 +25,8 @@ export function AdminLayout({ children }: { children: ReactNode }) {
     navItems.push(
       { href: "/admin/usuarios", icon: Users, label: "Usuários" },
       { href: "/admin/configuracoes", icon: Settings, label: "Configurações" },
-      { href: "/admin/audit", icon: ShieldAlert, label: "Logs de Auditoria" }
+      { href: "/admin/audit", icon: ShieldAlert, label: "Logs de Auditoria" },
+      { href: "/admin/importar-wordpress", icon: Globe, label: "Importar WordPress" }
     );
   }
 

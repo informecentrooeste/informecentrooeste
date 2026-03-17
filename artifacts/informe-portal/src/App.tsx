@@ -25,6 +25,7 @@ import ProgramsAdmin from "@/pages/admin/ProgramsAdmin";
 import UsersAdmin from "@/pages/admin/UsersAdmin";
 import SettingsAdmin from "@/pages/admin/SettingsAdmin";
 import AuditAdmin from "@/pages/admin/AuditAdmin";
+import WpImportAdmin from "@/pages/admin/WpImportAdmin";
 
 const ProtectedRoute = ({ component: Component, adminOnly = false }: any) => {
   const { user, isLoading } = useAuth();
@@ -92,6 +93,9 @@ function Router() {
       </Route>
       <Route path="/admin/audit">
         <ProtectedRoute component={AuditAdmin} adminOnly />
+      </Route>
+      <Route path="/admin/importar-wordpress">
+        <ProtectedRoute component={WpImportAdmin} adminOnly />
       </Route>
 
       <Route component={NotFound} />
