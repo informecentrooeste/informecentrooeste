@@ -5,6 +5,8 @@ import { FaInstagram } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAuthHeaders as getAuth } from "@/hooks/use-auth";
+import { ImageUpload } from "@/components/admin/ImageUpload";
+import { getImageUrl } from "@/lib/image-url";
 
 const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
@@ -18,7 +20,7 @@ async function apiFetch(path: string, opts?: RequestInit) {
   return res.json();
 }
 
-const INSTAGRAM_URL_REGEX = /^https?:\/\/(www\.)?instagram\.com\/(p|reel)\/[\w-]+\/?/;
+const URL_REGEX = /^https?:\/\/(www\.)?(instagram\.com\/(p|reel)\/[\w-]+|youtu\.?be)/;
 
 type VideoForm = {
   title: string;
@@ -58,8 +60,8 @@ export default function InstagramVideosAdmin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!INSTAGRAM_URL_REGEX.test(form.instagramUrl)) {
-      toast({ title: "URL inválida", description: "Use links no formato instagram.com/p/... ou instagram.com/reel/...", variant: "destructive" });
+    if (!URL_REGEX.test(form.instagramUrl)) {
+      toast({ title: "URL inválida", description: "Use links do Instagram ou YouTube", variant: "destructive" });
       return;
     }
     const payload = {
@@ -108,7 +110,7 @@ export default function InstagramVideosAdmin() {
 
       {showForm && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-          <h2 className="text-lg font-bold mb-4">{editId ? "Editar Vídeo" : "Novo Vídeo do Instagram"}</h2>
+          <h2 className="text-lg font-bold mb-4">{editId ? "Editar Vídeo" : "Novo Vídeo"}</h2>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-gray-700 mb-1">Título</label>
@@ -119,15 +121,20 @@ export default function InstagramVideosAdmin() {
               <textarea className="w-full border rounded-lg px-3 py-2 text-sm" rows={2} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Texto que aparece abaixo do vídeo no portal" />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">URL do Instagram</label>
-              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.instagramUrl} onChange={e => setForm({ ...form, instagramUrl: e.target.value })} required placeholder="https://www.instagram.com/p/... ou https://www.instagram.com/reel/..." />
-              <p className="text-xs text-gray-500 mt-1">Cole o link do post ou reel do Instagram</p>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">URL do Vídeo (Instagram ou YouTube)</label>
+              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.instagramUrl} onChange={e => setForm({ ...form, instagramUrl: e.target.value })} required placeholder="https://www.instagram.com/reel/... ou https://www.youtube.com/watch?v=..." />
+              <p className="text-xs text-gray-500 mt-1">Cole o link do post, reel do Instagram ou vídeo do YouTube</p>
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">URL da Thumbnail (opcional)</label>
-              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.thumbnailUrl} onChange={e => setForm({ ...form, thumbnailUrl: e.target.value })} placeholder="Link de uma imagem de capa (opcional)" />
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Imagem de Capa</label>
+              <ImageUpload
+                value={form.thumbnailUrl}
+                onChange={(url) => setForm({ ...form, thumbnailUrl: url })}
+                placeholder="Faça upload da imagem de capa do vídeo"
+              />
+              <p className="text-xs text-gray-500 mt-1">A imagem de capa aparece no carrossel do portal. Recomendado: proporção vertical (9:16)</p>
             </div>
-            {form.instagramUrl && INSTAGRAM_URL_REGEX.test(form.instagramUrl) && (
+            {form.instagramUrl && getEmbedUrl(form.instagramUrl) && (
               <div className="md:col-span-2">
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Preview</label>
                 <div className="border rounded-lg overflow-hidden max-w-sm">
@@ -159,7 +166,7 @@ export default function InstagramVideosAdmin() {
       ) : !videos?.length ? (
         <div className="text-center py-16 bg-white rounded-xl border border-gray-100">
           <FaInstagram className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500 font-semibold">Nenhum vídeo do Instagram cadastrado</p>
+          <p className="text-gray-500 font-semibold">Nenhum vídeo cadastrado</p>
           <p className="text-gray-400 text-sm mt-1">Clique em "Novo Vídeo" para adicionar</p>
         </div>
       ) : (
@@ -167,6 +174,7 @@ export default function InstagramVideosAdmin() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 text-gray-600 text-left">
+                <th className="px-4 py-3 font-semibold">Capa</th>
                 <th className="px-4 py-3 font-semibold">Título</th>
                 <th className="px-4 py-3 font-semibold">URL</th>
                 <th className="px-4 py-3 font-semibold text-center">Status</th>
@@ -177,12 +185,18 @@ export default function InstagramVideosAdmin() {
               {videos.map((v: any) => (
                 <tr key={v.id} className="border-t border-gray-100 hover:bg-gray-50/50">
                   <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <FaInstagram className="h-4 w-4 text-pink-500 shrink-0" />
-                      <div>
-                        <p className="font-semibold text-gray-900">{v.title}</p>
-                        {v.description && <p className="text-xs text-gray-500 line-clamp-1">{v.description}</p>}
+                    {v.thumbnailUrl ? (
+                      <img src={getImageUrl(v.thumbnailUrl)} alt={v.title} className="w-12 h-16 object-cover rounded-lg" />
+                    ) : (
+                      <div className="w-12 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <FaInstagram className="h-4 w-4 text-gray-300" />
                       </div>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div>
+                      <p className="font-semibold text-gray-900">{v.title}</p>
+                      {v.description && <p className="text-xs text-gray-500 line-clamp-1">{v.description}</p>}
                     </div>
                   </td>
                   <td className="px-4 py-3">

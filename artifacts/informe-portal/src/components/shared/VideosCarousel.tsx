@@ -2,6 +2,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight, Play, ExternalLink } from "lucide-react";
 import { FaInstagram, FaYoutube } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
+import { getImageUrl } from "@/lib/image-url";
 
 const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
@@ -83,9 +84,9 @@ function VideoCard({ video }: { video: any }) {
     );
   }
 
-  const thumbSrc = ytId
-    ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`
-    : null;
+  const uploadedThumb = video.thumbnailUrl ? getImageUrl(video.thumbnailUrl) : null;
+  const thumbSrc = uploadedThumb
+    || (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null);
 
   return (
     <div
