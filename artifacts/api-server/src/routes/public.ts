@@ -108,6 +108,18 @@ router.get("/news/:slug", async (req, res) => {
     .orderBy(desc(newsTable.publishedAt))
     .limit(4);
 
+  const [prevPost] = await db.select({ title: newsTable.title, slug: newsTable.slug })
+    .from(newsTable)
+    .where(and(eq(newsTable.status, "PUBLISHED"), sql`${newsTable.publishedAt} < ${row.news.publishedAt}`))
+    .orderBy(desc(newsTable.publishedAt))
+    .limit(1);
+
+  const [nextPost] = await db.select({ title: newsTable.title, slug: newsTable.slug })
+    .from(newsTable)
+    .where(and(eq(newsTable.status, "PUBLISHED"), sql`${newsTable.publishedAt} > ${row.news.publishedAt}`))
+    .orderBy(asc(newsTable.publishedAt))
+    .limit(1);
+
   const result = {
     ...buildNewsCard(row),
     content: row.news.content,
@@ -116,6 +128,8 @@ router.get("/news/:slug", async (req, res) => {
     seoKeywords: row.news.seoKeywords,
     tags,
     related: related.map(buildNewsCard),
+    previousPost: prevPost || null,
+    nextPost: nextPost || null,
   };
   cache.set(cacheKey, result, TTL.MEDIUM);
   res.json(result);

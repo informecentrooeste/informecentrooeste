@@ -5,7 +5,7 @@ import { usePublicArticle } from "@/hooks/use-public";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { getImageUrl } from "@/lib/image-url";
-import { Calendar, User, Eye, ArrowLeft, ExternalLink, FileText, Play } from "lucide-react";
+import { Calendar, User, Eye, ArrowLeft, ArrowRight, ExternalLink, FileText, Play, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import { NewsCard } from "@/components/shared/NewsCard";
 import { VideoEmbed } from "@/components/shared/VideoEmbed";
@@ -154,6 +154,31 @@ export default function Article() {
             )}
           </article>
           
+          {(article.previousPost || article.nextPost) && (
+            <div className="mt-8 border-t border-gray-200 pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                {article.previousPost && (
+                  <Link href={`/noticia/${article.previousPost.slug}`} className="group block">
+                    <span className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Postagem anterior</span>
+                    <p className="text-sm sm:text-base font-bold text-gray-800 mt-1 border-l-4 border-gray-300 pl-3 group-hover:border-primary group-hover:text-primary transition-colors leading-snug">
+                      {article.previousPost.title}
+                    </p>
+                  </Link>
+                )}
+              </div>
+              <div className="text-right">
+                {article.nextPost && (
+                  <Link href={`/noticia/${article.nextPost.slug}`} className="group block">
+                    <span className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Próxima postagem</span>
+                    <p className="text-sm sm:text-base font-bold text-gray-800 mt-1 border-r-4 border-gray-300 pr-3 group-hover:border-primary group-hover:text-primary transition-colors leading-snug">
+                      {article.nextPost.title}
+                    </p>
+                  </Link>
+                )}
+              </div>
+            </div>
+          )}
+
           {article.related && article.related.length > 0 && (
             <div className="mt-12">
               <h2 className="text-2xl font-black border-l-[6px] border-primary pl-3 mb-6 text-primary uppercase">Notícias Relacionadas</h2>
