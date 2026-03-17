@@ -4,63 +4,6 @@ import { FaInstagram, FaYoutube } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { getImageUrl } from "@/lib/image-url";
 
-function InstaCarouselEmbed({ postId, title }: { postId: string; title?: string }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const process = () => {
-      if ((window as any).instgrm) {
-        (window as any).instgrm.Embeds.process(containerRef.current);
-      }
-    };
-
-    if (!(window as any).instgrm) {
-      const existing = document.querySelector('script[src*="instagram.com/embed.js"]');
-      if (!existing) {
-        const script = document.createElement("script");
-        script.src = "https://www.instagram.com/embed.js";
-        script.async = true;
-        script.onload = () => process();
-        document.body.appendChild(script);
-      } else {
-        const check = setInterval(() => {
-          if ((window as any).instgrm) {
-            process();
-            clearInterval(check);
-          }
-        }, 300);
-        return () => clearInterval(check);
-      }
-    } else {
-      setTimeout(process, 100);
-    }
-  }, [postId]);
-
-  const embedUrl = `https://www.instagram.com/reel/${postId}/`;
-
-  return (
-    <div ref={containerRef} className="w-full h-full flex items-center justify-center">
-      <blockquote
-        className="instagram-media"
-        data-instgrm-permalink={embedUrl}
-        data-instgrm-version="14"
-        style={{
-          background: "#FFF",
-          border: 0,
-          borderRadius: "0",
-          boxShadow: "none",
-          margin: "0",
-          maxWidth: "100%",
-          minWidth: "100%",
-          padding: 0,
-          width: "100%",
-        }}
-      >
-        <a href={embedUrl} target="_blank" rel="noreferrer">{title || "Ver no Instagram"}</a>
-      </blockquote>
-    </div>
-  );
-}
 
 const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
@@ -119,13 +62,21 @@ function VideoCard({ video }: { video: any }) {
   if (!thumbSrc && igId) {
     return (
       <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
-        <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-white aspect-[9/16] relative">
-          <InstaCarouselEmbed postId={igId} title={video.title} />
+        <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-black aspect-[9/16] relative">
+          <iframe
+            src={`https://www.instagram.com/reel/${igId}/embed/`}
+            className="absolute inset-0 w-full h-full border-0"
+            title={video.title || "Instagram video"}
+            loading="lazy"
+            allow="encrypted-media"
+          />
+          <div className="absolute top-3 right-3 z-20">
+            <div className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 rounded-lg p-1.5 shadow-lg">
+              <FaInstagram className="h-3.5 w-3.5 text-white" />
+            </div>
+          </div>
         </div>
-        {video.title && (
-          <p className="mt-3 text-sm sm:text-base font-bold text-white leading-snug line-clamp-2 text-center">{video.title}</p>
-        )}
-        <button onClick={openLink} className="mt-1 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto">
+        <button onClick={openLink} className="mt-2 flex items-center gap-1.5 text-[11px] text-gray-400 hover:text-white transition-colors mx-auto">
           <FaInstagram className="h-3 w-3" />
           Assistir no Instagram
         </button>
