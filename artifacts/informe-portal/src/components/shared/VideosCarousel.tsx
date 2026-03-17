@@ -42,18 +42,20 @@ function VideoCard({ video }: { video: any }) {
     return (
       <div
         data-video-card
-        className="min-w-[280px] sm:min-w-[320px] md:min-w-[340px] flex-shrink-0"
+        className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0"
         style={{ scrollSnapAlign: "start" }}
       >
-        <div className="rounded-xl overflow-hidden shadow-lg shadow-black/50 bg-white">
-          <iframe
-            src={`https://www.instagram.com/reel/${igId}/embed/`}
-            className="w-full border-0"
-            style={{ height: "480px" }}
-            loading="lazy"
-            title={video.title || "Instagram video"}
-            allowFullScreen
-          />
+        <div className="rounded-xl overflow-hidden shadow-lg shadow-black/50 bg-black relative" style={{ height: "400px" }}>
+          <div className="absolute inset-0 overflow-hidden" style={{ top: "-60px", bottom: "-80px" }}>
+            <iframe
+              src={`https://www.instagram.com/reel/${igId}/embed/`}
+              className="w-full border-0"
+              style={{ height: "540px" }}
+              loading="lazy"
+              title={video.title || "Instagram video"}
+              allowFullScreen
+            />
+          </div>
         </div>
         {video.title && (
           <p className="mt-2 text-[11px] sm:text-xs text-gray-400 leading-snug line-clamp-2 text-center">
