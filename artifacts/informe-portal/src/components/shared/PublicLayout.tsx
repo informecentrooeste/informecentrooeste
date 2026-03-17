@@ -1,7 +1,7 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { 
-  Tv, Search, Instagram, Facebook, Youtube, Menu, X, Smartphone 
+  Tv, Search, Instagram, Facebook, Youtube, Menu, X, Smartphone, ChevronDown, MapPin 
 } from "lucide-react";
 import { FaWhatsapp, FaGooglePlay, FaApple } from "react-icons/fa";
 import { usePublicCategories } from "@/hooks/use-public";
@@ -52,6 +52,29 @@ export function PublicLayout({ children }: { children: ReactNode }) {
     .map(slug => categories?.find(c => c.slug === slug))
     .filter(Boolean) as NonNullable<typeof categories>;
 
+  const [regionalOpen, setRegionalOpen] = useState(false);
+  const [mobileRegionalOpen, setMobileRegionalOpen] = useState(false);
+  const regionalRef = useRef<HTMLDivElement>(null);
+
+  const { data: regionalCities = [] } = useQuery<{ id: number; name: string; slug: string }[]>({
+    queryKey: ["/api/public/cities", "regional"],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE}/public/cities?category=regional`);
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (regionalRef.current && !regionalRef.current.contains(e.target as Node)) {
+        setRegionalOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -75,11 +98,50 @@ export function PublicLayout({ children }: { children: ReactNode }) {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-6 font-semibold text-sm">
-            {navCategories.map(cat => (
-              <Link key={cat.id} href={`/categoria/${cat.slug}`} className="hover:text-gray-300 transition-colors uppercase">
-                {cat.name}
-              </Link>
-            ))}
+            {navCategories.map(cat => {
+              if (cat.slug === "regional" && regionalCities.length > 0) {
+                return (
+                  <div key={cat.id} className="relative" ref={regionalRef}>
+                    <button
+                      onClick={() => setRegionalOpen(!regionalOpen)}
+                      className="hover:text-gray-300 transition-colors uppercase flex items-center gap-1"
+                    >
+                      {cat.name}
+                      <ChevronDown className={`h-3.5 w-3.5 transition-transform ${regionalOpen ? "rotate-180" : ""}`} />
+                    </button>
+                    {regionalOpen && (
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white text-gray-800 rounded-xl shadow-xl border border-gray-100 py-2 min-w-[200px] z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                        <Link
+                          href="/categoria/regional"
+                          onClick={() => setRegionalOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2.5 hover:bg-primary/5 transition-colors text-sm font-bold text-primary"
+                        >
+                          <MapPin className="h-4 w-4" />
+                          Todas as Cidades
+                        </Link>
+                        <div className="border-t border-gray-100 my-1" />
+                        {regionalCities.map(city => (
+                          <Link
+                            key={city.id}
+                            href={`/categoria/regional?cidade=${city.slug}`}
+                            onClick={() => setRegionalOpen(false)}
+                            className="flex items-center gap-2 px-4 py-2.5 hover:bg-primary/5 transition-colors text-sm font-medium"
+                          >
+                            <MapPin className="h-3.5 w-3.5 text-gray-400" />
+                            {city.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              return (
+                <Link key={cat.id} href={`/categoria/${cat.slug}`} className="hover:text-gray-300 transition-colors uppercase">
+                  {cat.name}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Right actions */}
@@ -129,11 +191,47 @@ export function PublicLayout({ children }: { children: ReactNode }) {
             </form>
           </div>
           <nav className="flex flex-col px-4 py-2 font-semibold">
-            {navCategories.map(cat => (
-              <Link key={cat.id} href={`/categoria/${cat.slug}`} onClick={() => setMobileMenuOpen(false)} className="py-3 border-b border-white/10 uppercase">
-                {cat.name}
-              </Link>
-            ))}
+            {navCategories.map(cat => {
+              if (cat.slug === "regional" && regionalCities.length > 0) {
+                return (
+                  <div key={cat.id}>
+                    <button
+                      onClick={() => setMobileRegionalOpen(!mobileRegionalOpen)}
+                      className="w-full py-3 border-b border-white/10 uppercase flex items-center justify-between"
+                    >
+                      {cat.name}
+                      <ChevronDown className={`h-4 w-4 transition-transform ${mobileRegionalOpen ? "rotate-180" : ""}`} />
+                    </button>
+                    {mobileRegionalOpen && (
+                      <div className="bg-white/5 border-b border-white/10">
+                        <Link
+                          href="/categoria/regional"
+                          onClick={() => { setMobileMenuOpen(false); setMobileRegionalOpen(false); }}
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm font-bold"
+                        >
+                          <MapPin className="h-4 w-4" /> Todas as Cidades
+                        </Link>
+                        {regionalCities.map(city => (
+                          <Link
+                            key={city.id}
+                            href={`/categoria/regional?cidade=${city.slug}`}
+                            onClick={() => { setMobileMenuOpen(false); setMobileRegionalOpen(false); }}
+                            className="flex items-center gap-2 px-6 py-2.5 text-sm font-medium text-white/80"
+                          >
+                            <MapPin className="h-3.5 w-3.5 text-white/50" /> {city.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              return (
+                <Link key={cat.id} href={`/categoria/${cat.slug}`} onClick={() => setMobileMenuOpen(false)} className="py-3 border-b border-white/10 uppercase">
+                  {cat.name}
+                </Link>
+              );
+            })}
           </nav>
         </div>
       )}

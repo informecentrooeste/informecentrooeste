@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams } from "wouter";
+import { useState, useEffect } from "react";
+import { useParams, useLocation } from "wouter";
 import { PublicLayout } from "@/components/shared/PublicLayout";
 import { PublicSidebar } from "@/components/shared/PublicSidebar";
 import { usePublicCategories } from "@/hooks/use-public";
@@ -12,7 +12,13 @@ const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 export default function Category() {
   const params = useParams<{ slug: string }>();
   const categorySlug = params.slug || "";
-  const [selectedCity, setSelectedCity] = useState("");
+  const [location] = useLocation();
+  const cidadeParam = new URLSearchParams(location.split("?")[1] || "").get("cidade") || "";
+  const [selectedCity, setSelectedCity] = useState(cidadeParam);
+
+  useEffect(() => {
+    setSelectedCity(cidadeParam);
+  }, [cidadeParam]);
 
   const { data: categories } = usePublicCategories();
   const category = categories?.find(c => c.slug === categorySlug);
