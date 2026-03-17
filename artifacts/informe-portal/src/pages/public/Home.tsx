@@ -105,8 +105,8 @@ export default function Home() {
     <PublicLayout>
       <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 flex flex-col lg:flex-row gap-6 sm:gap-8">
         
-        {/* LEFT COLUMN (70%) */}
-        <div className="w-full lg:w-[70%] flex flex-col gap-6 sm:gap-10">
+        {/* LEFT COLUMN (75%) */}
+        <div className="w-full lg:w-[75%] flex flex-col gap-6 sm:gap-10">
           
           {/* 1. LIVE TV PLAYER */}
           <section>

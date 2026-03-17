@@ -48,7 +48,7 @@ export function PublicSidebar() {
   });
 
   return (
-    <aside className="w-full flex flex-col gap-5 sm:gap-8 lg:sticky lg:top-24 h-fit">
+    <aside className="w-full lg:w-[25%] lg:min-w-[280px] flex flex-col gap-5 sm:gap-8 lg:sticky lg:top-24 h-fit">
       
       <a href="https://player.logicahost.com.br/player.php?player=2050" target="_blank" rel="noreferrer" className="bg-red-600 text-white rounded-xl p-4 flex items-center justify-between shadow-lg shadow-red-600/20 cursor-pointer hover:bg-red-700 transition-colors">
         <div className="flex items-center gap-2">
