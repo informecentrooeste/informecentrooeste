@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 export const bannerPositionEnum = pgEnum("banner_position", [
   "TOP",
+  "TOP_MOBILE",
   "BELOW_PLAYER",
   "SIDEBAR",
   "BETWEEN_SECTIONS",

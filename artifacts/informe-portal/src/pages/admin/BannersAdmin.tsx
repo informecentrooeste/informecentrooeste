@@ -6,7 +6,8 @@ import { useToast } from "@/hooks/use-toast";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 
 const POSITIONS = [
-  { value: "TOP", label: "Banner Topo", description: "Banner no topo do site, acima do menu", size: "1920×250" },
+  { value: "TOP", label: "Banner Topo (Desktop)", description: "Banner no topo do site, acima do menu — visível em telas maiores (desktop/tablet)", size: "1920×250" },
+  { value: "TOP_MOBILE", label: "Banner Topo (Mobile)", description: "Banner no topo do site, acima do menu — visível apenas em celulares", size: "750×150" },
   { value: "ABOVE_DESTAQUE", label: "Banner Acima do Destaque", description: "Entre o player de TV e a seção de destaque", size: "970×120" },
   { value: "BELOW_DESTAQUE", label: "Banner Abaixo do Destaque", description: "Logo abaixo do carrossel de destaque", size: "970×120" },
   { value: "BELOW_ARTICULISTAS", label: "Banner Abaixo dos Articulistas", description: "Após a seção de articulistas", size: "970×120" },

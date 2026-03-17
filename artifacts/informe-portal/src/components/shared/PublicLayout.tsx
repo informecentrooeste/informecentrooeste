@@ -30,8 +30,14 @@ export function PublicLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-foreground font-sans">
-      {/* Banner Topo - full width */}
-      <BannerCarousel position="TOP" fallbackHeight="h-[50px] sm:h-[80px] md:h-[100px]" fallbackLabel="BANNER TOPO (1920x250)" className="" fillWidth />
+      {/* Banner Topo Desktop - hidden on mobile */}
+      <div className="hidden md:block">
+        <BannerCarousel position="TOP" fallbackHeight="h-[80px] md:h-[100px]" fallbackLabel="BANNER TOPO DESKTOP (1920x250)" className="" fillWidth />
+      </div>
+      {/* Banner Topo Mobile - visible only on mobile */}
+      <div className="block md:hidden">
+        <BannerCarousel position="TOP_MOBILE" fallbackHeight="h-[50px]" fallbackLabel="BANNER TOPO MOBILE (750x150)" className="" fillWidth />
+      </div>
 
       {/* Header */}
       <header className="bg-primary text-primary-foreground sticky top-0 z-50 shadow-md">
