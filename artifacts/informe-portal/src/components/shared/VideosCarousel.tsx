@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, ExternalLink } from "lucide-react";
 import { FaInstagram, FaYoutube } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 
@@ -37,84 +37,121 @@ function VideoCard({ video }: { video: any }) {
   const igId = extractInstagramId(url);
   const ytId = extractYouTubeId(url);
   const isYouTube = url.includes("youtube.com") || url.includes("youtu.be");
+  const [playing, setPlaying] = useState(false);
 
-  if (igId) {
+  const openLink = () => {
+    const link = video.redirectUrl || video.videoUrl;
+    if (link) window.open(link, "_blank", "noopener,noreferrer");
+  };
+
+  if (ytId && playing) {
     return (
       <div
         data-video-card
         className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0"
         style={{ scrollSnapAlign: "start" }}
       >
-        <div className="rounded-xl overflow-hidden shadow-lg shadow-black/50 bg-black relative" style={{ height: "400px" }}>
-          <div className="absolute inset-0 overflow-hidden" style={{ top: "-60px", bottom: "-80px" }}>
-            <iframe
-              src={`https://www.instagram.com/reel/${igId}/embed/`}
-              className="w-full border-0"
-              style={{ height: "540px" }}
-              loading="lazy"
-              title={video.title || "Instagram video"}
-              allowFullScreen
-            />
-          </div>
+        <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-black aspect-[9/16]">
+          <iframe
+            src={`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`}
+            className="w-full h-full border-0"
+            title={video.title || "YouTube video"}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
         </div>
-        {video.title && (
-          <p className="mt-2 text-[11px] sm:text-xs text-gray-400 leading-snug line-clamp-2 text-center">
-            {video.title}
-          </p>
-        )}
       </div>
     );
   }
 
-  if (ytId) {
+  if (igId && playing) {
     return (
       <div
         data-video-card
-        className="min-w-[280px] sm:min-w-[320px] md:min-w-[340px] flex-shrink-0"
+        className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0"
         style={{ scrollSnapAlign: "start" }}
       >
-        <div className="rounded-xl overflow-hidden shadow-lg shadow-black/50 bg-black">
-          <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-            <iframe
-              src={`https://www.youtube.com/embed/${ytId}?rel=0`}
-              className="absolute inset-0 w-full h-full border-0"
-              loading="lazy"
-              title={video.title || "YouTube video"}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
+        <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-white aspect-[9/16] relative">
+          <iframe
+            src={`https://www.instagram.com/reel/${igId}/embed/`}
+            className="absolute inset-0 w-full h-full border-0"
+            title={video.title || "Instagram video"}
+            allowFullScreen
+          />
         </div>
-        {video.title && (
-          <p className="mt-2 text-[11px] sm:text-xs text-gray-400 leading-snug line-clamp-2 text-center">
-            {video.title}
-          </p>
-        )}
       </div>
     );
   }
+
+  const thumbSrc = ytId
+    ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`
+    : null;
 
   return (
     <div
       data-video-card
-      className="min-w-[280px] sm:min-w-[320px] md:min-w-[340px] flex-shrink-0 cursor-pointer group"
+      className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0 group"
       style={{ scrollSnapAlign: "start" }}
-      onClick={() => url && window.open(url, "_blank", "noopener,noreferrer")}
     >
-      <div className="aspect-[9/16] bg-gray-900 rounded-xl overflow-hidden relative shadow-lg shadow-black/50">
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center">
+      <div
+        className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-gradient-to-b from-gray-800 to-gray-950 aspect-[9/16] relative cursor-pointer"
+        onClick={() => setPlaying(true)}
+      >
+        {thumbSrc ? (
+          <img
+            src={thumbSrc}
+            alt={video.title}
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center">
+              {isYouTube ? (
+                <FaYoutube className="h-10 w-10 text-white/20" />
+              ) : (
+                <FaInstagram className="h-10 w-10 text-white/20" />
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 group-hover:bg-white/30 group-hover:scale-110 transition-all duration-300">
+            <Play className="h-6 w-6 text-white fill-white ml-0.5" />
+          </div>
+        </div>
+
+        <div className="absolute top-3 right-3 z-10">
           {isYouTube ? (
-            <FaYoutube className="h-10 w-10 text-white/30" />
+            <div className="bg-red-600 rounded-lg p-1.5">
+              <FaYoutube className="h-3.5 w-3.5 text-white" />
+            </div>
           ) : (
-            <FaInstagram className="h-10 w-10 text-white/30" />
+            <div className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 rounded-lg p-1.5">
+              <FaInstagram className="h-3.5 w-3.5 text-white" />
+            </div>
           )}
         </div>
+
+        {(video.title || video.description) && (
+          <div className="absolute bottom-0 left-0 right-0 p-3 z-10">
+            <p className="text-white text-xs sm:text-sm font-medium leading-snug line-clamp-2 drop-shadow-lg">
+              {video.title || video.description}
+            </p>
+          </div>
+        )}
       </div>
-      {video.title && (
-        <p className="mt-2 text-[11px] sm:text-xs text-gray-400 leading-snug line-clamp-2 text-center">
-          {video.title}
-        </p>
-      )}
+
+      <button
+        onClick={openLink}
+        className="mt-2 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto"
+      >
+        <ExternalLink className="h-3 w-3" />
+        {isYouTube ? "Abrir no YouTube" : "Abrir no Instagram"}
+      </button>
     </div>
   );
 }
@@ -166,7 +203,7 @@ export function VideosCarousel() {
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
-    const cardWidth = scrollRef.current.querySelector("[data-video-card]")?.clientWidth ?? 320;
+    const cardWidth = scrollRef.current.querySelector("[data-video-card]")?.clientWidth ?? 270;
     const gap = 16;
     const scrollAmount = (cardWidth + gap) * 2;
     scrollRef.current.scrollBy({
@@ -179,12 +216,14 @@ export function VideosCarousel() {
     return (
       <section className="bg-black text-white">
         <div className="px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
-          <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide items-center justify-start">
-            {Array.from({ length: 6 }, (_, i) => (
-              <div key={i} className="min-w-[130px] sm:min-w-[155px] md:min-w-[170px] lg:min-w-[185px] flex-1">
-                <div className="aspect-[9/16] bg-gray-900 rounded-xl overflow-hidden relative shadow-lg shadow-black/50">
-                  <div className="absolute inset-0 bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center">
-                    <FaInstagram className="h-10 w-10 text-white/30" />
+          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide items-center justify-start">
+            {Array.from({ length: 5 }, (_, i) => (
+              <div key={i} className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0">
+                <div className="aspect-[9/16] bg-gradient-to-b from-gray-800 to-gray-950 rounded-2xl overflow-hidden relative shadow-lg shadow-black/50">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center">
+                      <FaInstagram className="h-10 w-10 text-white/10" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -210,18 +249,18 @@ export function VideosCarousel() {
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-4 mt-5">
+        <div className="flex items-center justify-center gap-4 mt-6">
           <button
             onClick={() => scroll("left")}
             disabled={!canScrollLeft}
-            className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-20 disabled:cursor-default"
+            className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-20 disabled:cursor-default"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
           <button
             onClick={() => scroll("right")}
             disabled={!canScrollRight}
-            className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-20 disabled:cursor-default"
+            className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-20 disabled:cursor-default"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
