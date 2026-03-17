@@ -109,6 +109,7 @@ function InstaEmbed({ postId }: { postId: string }) {
     <div ref={containerRef} className="max-w-[400px]">
       <blockquote
         className="instagram-media"
+        data-instgrm-captioned
         data-instgrm-permalink={embedUrl}
         data-instgrm-version="14"
         style={{
