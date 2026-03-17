@@ -97,7 +97,7 @@ router.get("/status", async (_req, res) => {
 });
 
 router.post("/import", async (req: AuthRequest, res) => {
-  const { page = 1, perPage = 10 } = req.body;
+  const { page = 1, perPage = 10, after, before } = req.body;
   const results: any[] = [];
   let imported = 0;
   let skipped = 0;
@@ -107,9 +107,11 @@ router.post("/import", async (req: AuthRequest, res) => {
     const categories = await db.select().from(categoriesTable);
     const catBySlug = new Map(categories.map(c => [c.slug, c.id]));
 
-    const posts = await fetchJSON(
-      `${WP_BASE}/posts?per_page=${perPage}&page=${page}&_fields=id,title,slug,date,excerpt,content,featured_media,categories&orderby=date&order=desc`
-    );
+    let url = `${WP_BASE}/posts?per_page=${perPage}&page=${page}&_fields=id,title,slug,date,excerpt,content,featured_media,categories&orderby=date&order=desc`;
+    if (after) url += `&after=${after}`;
+    if (before) url += `&before=${before}`;
+
+    const posts = await fetchJSON(url);
 
     if (!Array.isArray(posts)) {
       res.json({ imported: 0, skipped: 0, errors: 0, message: "No more posts", done: true });
