@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { newsTable, categoriesTable, usersTable, newsTagsTable, newsToTagsTable } from "@workspace/db";
+import { newsTable, categoriesTable, usersTable, newsTagsTable, newsToTagsTable, citiesTable } from "@workspace/db";
 import { eq, and, desc, sql, ilike, or } from "drizzle-orm";
 import { requireAuth, requireRole, type AuthRequest } from "../../middleware/auth.js";
 import { logAudit } from "../../lib/audit.js";
@@ -77,8 +77,16 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req: AuthRequest, res) => {
-  const { title, slug, summary, content, featuredImage, status, categoryId, isFeatured, seoTitle, seoDescription, seoKeywords, tagIds, redirectUrl, videoUrl, galleryImages, attachmentUrl, attachmentName } = req.body;
+  const { title, slug, summary, content, featuredImage, status, categoryId, isFeatured, seoTitle, seoDescription, seoKeywords, tagIds, redirectUrl, videoUrl, galleryImages, attachmentUrl, attachmentName, cityId } = req.body;
   if (!title || !content || !categoryId) { res.status(400).json({ error: "title, content, and categoryId required" }); return; }
+
+  if (cityId) {
+    const [city] = await db.select().from(citiesTable).where(eq(citiesTable.id, parseInt(cityId))).limit(1);
+    if (!city || city.categoryId !== parseInt(categoryId)) {
+      res.status(400).json({ error: "City does not belong to the selected category" });
+      return;
+    }
+  }
 
   const finalSlug = slug || slugify(title);
   const authorId = req.user!.id;
@@ -94,6 +102,7 @@ router.post("/", async (req: AuthRequest, res) => {
     galleryImages: galleryImages || null,
     attachmentUrl: attachmentUrl || null,
     attachmentName: attachmentName || null,
+    cityId: cityId ? parseInt(cityId) : null,
   }).returning();
 
   if (tagIds?.length) {
@@ -112,7 +121,15 @@ router.put("/:id", async (req: AuthRequest, res) => {
   if (!existing) { res.status(404).json({ error: "Not found" }); return; }
   if (req.user!.role === "AUTHOR" && existing.authorId !== req.user!.id) { res.status(403).json({ error: "Forbidden" }); return; }
 
-  const { title, slug, summary, content, featuredImage, categoryId, isFeatured, seoTitle, seoDescription, seoKeywords, tagIds, redirectUrl, videoUrl, galleryImages, attachmentUrl, attachmentName } = req.body;
+  const { title, slug, summary, content, featuredImage, categoryId, isFeatured, seoTitle, seoDescription, seoKeywords, tagIds, redirectUrl, videoUrl, galleryImages, attachmentUrl, attachmentName, cityId } = req.body;
+
+  if (cityId && categoryId) {
+    const [city] = await db.select().from(citiesTable).where(eq(citiesTable.id, parseInt(cityId))).limit(1);
+    if (!city || city.categoryId !== parseInt(categoryId)) {
+      res.status(400).json({ error: "City does not belong to the selected category" });
+      return;
+    }
+  }
 
   await db.update(newsTable).set({
     title, slug, summary, content, featuredImage,
@@ -123,6 +140,7 @@ router.put("/:id", async (req: AuthRequest, res) => {
     ...(galleryImages !== undefined && { galleryImages: galleryImages || null }),
     ...(attachmentUrl !== undefined && { attachmentUrl: attachmentUrl || null }),
     ...(attachmentName !== undefined && { attachmentName: attachmentName || null }),
+    ...(cityId !== undefined && { cityId: cityId ? parseInt(cityId) : null }),
   }).where(eq(newsTable.id, id));
 
   if (tagIds !== undefined) {

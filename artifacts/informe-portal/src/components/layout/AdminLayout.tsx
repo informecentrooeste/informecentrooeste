@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { 
   LayoutDashboard, FileText, Tags, Image, Video as VideoIcon, 
-  Users, Settings, LogOut, ShieldAlert, Menu, X, ChevronRight, UserCircle, Tv, Globe
+  Users, Settings, LogOut, ShieldAlert, Menu, X, ChevronRight, UserCircle, Tv, Globe, MapPin
 } from "lucide-react";
 
 export function AdminLayout({ children }: { children: ReactNode }) {
@@ -19,6 +19,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
     { href: "/admin/instagram-videos", icon: VideoIcon, label: "Instagram Videos" },
     { href: "/admin/articulistas", icon: UserCircle, label: "Articulistas" },
     { href: "/admin/programas", icon: Tv, label: "Programas" },
+    { href: "/admin/cidades", icon: MapPin, label: "Cidades" },
   ];
 
   if (user?.role === "ADMIN") {

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useLocation } from "wouter";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { useAdminNews, useCreateNews, useUpdateNews, useAdminCategories, useUploadFile } from "@/hooks/use-admin";
+import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Save, Upload, X, FileText, Video, Link2, ImagePlus, Paperclip } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
@@ -24,6 +25,15 @@ export default function NewsForm() {
   const updateMutation = useUpdateNews();
   const uploadMutation = useUploadFile();
 
+  const { data: cities = [] } = useQuery<{ id: number; name: string; slug: string; categoryId: number; isActive: boolean }[]>({
+    queryKey: ["/api/admin/cities"],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE}/admin/cities`, { headers: getAuthHeaders() });
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -38,7 +48,10 @@ export default function NewsForm() {
     galleryImages: [] as string[],
     attachmentUrl: "",
     attachmentName: "",
+    cityId: "",
   });
+
+  const filteredCities = cities.filter(c => c.isActive && c.categoryId === Number(formData.categoryId));
 
   const [uploadingGallery, setUploadingGallery] = useState(false);
   const [uploadingAttachment, setUploadingAttachment] = useState(false);
@@ -63,6 +76,7 @@ export default function NewsForm() {
         galleryImages: gallery,
         attachmentUrl: (article as any).attachmentUrl || "",
         attachmentName: (article as any).attachmentName || "",
+        cityId: (article as any).cityId ? (article as any).cityId.toString() : "",
       });
     }
   }, [article]);
@@ -76,7 +90,8 @@ export default function NewsForm() {
     setFormData(prev => ({
       ...prev,
       [name]: val,
-      ...(name === 'title' && !isEdit ? { slug: generateSlug(value) } : {})
+      ...(name === 'title' && !isEdit ? { slug: generateSlug(value) } : {}),
+      ...(name === 'categoryId' ? { cityId: "" } : {}),
     }));
   };
 
@@ -318,6 +333,18 @@ export default function NewsForm() {
                 ))}
               </select>
             </div>
+
+            {filteredCities.length > 0 && (
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1">Cidade (opcional)</label>
+                <select name="cityId" value={formData.cityId} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-primary focus:border-primary bg-white font-semibold">
+                  <option value="">Nenhuma cidade</option>
+                  {filteredCities.map(c => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-1">Slug da URL</label>

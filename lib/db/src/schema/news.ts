@@ -3,6 +3,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { usersTable } from "./users";
 import { categoriesTable } from "./categories";
+import { citiesTable } from "./cities";
 
 export const newsStatusEnum = pgEnum("news_status", ["DRAFT", "PUBLISHED", "ARCHIVED"]);
 
@@ -29,6 +30,7 @@ export const newsTable = pgTable("news", {
   galleryImages: text("gallery_images"),
   attachmentUrl: text("attachment_url"),
   attachmentName: text("attachment_name"),
+  cityId: integer("city_id").references(() => citiesTable.id),
 });
 
 export const newsTagsTable = pgTable("news_tags", {

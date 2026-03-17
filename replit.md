@@ -99,7 +99,14 @@ React + Vite frontend for Informe Centro-Oeste news portal. Brand color: `#47408
 - Home, Article (`/noticia/:slug`), Category (`/categoria/:slug`), Search (`/busca`)
 
 **Admin pages** (at `/admin/*`, JWT-protected):
-- Login, Dashboard, Notícias (list + form), Categorias, Banners (accordion by position), Vídeos, Instagram Videos, Articulistas, Usuários (admin-only), Configurações (admin-only), Logs de Auditoria (admin-only)
+- Login, Dashboard, Notícias (list + form), Categorias, Banners (accordion by position), Vídeos, Instagram Videos, Articulistas, Programas, Cidades (`/admin/cidades`), Usuários (admin-only), Configurações (admin-only), Logs de Auditoria (admin-only), Importar WordPress (admin-only)
+
+**Cities system**:
+- Admin registers cities linked to categories (e.g., "Regional" → Pains, Córrego Fundo)
+- News form shows city dropdown when selected category has linked cities
+- Category pages show city filter chips when cities exist for that category
+- API: `/api/admin/cities` (CRUD), `/api/public/cities?category=<slug>`, `/api/public/news?city=<slug>`
+- Schema: `lib/db/src/schema/cities.ts`, news table has `city_id` FK
 
 **Banner system**:
 - Positions: TOP, ABOVE_DESTAQUE, BELOW_DESTAQUE, BELOW_ARTICULISTAS, ABOVE_POLITICA, SIDE_POLITICA, SIDE_GERAL, SIDEBAR, BETWEEN_SECTIONS, BELOW_PLAYER

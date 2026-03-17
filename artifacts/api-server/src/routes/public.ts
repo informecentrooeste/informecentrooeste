@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { newsTable, categoriesTable, usersTable, bannersTable, videosTable, instagramVideosTable, columnistsTable, siteSettingsTable, newsTagsTable, newsToTagsTable, programsTable } from "@workspace/db";
+import { newsTable, categoriesTable, usersTable, bannersTable, videosTable, instagramVideosTable, columnistsTable, siteSettingsTable, newsTagsTable, newsToTagsTable, programsTable, citiesTable } from "@workspace/db";
 import { eq, and, desc, asc, sql, ilike, or } from "drizzle-orm";
 import { cache, TTL } from "../lib/cache.js";
 import { rateLimit } from "express-rate-limit";
@@ -34,10 +34,11 @@ router.get("/news", async (req, res) => {
   const limit = Math.min(50, parseInt(req.query.limit as string) || 12);
   const category = req.query.category as string | undefined;
   const featured = req.query.featured as string | undefined;
+  const city = req.query.city as string | undefined;
   const sort = (req.query.sort as string) || "latest";
   const offset = (page - 1) * limit;
 
-  const cacheKey = `public:news:${page}:${limit}:${category}:${featured}:${sort}`;
+  const cacheKey = `public:news:${page}:${limit}:${category}:${featured}:${sort}:${city}`;
   const cached = cache.get(cacheKey);
   if (cached) { res.json(cached); return; }
 
@@ -47,6 +48,10 @@ router.get("/news", async (req, res) => {
     if (cat) conditions.push(eq(newsTable.categoryId, cat.id));
   }
   if (featured === "true") conditions.push(eq(newsTable.isFeatured, true));
+  if (city) {
+    const [c] = await db.select({ id: citiesTable.id }).from(citiesTable).where(eq(citiesTable.slug, city)).limit(1);
+    if (c) conditions.push(eq(newsTable.cityId, c.id));
+  }
 
   const orderBy = sort === "most_viewed" ? desc(newsTable.viewCount) : desc(newsTable.publishedAt);
 
@@ -142,6 +147,24 @@ router.get("/categories", async (_req, res) => {
   const cats = await db.select().from(categoriesTable).where(eq(categoriesTable.isActive, true)).orderBy(asc(categoriesTable.name));
   cache.set("public:categories", cats, TTL.LONG);
   res.json(cats);
+});
+
+// GET /api/public/cities
+router.get("/cities", async (req, res) => {
+  const categorySlug = req.query.category as string | undefined;
+  const cacheKey = `public:cities:${categorySlug || "all"}`;
+  const cached = cache.get(cacheKey);
+  if (cached) { res.json(cached); return; }
+
+  const conditions = [eq(citiesTable.isActive, true)];
+  if (categorySlug) {
+    const [cat] = await db.select({ id: categoriesTable.id }).from(categoriesTable).where(eq(categoriesTable.slug, categorySlug)).limit(1);
+    if (cat) conditions.push(eq(citiesTable.categoryId, cat.id));
+  }
+
+  const cities = await db.select().from(citiesTable).where(and(...conditions)).orderBy(asc(citiesTable.name));
+  cache.set(cacheKey, cities, TTL.LONG);
+  res.json(cities);
 });
 
 // GET /api/public/featured-news

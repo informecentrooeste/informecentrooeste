@@ -27,6 +27,7 @@ import UsersAdmin from "@/pages/admin/UsersAdmin";
 import SettingsAdmin from "@/pages/admin/SettingsAdmin";
 import AuditAdmin from "@/pages/admin/AuditAdmin";
 import WpImportAdmin from "@/pages/admin/WpImportAdmin";
+import CitiesAdmin from "@/pages/admin/CitiesAdmin";
 
 const ProtectedRoute = ({ component: Component, adminOnly = false }: any) => {
   const { user, isLoading } = useAuth();
@@ -85,6 +86,9 @@ function Router() {
       </Route>
       <Route path="/admin/programas">
         <ProtectedRoute component={ProgramsAdmin} />
+      </Route>
+      <Route path="/admin/cidades">
+        <ProtectedRoute component={CitiesAdmin} />
       </Route>
       <Route path="/admin/usuarios">
         <ProtectedRoute component={UsersAdmin} adminOnly />
