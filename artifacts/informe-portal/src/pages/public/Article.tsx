@@ -5,7 +5,8 @@ import { usePublicArticle } from "@/hooks/use-public";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { getImageUrl } from "@/lib/image-url";
-import { Calendar, User, Eye, ArrowLeft, ArrowRight, ExternalLink, FileText, Play, ChevronLeft, ChevronRight, Share2 } from "lucide-react";
+import { useState } from "react";
+import { Calendar, User, Eye, ArrowLeft, ArrowRight, ExternalLink, FileText, Play, ChevronLeft, ChevronRight, Share2, X } from "lucide-react";
 import { Link } from "wouter";
 import { NewsCard } from "@/components/shared/NewsCard";
 import { VideoEmbed } from "@/components/shared/VideoEmbed";
@@ -14,6 +15,7 @@ import { BannerCarousel } from "@/components/shared/BannerCarousel";
 export default function Article() {
   const params = useParams<{ slug: string }>();
   const { data: article, isLoading, error } = usePublicArticle(params.slug || "");
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
   if (isLoading) {
     return (
@@ -75,7 +77,10 @@ export default function Article() {
             </div>
 
             {article.featuredImage && (
-              <div className="w-full aspect-video bg-gray-100 relative">
+              <div
+                className="w-full aspect-video bg-gray-100 relative cursor-zoom-in"
+                onClick={() => setLightboxImage(getImageUrl(article.featuredImage))}
+              >
                 <img 
                   src={getImageUrl(article.featuredImage)} 
                   alt={article.title} 
@@ -172,9 +177,9 @@ export default function Article() {
                   <h3 className="text-lg font-black text-foreground mb-4 border-l-4 border-primary pl-3">Galeria de Fotos</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {gallery.map((img, i) => (
-                      <a key={i} href={getImageUrl(img)} target="_blank" rel="noreferrer" className="rounded-xl overflow-hidden aspect-video border border-gray-200 hover:border-primary transition-colors group">
+                      <div key={i} onClick={() => setLightboxImage(getImageUrl(img))} className="rounded-xl overflow-hidden aspect-video border border-gray-200 hover:border-primary transition-colors group cursor-zoom-in">
                         <img src={getImageUrl(img)} alt={`Foto ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                      </a>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -260,6 +265,26 @@ export default function Article() {
 
         <PublicSidebar />
       </main>
+
+      {lightboxImage && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 cursor-zoom-out"
+          onClick={() => setLightboxImage(null)}
+        >
+          <button
+            onClick={() => setLightboxImage(null)}
+            className="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/80 rounded-full p-2 transition-colors z-10"
+          >
+            <X className="h-7 w-7" />
+          </button>
+          <img
+            src={lightboxImage}
+            alt={article?.title || ""}
+            className="max-w-full max-h-full object-contain rounded-lg"
+            onClick={e => e.stopPropagation()}
+          />
+        </div>
+      )}
     </PublicLayout>
   );
 }
