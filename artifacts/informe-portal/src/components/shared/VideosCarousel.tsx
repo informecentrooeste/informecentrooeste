@@ -39,117 +39,90 @@ function VideoCard({ video }: { video: any }) {
   const ytId = extractYouTubeId(url);
   const isYouTube = url.includes("youtube.com") || url.includes("youtu.be");
   const [playing, setPlaying] = useState(false);
+  const uploadedThumb = video.thumbnailUrl ? getImageUrl(video.thumbnailUrl) : null;
+  const ytThumb = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null;
+  const thumbSrc = uploadedThumb || ytThumb;
+  const hasThumb = !!thumbSrc;
 
   const openLink = () => {
     const link = video.redirectUrl || video.videoUrl;
     if (link) window.open(link, "_blank", "noopener,noreferrer");
   };
 
-  if (ytId && playing) {
-    return (
-      <div
-        data-video-card
-        className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0"
-        style={{ scrollSnapAlign: "start" }}
-      >
-        <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-black aspect-[9/16]">
-          <iframe
-            src={`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`}
-            className="w-full h-full border-0"
-            title={video.title || "YouTube video"}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+  if (playing) {
+    if (igId) {
+      return (
+        <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
+          <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-white aspect-[9/16] relative">
+            <iframe src={`https://www.instagram.com/reel/${igId}/embed/`} className="absolute inset-0 w-full h-full border-0" title={video.title || "Instagram video"} allowFullScreen />
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+    if (ytId) {
+      return (
+        <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
+          <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-black aspect-[9/16]">
+            <iframe src={`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`} className="w-full h-full border-0" title={video.title || "YouTube video"} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+          </div>
+        </div>
+      );
+    }
   }
 
-  if (igId && playing) {
+  if (!hasThumb && igId) {
     return (
-      <div
-        data-video-card
-        className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0"
-        style={{ scrollSnapAlign: "start" }}
-      >
+      <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
         <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-white aspect-[9/16] relative">
-          <iframe
-            src={`https://www.instagram.com/reel/${igId}/embed/`}
-            className="absolute inset-0 w-full h-full border-0"
-            title={video.title || "Instagram video"}
-            allowFullScreen
-          />
+          <iframe src={`https://www.instagram.com/reel/${igId}/embed/`} className="absolute inset-0 w-full h-full border-0 pointer-events-none" title={video.title || "Instagram video"} loading="lazy" />
+          <div className="absolute inset-0 z-10 cursor-pointer" onClick={openLink}>
+            <div className="absolute top-3 right-3 z-20">
+              <div className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 rounded-lg p-1.5">
+                <FaInstagram className="h-3.5 w-3.5 text-white" />
+              </div>
+            </div>
+          </div>
         </div>
+        {video.title && (
+          <p className="mt-2 text-[11px] sm:text-xs text-gray-400 leading-snug line-clamp-2 text-center">{video.title}</p>
+        )}
       </div>
     );
   }
-
-  const uploadedThumb = video.thumbnailUrl ? getImageUrl(video.thumbnailUrl) : null;
-  const thumbSrc = uploadedThumb
-    || (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null);
 
   return (
-    <div
-      data-video-card
-      className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0 group"
-      style={{ scrollSnapAlign: "start" }}
-    >
-      <div
-        className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-gradient-to-b from-gray-800 to-gray-950 aspect-[9/16] relative cursor-pointer"
-        onClick={() => setPlaying(true)}
-      >
-        {thumbSrc ? (
-          <img
-            src={thumbSrc}
-            alt={video.title}
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
-          />
-        ) : (
+    <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0 group" style={{ scrollSnapAlign: "start" }}>
+      <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-gradient-to-b from-gray-800 to-gray-950 aspect-[9/16] relative cursor-pointer" onClick={() => hasThumb ? setPlaying(true) : openLink()}>
+        {thumbSrc && (
+          <img src={thumbSrc} alt={video.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+        )}
+        {!thumbSrc && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center">
-              {isYouTube ? (
-                <FaYoutube className="h-10 w-10 text-white/20" />
-              ) : (
-                <FaInstagram className="h-10 w-10 text-white/20" />
-              )}
+              {isYouTube ? <FaYoutube className="h-10 w-10 text-white/20" /> : <FaInstagram className="h-10 w-10 text-white/20" />}
             </div>
           </div>
         )}
-
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 group-hover:bg-white/30 group-hover:scale-110 transition-all duration-300">
             <Play className="h-6 w-6 text-white fill-white ml-0.5" />
           </div>
         </div>
-
         <div className="absolute top-3 right-3 z-10">
           {isYouTube ? (
-            <div className="bg-red-600 rounded-lg p-1.5">
-              <FaYoutube className="h-3.5 w-3.5 text-white" />
-            </div>
+            <div className="bg-red-600 rounded-lg p-1.5"><FaYoutube className="h-3.5 w-3.5 text-white" /></div>
           ) : (
-            <div className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 rounded-lg p-1.5">
-              <FaInstagram className="h-3.5 w-3.5 text-white" />
-            </div>
+            <div className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 rounded-lg p-1.5"><FaInstagram className="h-3.5 w-3.5 text-white" /></div>
           )}
         </div>
-
         {(video.title || video.description) && (
           <div className="absolute bottom-0 left-0 right-0 p-3 z-10">
-            <p className="text-white text-xs sm:text-sm font-medium leading-snug line-clamp-2 drop-shadow-lg">
-              {video.title || video.description}
-            </p>
+            <p className="text-white text-xs sm:text-sm font-medium leading-snug line-clamp-2 drop-shadow-lg">{video.title || video.description}</p>
           </div>
         )}
       </div>
-
-      <button
-        onClick={openLink}
-        className="mt-2 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto"
-      >
+      <button onClick={openLink} className="mt-2 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto">
         <ExternalLink className="h-3 w-3" />
         {isYouTube ? "Abrir no YouTube" : "Abrir no Instagram"}
       </button>
@@ -239,30 +212,17 @@ export function VideosCarousel() {
     <section className="bg-black text-white">
       <div className="px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
         <div className="relative">
-          <div
-            ref={scrollRef}
-            className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide scroll-smooth items-start justify-start"
-            style={{ scrollSnapType: "x mandatory" }}
-          >
+          <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide scroll-smooth items-start justify-start" style={{ scrollSnapType: "x mandatory" }}>
             {allVideos.map((video: any) => (
               <VideoCard key={video.id} video={video} />
             ))}
           </div>
         </div>
-
         <div className="flex items-center justify-center gap-4 mt-6">
-          <button
-            onClick={() => scroll("left")}
-            disabled={!canScrollLeft}
-            className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-20 disabled:cursor-default"
-          >
+          <button onClick={() => scroll("left")} disabled={!canScrollLeft} className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-20 disabled:cursor-default">
             <ChevronLeft className="h-4 w-4" />
           </button>
-          <button
-            onClick={() => scroll("right")}
-            disabled={!canScrollRight}
-            className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-20 disabled:cursor-default"
-          >
+          <button onClick={() => scroll("right")} disabled={!canScrollRight} className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors disabled:opacity-20 disabled:cursor-default">
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>
