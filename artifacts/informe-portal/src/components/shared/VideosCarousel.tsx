@@ -48,34 +48,27 @@ function VideoCard({ video }: { video: any }) {
     if (link) window.open(link, "_blank", "noopener,noreferrer");
   };
 
-  if (playing) {
+  const handlePlay = () => {
     if (igId) {
-      return (
-        <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
-          <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-white aspect-[9/16] relative">
-            <iframe src={`https://www.instagram.com/reel/${igId}/embed/`} className="absolute inset-0 w-full h-full border-0" title={video.title || "Instagram video"} allowFullScreen />
-          </div>
-          <button onClick={openLink} className="mt-2 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 text-white text-xs font-bold py-2 px-3 rounded-xl hover:opacity-90 transition-opacity">
-            <FaInstagram className="h-3.5 w-3.5" />
-            Ver completo no Instagram
-          </button>
-        </div>
-      );
+      openLink();
+    } else {
+      setPlaying(true);
     }
-    if (ytId) {
-      return (
-        <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
-          <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-black aspect-[9/16]">
-            <iframe src={`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`} className="w-full h-full border-0" title={video.title || "YouTube video"} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
-          </div>
+  };
+
+  if (playing && ytId) {
+    return (
+      <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
+        <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-black aspect-[9/16]">
+          <iframe src={`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`} className="w-full h-full border-0" title={video.title || "YouTube video"} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
         </div>
-      );
-    }
+      </div>
+    );
   }
 
   return (
     <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0 group" style={{ scrollSnapAlign: "start" }}>
-      <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-gradient-to-b from-gray-800 to-gray-950 aspect-[9/16] relative cursor-pointer" onClick={() => setPlaying(true)}>
+      <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-gradient-to-b from-gray-800 to-gray-950 aspect-[9/16] relative cursor-pointer" onClick={handlePlay}>
         {thumbSrc ? (
           <img src={thumbSrc} alt={video.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
         ) : (
@@ -104,10 +97,18 @@ function VideoCard({ video }: { video: any }) {
           </div>
         )}
       </div>
-      <button onClick={openLink} className="mt-1 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto">
-        <ExternalLink className="h-3 w-3" />
-        {isYouTube ? "Abrir no YouTube" : "Abrir no Instagram"}
-      </button>
+      {igId && (
+        <button onClick={openLink} className="mt-1 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto">
+          <FaInstagram className="h-3 w-3" />
+          Assistir no Instagram
+        </button>
+      )}
+      {isYouTube && (
+        <button onClick={openLink} className="mt-1 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto">
+          <ExternalLink className="h-3 w-3" />
+          Abrir no YouTube
+        </button>
+      )}
     </div>
   );
 }
