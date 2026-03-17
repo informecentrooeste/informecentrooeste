@@ -72,7 +72,7 @@ router.post("/login", loginLimiter, async (req, res) => {
 });
 
 router.post("/refresh", async (req, res) => {
-  const { refreshToken } = req.body;
+  const refreshToken = req.body?.refreshToken;
   if (!refreshToken) {
     res.status(400).json({ error: "Refresh token required" });
     return;
@@ -120,7 +120,7 @@ router.post("/refresh", async (req, res) => {
 });
 
 router.post("/logout", requireAuth, async (req: AuthRequest, res) => {
-  const { refreshToken } = req.body;
+  const refreshToken = req.body?.refreshToken;
   if (refreshToken) {
     await db.update(refreshTokensTable).set({ revokedAt: new Date() }).where(
       eq(refreshTokensTable.tokenHash, hashToken(refreshToken))
