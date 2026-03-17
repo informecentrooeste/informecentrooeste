@@ -150,12 +150,42 @@ export default function Article() {
                 .replace(/<p>\s*<br\s*\/?>\s*<\/p>/gi, '')
                 .replace(/\n/g, '<br/>');
 
-              const paragraphs = cleanContent.split(/<\/p>/i).filter(p => p.trim());
-              const midPoint = Math.ceil(paragraphs.length / 2);
+              const hasPTags = /<\/p>/i.test(cleanContent);
 
-              if (paragraphs.length >= 4) {
-                const firstHalf = paragraphs.slice(0, midPoint).join('</p>') + '</p>';
-                const secondHalf = paragraphs.slice(midPoint).join('</p>') + '</p>';
+              if (hasPTags) {
+                const paragraphs = cleanContent.split(/<\/p>/i).filter(p => p.trim());
+                const midPoint = Math.max(1, Math.ceil(paragraphs.length / 2));
+
+                if (paragraphs.length >= 2) {
+                  const firstHalf = paragraphs.slice(0, midPoint).join('</p>') + '</p>';
+                  const secondHalf = paragraphs.slice(midPoint).join('</p>') + '</p>';
+                  return (
+                    <div ref={contentRef} onClick={handleContentClick}>
+                      <div className="p-4 sm:p-8 pt-6 sm:pt-10 pb-0">
+                        <div
+                          className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
+                          dangerouslySetInnerHTML={{ __html: firstHalf }}
+                        />
+                      </div>
+                      <div className="px-4 sm:px-8 py-4">
+                        <BannerCarousel position="MID_NEWS" />
+                      </div>
+                      <div className="p-4 sm:p-8 pt-0">
+                        <div
+                          className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
+                          dangerouslySetInnerHTML={{ __html: secondHalf }}
+                        />
+                      </div>
+                    </div>
+                  );
+                }
+              }
+
+              const sentences = cleanContent.split(/(?<=\.\s)|(?<=<br\s*\/?>)/i).filter(s => s.trim());
+              if (sentences.length >= 4) {
+                const mid = Math.ceil(sentences.length / 2);
+                const firstHalf = sentences.slice(0, mid).join('');
+                const secondHalf = sentences.slice(mid).join('');
                 return (
                   <div ref={contentRef} onClick={handleContentClick}>
                     <div className="p-4 sm:p-8 pt-6 sm:pt-10 pb-0">
@@ -165,7 +195,7 @@ export default function Article() {
                       />
                     </div>
                     <div className="px-4 sm:px-8 py-4">
-                      <BannerCarousel position="MID_NEWS" fallbackHeight="h-[90px]" fallbackLabel="BANNER MEIO NOTÍCIA" />
+                      <BannerCarousel position="MID_NEWS" />
                     </div>
                     <div className="p-4 sm:p-8 pt-0">
                       <div
@@ -178,11 +208,16 @@ export default function Article() {
               }
 
               return (
-                <div ref={contentRef} onClick={handleContentClick} className="p-4 sm:p-8 pt-6 sm:pt-10">
-                  <div
-                    className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
-                    dangerouslySetInnerHTML={{ __html: cleanContent }}
-                  />
+                <div ref={contentRef} onClick={handleContentClick}>
+                  <div className="p-4 sm:p-8 pt-6 sm:pt-10">
+                    <div
+                      className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
+                      dangerouslySetInnerHTML={{ __html: cleanContent }}
+                    />
+                  </div>
+                  <div className="px-4 sm:px-8 py-4">
+                    <BannerCarousel position="MID_NEWS" />
+                  </div>
                 </div>
               );
             })()}
