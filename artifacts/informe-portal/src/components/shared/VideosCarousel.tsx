@@ -42,7 +42,6 @@ function VideoCard({ video }: { video: any }) {
   const uploadedThumb = video.thumbnailUrl ? getImageUrl(video.thumbnailUrl) : null;
   const ytThumb = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null;
   const thumbSrc = uploadedThumb || ytThumb;
-  const hasThumb = !!thumbSrc;
 
   const openLink = () => {
     const link = video.redirectUrl || video.videoUrl;
@@ -56,6 +55,10 @@ function VideoCard({ video }: { video: any }) {
           <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-white aspect-[9/16] relative">
             <iframe src={`https://www.instagram.com/reel/${igId}/embed/`} className="absolute inset-0 w-full h-full border-0" title={video.title || "Instagram video"} allowFullScreen />
           </div>
+          <button onClick={openLink} className="mt-2 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 text-white text-xs font-bold py-2 px-3 rounded-xl hover:opacity-90 transition-opacity">
+            <FaInstagram className="h-3.5 w-3.5" />
+            Ver completo no Instagram
+          </button>
         </div>
       );
     }
@@ -70,33 +73,12 @@ function VideoCard({ video }: { video: any }) {
     }
   }
 
-  if (!hasThumb && igId) {
-    return (
-      <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
-        <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-white aspect-[9/16] relative">
-          <iframe src={`https://www.instagram.com/reel/${igId}/embed/`} className="absolute inset-0 w-full h-full border-0 pointer-events-none" title={video.title || "Instagram video"} loading="lazy" />
-          <div className="absolute inset-0 z-10 cursor-pointer" onClick={openLink}>
-            <div className="absolute top-3 right-3 z-20">
-              <div className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 rounded-lg p-1.5">
-                <FaInstagram className="h-3.5 w-3.5 text-white" />
-              </div>
-            </div>
-          </div>
-        </div>
-        {video.title && (
-          <p className="mt-3 text-sm sm:text-base font-bold text-white leading-snug line-clamp-2 text-center">{video.title}</p>
-        )}
-      </div>
-    );
-  }
-
   return (
     <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0 group" style={{ scrollSnapAlign: "start" }}>
-      <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-gradient-to-b from-gray-800 to-gray-950 aspect-[9/16] relative cursor-pointer" onClick={() => hasThumb ? setPlaying(true) : openLink()}>
-        {thumbSrc && (
+      <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-gradient-to-b from-gray-800 to-gray-950 aspect-[9/16] relative cursor-pointer" onClick={() => setPlaying(true)}>
+        {thumbSrc ? (
           <img src={thumbSrc} alt={video.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-        )}
-        {!thumbSrc && (
+        ) : (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center">
               {isYouTube ? <FaYoutube className="h-10 w-10 text-white/20" /> : <FaInstagram className="h-10 w-10 text-white/20" />}
