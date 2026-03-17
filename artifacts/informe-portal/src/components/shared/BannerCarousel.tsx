@@ -56,14 +56,12 @@ export function BannerCarousel({ position, className = "", fallbackHeight = "h-[
 
   const imgEl = fillWidth ? (
     <div
-      className={`relative overflow-hidden w-full flex items-center justify-center ${className || ""}`}
-      style={{ backgroundColor: "#474085" }}
+      className={`relative overflow-hidden w-full ${className || ""}`}
     >
       <img
         src={getImageUrl(banner.imageUrl)}
         alt={banner.title}
-        className="block max-w-full h-auto object-contain"
-        style={{ maxHeight: "140px" }}
+        className="w-full h-auto object-cover block"
       />
       {activeBanners.length > 1 && (
         <div className="absolute bottom-1.5 right-3 flex gap-1 z-10">
