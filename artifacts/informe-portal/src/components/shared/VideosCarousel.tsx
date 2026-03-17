@@ -1,14 +1,99 @@
 import { useRef, useState, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { FaInstagram } from "react-icons/fa";
+import { ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { FaInstagram, FaYoutube } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { getImageUrl } from "@/lib/image-url";
 
 const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
-function getThumbnail(video: any): string {
-  if (video.thumbnailUrl) return getImageUrl(video.thumbnailUrl);
-  return "";
+function extractInstagramId(url: string): string | null {
+  const patterns = [
+    /instagram\.com\/reel\/([A-Za-z0-9_-]+)/,
+    /instagram\.com\/p\/([A-Za-z0-9_-]+)/,
+    /instagram\.com\/tv\/([A-Za-z0-9_-]+)/,
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+function extractYouTubeId(url: string): string | null {
+  const patterns = [
+    /youtube\.com\/watch\?v=([A-Za-z0-9_-]+)/,
+    /youtube\.com\/embed\/([A-Za-z0-9_-]+)/,
+    /youtu\.be\/([A-Za-z0-9_-]+)/,
+    /youtube\.com\/shorts\/([A-Za-z0-9_-]+)/,
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+function VideoCard({ video, onPlay }: { video: any; onPlay: (v: any) => void }) {
+  const url = video.videoUrl || "";
+  const igId = extractInstagramId(url);
+  const ytId = extractYouTubeId(url);
+  const thumb = video.thumbnailUrl ? getImageUrl(video.thumbnailUrl) : null;
+  const isYouTube = url.includes("youtube.com") || url.includes("youtu.be");
+  const ytThumb = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null;
+  const displayThumb = thumb || ytThumb;
+
+  return (
+    <div
+      data-video-card
+      onClick={() => onPlay(video)}
+      className="min-w-[130px] sm:min-w-[155px] md:min-w-[170px] lg:min-w-[185px] flex-1 cursor-pointer group"
+      style={{ scrollSnapAlign: "start" }}
+    >
+      <div className="aspect-[9/16] bg-gray-900 rounded-xl overflow-hidden relative shadow-lg shadow-black/50">
+        {displayThumb ? (
+          <img
+            src={displayThumb}
+            alt={video.title}
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+          />
+        ) : igId ? (
+          <iframe
+            src={`https://www.instagram.com/reel/${igId}/embed/`}
+            className="absolute inset-0 w-full h-full border-0 pointer-events-none"
+            loading="lazy"
+            title={video.title}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center">
+            {isYouTube ? (
+              <FaYoutube className="h-10 w-10 text-white/30" />
+            ) : (
+              <FaInstagram className="h-10 w-10 text-white/30" />
+            )}
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+          <div className="w-11 h-11 bg-white/25 backdrop-blur-sm rounded-full flex items-center justify-center">
+            <Play className="h-5 w-5 text-white fill-white ml-0.5" />
+          </div>
+        </div>
+        <div className="absolute top-2 right-2 z-10">
+          {isYouTube ? (
+            <FaYoutube className="h-4 w-4 text-white drop-shadow-lg" />
+          ) : (
+            <FaInstagram className="h-4 w-4 text-white drop-shadow-lg" />
+          )}
+        </div>
+      </div>
+      {(video.description || video.title) && (
+        <p className="mt-2 text-[11px] sm:text-xs text-gray-400 leading-snug line-clamp-2 group-hover:text-white transition-colors">
+          {video.description || video.title}
+        </p>
+      )}
+    </div>
+  );
 }
 
 export function VideosCarousel() {
@@ -69,7 +154,7 @@ export function VideosCarousel() {
 
   const openVideo = (video: any) => {
     const url = video.redirectUrl || video.videoUrl;
-    window.open(url, "_blank", "noopener,noreferrer");
+    if (url) window.open(url, "_blank", "noopener,noreferrer");
   };
 
   const placeholders = allVideos.length === 0
@@ -96,51 +181,24 @@ export function VideosCarousel() {
             className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide scroll-smooth items-center justify-start"
             style={{ scrollSnapType: "x mandatory" }}
           >
-            {displayVideos.map((video: any) => {
-              const thumb = video._placeholder ? "" : getThumbnail(video);
-              return (
+            {displayVideos.map((video: any) =>
+              video._placeholder ? (
                 <div
                   key={video.id}
                   data-video-card
-                  onClick={() => !video._placeholder && openVideo(video)}
-                  className={`min-w-[130px] sm:min-w-[155px] md:min-w-[170px] lg:min-w-[185px] flex-1 ${video._placeholder ? 'cursor-default' : 'cursor-pointer'} group`}
+                  className="min-w-[130px] sm:min-w-[155px] md:min-w-[170px] lg:min-w-[185px] flex-1"
                   style={{ scrollSnapAlign: "start" }}
                 >
                   <div className="aspect-[9/16] bg-gray-900 rounded-xl overflow-hidden relative shadow-lg shadow-black/50">
-                    {thumb ? (
-                      <img
-                        src={thumb}
-                        alt={video.title}
-                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center">
-                        <FaInstagram className="h-10 w-10 text-white/30" />
-                      </div>
-                    )}
-                    {!video._placeholder && (
-                      <>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-                          <div className="w-11 h-11 bg-white/25 backdrop-blur-sm rounded-full flex items-center justify-center">
-                            <FaInstagram className="h-5 w-5 text-white" />
-                          </div>
-                        </div>
-                      </>
-                    )}
-                    <div className="absolute top-2 right-2 z-10">
-                      <FaInstagram className="h-4 w-4 text-white drop-shadow-lg" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center">
+                      <FaInstagram className="h-10 w-10 text-white/30" />
                     </div>
                   </div>
-                  {(video.description || video.title) && (
-                    <p className="mt-2 text-[11px] sm:text-xs text-gray-400 leading-snug line-clamp-2 group-hover:text-white transition-colors">
-                      {video.description || video.title}
-                    </p>
-                  )}
                 </div>
-              );
-            })}
+              ) : (
+                <VideoCard key={video.id} video={video} onPlay={openVideo} />
+              )
+            )}
           </div>
         </div>
 
