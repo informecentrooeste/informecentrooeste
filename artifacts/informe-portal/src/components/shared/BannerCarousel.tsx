@@ -9,9 +9,10 @@ interface BannerCarouselProps {
   className?: string;
   fallbackHeight?: string;
   fallbackLabel?: string;
+  fillWidth?: boolean;
 }
 
-export function BannerCarousel({ position, className = "", fallbackHeight = "h-[90px] sm:h-[120px]", fallbackLabel }: BannerCarouselProps) {
+export function BannerCarousel({ position, className = "", fallbackHeight = "h-[90px] sm:h-[120px]", fallbackLabel, fillWidth }: BannerCarouselProps) {
   const { data } = useQuery({
     queryKey: ["/api/public/banners", position],
     queryFn: async () => {
@@ -53,7 +54,25 @@ export function BannerCarousel({ position, className = "", fallbackHeight = "h-[
 
   const banner = activeBanners[current];
 
-  const content = (
+  const imgEl = fillWidth ? (
+    <div
+      className={`relative overflow-hidden w-full h-[50px] sm:h-[80px] md:h-[100px] lg:h-[120px] ${className || ""}`}
+      style={{
+        backgroundImage: `url(${getImageUrl(banner.imageUrl)})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      {activeBanners.length > 1 && (
+        <div className="absolute bottom-1.5 right-3 flex gap-1 z-10">
+          {activeBanners.map((_: any, i: number) => (
+            <button key={i} onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrent(i); }} className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all ${i === current ? "bg-white scale-125" : "bg-white/40"}`} />
+          ))}
+        </div>
+      )}
+    </div>
+  ) : (
     <div className={`relative overflow-hidden ${className || "rounded-xl"}`}>
       <img
         src={getImageUrl(banner.imageUrl)}
@@ -74,10 +93,10 @@ export function BannerCarousel({ position, className = "", fallbackHeight = "h-[
   if (banner.targetUrl) {
     return (
       <a href={banner.targetUrl} target="_blank" rel="noopener noreferrer">
-        {content}
+        {imgEl}
       </a>
     );
   }
 
-  return content;
+  return imgEl;
 }
