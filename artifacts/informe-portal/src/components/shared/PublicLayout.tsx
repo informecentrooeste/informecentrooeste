@@ -7,6 +7,39 @@ import { FaWhatsapp, FaGooglePlay, FaApple } from "react-icons/fa";
 import { usePublicCategories } from "@/hooks/use-public";
 import logoInforme from "@assets/logo-informe.png";
 import { BannerCarousel } from "@/components/shared/BannerCarousel";
+import { useQuery } from "@tanstack/react-query";
+
+const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
+
+function TopBanner() {
+  const { data: mobileBanners } = useQuery({
+    queryKey: ["/api/public/banners", "TOP_MOBILE"],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE}/public/banners?position=TOP_MOBILE`);
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
+  const hasMobileBanner = Array.isArray(mobileBanners) && mobileBanners.filter((b: any) => b.isActive).length > 0;
+
+  if (hasMobileBanner) {
+    return (
+      <>
+        <div className="hidden md:block">
+          <BannerCarousel position="TOP" fallbackHeight="h-[80px] md:h-[100px]" fallbackLabel="BANNER TOPO DESKTOP (1920x250)" className="" fillWidth />
+        </div>
+        <div className="block md:hidden">
+          <BannerCarousel position="TOP_MOBILE" fallbackHeight="h-[50px]" fallbackLabel="BANNER TOPO MOBILE (750x150)" className="" fillWidth />
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <BannerCarousel position="TOP" fallbackHeight="h-[50px] sm:h-[80px] md:h-[100px]" fallbackLabel="BANNER TOPO (1920x250)" className="" fillWidth />
+  );
+}
 
 export function PublicLayout({ children }: { children: ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -30,14 +63,8 @@ export function PublicLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-foreground font-sans">
-      {/* Banner Topo Desktop - hidden on mobile */}
-      <div className="hidden md:block">
-        <BannerCarousel position="TOP" fallbackHeight="h-[80px] md:h-[100px]" fallbackLabel="BANNER TOPO DESKTOP (1920x250)" className="" fillWidth />
-      </div>
-      {/* Banner Topo Mobile - visible only on mobile */}
-      <div className="block md:hidden">
-        <BannerCarousel position="TOP_MOBILE" fallbackHeight="h-[50px]" fallbackLabel="BANNER TOPO MOBILE (750x150)" className="" fillWidth />
-      </div>
+      {/* Banner Topo - Desktop/Mobile */}
+      <TopBanner />
 
       {/* Header */}
       <header className="bg-primary text-primary-foreground sticky top-0 z-50 shadow-md">
