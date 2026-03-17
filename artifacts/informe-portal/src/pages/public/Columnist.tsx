@@ -4,12 +4,25 @@ import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ArrowLeft, User, Eye, Calendar } from "lucide-react";
 import { getImageUrl } from "@/lib/image-url";
+import { useLightbox } from "@/components/shared/ImageLightbox";
+import { useCallback, useEffect, useRef } from "react";
 
 const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 
 export default function Columnist() {
   const [, params] = useRoute("/articulista/:id");
   const id = params?.id;
+  const { open: openLightbox } = useLightbox();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleContentClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === "IMG") {
+      e.preventDefault();
+      const img = target as HTMLImageElement;
+      openLightbox(img.src, img.alt || "");
+    }
+  }, [openLightbox]);
 
   const { data: columnist, isLoading, error } = useQuery({
     queryKey: [`/api/public/columnists/${id}`],
@@ -84,7 +97,10 @@ export default function Columnist() {
               </h2>
               
               {columnist.article.featuredImage && (
-                <div className="mb-6 rounded-xl overflow-hidden">
+                <div
+                  className="mb-6 rounded-xl overflow-hidden cursor-zoom-in"
+                  onClick={() => openLightbox(getImageUrl(columnist.article.featuredImage), columnist.article.title)}
+                >
                   <img
                     src={getImageUrl(columnist.article.featuredImage)}
                     alt={columnist.article.title}
@@ -119,7 +135,9 @@ export default function Columnist() {
               )}
 
               <div
-                className="prose prose-sm sm:prose-base max-w-none text-foreground"
+                ref={contentRef}
+                onClick={handleContentClick}
+                className="prose prose-sm sm:prose-base max-w-none text-foreground [&_img]:cursor-zoom-in"
                 dangerouslySetInnerHTML={{ __html: columnist.article.content }}
               />
             </div>

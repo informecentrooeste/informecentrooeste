@@ -5,17 +5,36 @@ import { usePublicArticle } from "@/hooks/use-public";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { getImageUrl } from "@/lib/image-url";
-import { useState } from "react";
-import { Calendar, User, Eye, ArrowLeft, ArrowRight, ExternalLink, FileText, Play, ChevronLeft, ChevronRight, Share2, X } from "lucide-react";
+import { useCallback, useEffect, useRef } from "react";
+import { Calendar, User, Eye, ArrowLeft, ArrowRight, ExternalLink, FileText, Play, ChevronLeft, ChevronRight, Share2 } from "lucide-react";
 import { Link } from "wouter";
 import { NewsCard } from "@/components/shared/NewsCard";
 import { VideoEmbed } from "@/components/shared/VideoEmbed";
 import { BannerCarousel } from "@/components/shared/BannerCarousel";
+import { useLightbox } from "@/components/shared/ImageLightbox";
 
 export default function Article() {
   const params = useParams<{ slug: string }>();
   const { data: article, isLoading, error } = usePublicArticle(params.slug || "");
-  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const { open: openLightbox } = useLightbox();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleContentClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === "IMG") {
+      e.preventDefault();
+      const img = target as HTMLImageElement;
+      openLightbox(img.src, img.alt || "");
+    }
+  }, [openLightbox]);
+
+  useEffect(() => {
+    if (!contentRef.current) return;
+    const imgs = contentRef.current.querySelectorAll("img");
+    imgs.forEach(img => {
+      img.style.cursor = "zoom-in";
+    });
+  }, [article?.content]);
 
   if (isLoading) {
     return (
@@ -79,7 +98,7 @@ export default function Article() {
             {article.featuredImage && (
               <div
                 className="w-full aspect-video bg-gray-100 relative cursor-zoom-in"
-                onClick={() => setLightboxImage(getImageUrl(article.featuredImage))}
+                onClick={() => openLightbox(getImageUrl(article.featuredImage), article.title)}
               >
                 <img 
                   src={getImageUrl(article.featuredImage)} 
@@ -138,10 +157,10 @@ export default function Article() {
                 const firstHalf = paragraphs.slice(0, midPoint).join('</p>') + '</p>';
                 const secondHalf = paragraphs.slice(midPoint).join('</p>') + '</p>';
                 return (
-                  <>
+                  <div ref={contentRef} onClick={handleContentClick}>
                     <div className="p-4 sm:p-8 pt-6 sm:pt-10 pb-0">
                       <div
-                        className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1"
+                        className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
                         dangerouslySetInnerHTML={{ __html: firstHalf }}
                       />
                     </div>
@@ -150,18 +169,18 @@ export default function Article() {
                     </div>
                     <div className="p-4 sm:p-8 pt-0">
                       <div
-                        className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1"
+                        className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
                         dangerouslySetInnerHTML={{ __html: secondHalf }}
                       />
                     </div>
-                  </>
+                  </div>
                 );
               }
 
               return (
-                <div className="p-4 sm:p-8 pt-6 sm:pt-10">
+                <div ref={contentRef} onClick={handleContentClick} className="p-4 sm:p-8 pt-6 sm:pt-10">
                   <div
-                    className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1"
+                    className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
                     dangerouslySetInnerHTML={{ __html: cleanContent }}
                   />
                 </div>
@@ -177,7 +196,7 @@ export default function Article() {
                   <h3 className="text-lg font-black text-foreground mb-4 border-l-4 border-primary pl-3">Galeria de Fotos</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {gallery.map((img, i) => (
-                      <div key={i} onClick={() => setLightboxImage(getImageUrl(img))} className="rounded-xl overflow-hidden aspect-video border border-gray-200 hover:border-primary transition-colors group cursor-zoom-in">
+                      <div key={i} onClick={() => openLightbox(getImageUrl(img), `Foto ${i + 1}`)} className="rounded-xl overflow-hidden aspect-video border border-gray-200 hover:border-primary transition-colors group cursor-zoom-in">
                         <img src={getImageUrl(img)} alt={`Foto ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                       </div>
                     ))}
@@ -266,25 +285,6 @@ export default function Article() {
         <PublicSidebar />
       </main>
 
-      {lightboxImage && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 cursor-zoom-out"
-          onClick={() => setLightboxImage(null)}
-        >
-          <button
-            onClick={() => setLightboxImage(null)}
-            className="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/80 rounded-full p-2 transition-colors z-10"
-          >
-            <X className="h-7 w-7" />
-          </button>
-          <img
-            src={lightboxImage}
-            alt={article?.title || ""}
-            className="max-w-full max-h-full object-contain rounded-lg"
-            onClick={e => e.stopPropagation()}
-          />
-        </div>
-      )}
     </PublicLayout>
   );
 }
