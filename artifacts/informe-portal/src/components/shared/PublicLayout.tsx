@@ -27,7 +27,7 @@ function TopBanner() {
     return (
       <>
         <div className="hidden md:block">
-          <BannerCarousel position="TOP" fallbackHeight="h-[80px] md:h-[100px]" fallbackLabel="BANNER TOPO DESKTOP (1920x250)" className="" fillWidth />
+          <BannerCarousel position="TOP" fallbackHeight="h-[50px] md:h-[80px]" fallbackLabel="BANNER TOPO DESKTOP (1920x150)" className="" fillWidth />
         </div>
         <div className="block md:hidden">
           <BannerCarousel position="TOP_MOBILE" fallbackHeight="h-[50px]" fallbackLabel="BANNER TOPO MOBILE (750x150)" className="" fillWidth />
@@ -37,7 +37,7 @@ function TopBanner() {
   }
 
   return (
-    <BannerCarousel position="TOP" fallbackHeight="h-[50px] sm:h-[80px] md:h-[100px]" fallbackLabel="BANNER TOPO (1920x250)" className="" fillWidth />
+    <BannerCarousel position="TOP" fallbackHeight="h-[50px] sm:h-[60px] md:h-[80px]" fallbackLabel="BANNER TOPO (1920x150)" className="" fillWidth />
   );
 }
 
