@@ -54,7 +54,7 @@ export function BannerCarousel({ position, className = "", fallbackHeight = "h-[
   const banner = activeBanners[current];
 
   const content = (
-    <div className={`relative overflow-hidden rounded-xl ${className}`}>
+    <div className={`relative overflow-hidden ${className || "rounded-xl"}`}>
       <img
         src={getImageUrl(banner.imageUrl)}
         alt={banner.title}
