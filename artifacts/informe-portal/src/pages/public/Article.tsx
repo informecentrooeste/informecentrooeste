@@ -9,6 +9,7 @@ import { Calendar, User, Eye, ArrowLeft, ArrowRight, ExternalLink, FileText, Pla
 import { Link } from "wouter";
 import { NewsCard } from "@/components/shared/NewsCard";
 import { VideoEmbed } from "@/components/shared/VideoEmbed";
+import { BannerCarousel } from "@/components/shared/BannerCarousel";
 
 export default function Article() {
   const params = useParams<{ slug: string }>();
@@ -117,18 +118,50 @@ export default function Article() {
               </div>
             )}
 
-            <div className="p-4 sm:p-8 pt-6 sm:pt-10">
-              <div 
-                className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1"
-                dangerouslySetInnerHTML={{ __html: article.content
-                  .replace(/\n{2,}/g, '\n')
-                  .replace(/(<br\s*\/?>[\s]*){3,}/gi, '<br/><br/>')
-                  .replace(/<p>\s*<\/p>/gi, '')
-                  .replace(/<p>\s*<br\s*\/?>\s*<\/p>/gi, '')
-                  .replace(/\n/g, '<br/>')
-                }}
-              />
-            </div>
+            {(() => {
+              const cleanContent = article.content
+                .replace(/\n{2,}/g, '\n')
+                .replace(/(<br\s*\/?>[\s]*){3,}/gi, '<br/><br/>')
+                .replace(/<p>\s*<\/p>/gi, '')
+                .replace(/<p>\s*<br\s*\/?>\s*<\/p>/gi, '')
+                .replace(/\n/g, '<br/>');
+
+              const paragraphs = cleanContent.split(/<\/p>/i).filter(p => p.trim());
+              const midPoint = Math.ceil(paragraphs.length / 2);
+
+              if (paragraphs.length >= 4) {
+                const firstHalf = paragraphs.slice(0, midPoint).join('</p>') + '</p>';
+                const secondHalf = paragraphs.slice(midPoint).join('</p>') + '</p>';
+                return (
+                  <>
+                    <div className="p-4 sm:p-8 pt-6 sm:pt-10 pb-0">
+                      <div
+                        className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1"
+                        dangerouslySetInnerHTML={{ __html: firstHalf }}
+                      />
+                    </div>
+                    <div className="px-4 sm:px-8 py-4">
+                      <BannerCarousel position="MID_NEWS" fallbackHeight="h-[90px]" fallbackLabel="BANNER MEIO NOTÍCIA" />
+                    </div>
+                    <div className="p-4 sm:p-8 pt-0">
+                      <div
+                        className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1"
+                        dangerouslySetInnerHTML={{ __html: secondHalf }}
+                      />
+                    </div>
+                  </>
+                );
+              }
+
+              return (
+                <div className="p-4 sm:p-8 pt-6 sm:pt-10">
+                  <div
+                    className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1"
+                    dangerouslySetInnerHTML={{ __html: cleanContent }}
+                  />
+                </div>
+              );
+            })()}
 
             {(() => {
               let gallery: string[] = [];

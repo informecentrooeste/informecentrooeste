@@ -17,6 +17,7 @@ const POSITIONS = [
   { value: "ABOVE_ULTIMAS_NOTICIAS_NEW", label: "Banner Acima das Últimas Notícias", description: "Na sidebar, entre Programas e Últimas Notícias", size: "300×250" },
   { value: "BELOW_MAIS_LIDAS", label: "Banner Abaixo das Mais Lidas", description: "Na sidebar, abaixo da seção Mais Lidas", size: "300×250" },
   { value: "ABOVE_NAVEGAR", label: "Banner Acima do Navegar", description: "Na sidebar, acima da seção Navegar", size: "300×250" },
+  { value: "MID_NEWS", label: "Banner Meio Notícia", description: "No meio do conteúdo da notícia", size: "970×120" },
 ] as const;
 
 type BannerForm = {
