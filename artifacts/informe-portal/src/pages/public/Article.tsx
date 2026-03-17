@@ -128,8 +128,14 @@ export default function Article() {
 
             <div className="p-4 sm:p-8 pt-6 sm:pt-10">
               <div 
-                className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline"
-                dangerouslySetInnerHTML={{ __html: article.content.replace(/\n/g, '<br/>') }}
+                className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1"
+                dangerouslySetInnerHTML={{ __html: article.content
+                  .replace(/\n{2,}/g, '\n')
+                  .replace(/(<br\s*\/?>[\s]*){3,}/gi, '<br/><br/>')
+                  .replace(/<p>\s*<\/p>/gi, '')
+                  .replace(/<p>\s*<br\s*\/?>\s*<\/p>/gi, '')
+                  .replace(/\n/g, '<br/>')
+                }}
               />
             </div>
 
