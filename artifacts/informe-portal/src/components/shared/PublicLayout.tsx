@@ -30,8 +30,12 @@ export function PublicLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-foreground font-sans">
-      {/* Banner Topo */}
-      <BannerCarousel position="TOP" fallbackHeight="h-[80px] sm:h-[100px] md:h-[120px]" fallbackLabel="BANNER TOPO" />
+      {/* Banner Topo - 1140x140 */}
+      <div className="w-full bg-white">
+        <div className="container mx-auto">
+          <BannerCarousel position="TOP" fallbackHeight="h-[50px] sm:h-[80px] md:h-[100px]" fallbackLabel="BANNER TOPO (1140x140)" className="rounded-none" />
+        </div>
+      </div>
 
       {/* Header */}
       <header className="bg-primary text-primary-foreground sticky top-0 z-50 shadow-md">
