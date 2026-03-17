@@ -48,14 +48,6 @@ function VideoCard({ video }: { video: any }) {
     if (link) window.open(link, "_blank", "noopener,noreferrer");
   };
 
-  const handlePlay = () => {
-    if (igId) {
-      openLink();
-    } else {
-      setPlaying(true);
-    }
-  };
-
   if (playing && ytId) {
     return (
       <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
@@ -66,9 +58,33 @@ function VideoCard({ video }: { video: any }) {
     );
   }
 
+  if (!thumbSrc && igId) {
+    return (
+      <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
+        <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-white aspect-[9/16] relative">
+          <iframe src={`https://www.instagram.com/reel/${igId}/embed/`} className="absolute inset-0 w-full h-full border-0 pointer-events-none" title={video.title || "Instagram video"} loading="lazy" />
+          <div className="absolute inset-0 z-10 cursor-pointer" onClick={openLink}>
+            <div className="absolute top-3 right-3 z-20">
+              <div className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 rounded-lg p-1.5">
+                <FaInstagram className="h-3.5 w-3.5 text-white" />
+              </div>
+            </div>
+          </div>
+        </div>
+        {video.title && (
+          <p className="mt-3 text-sm sm:text-base font-bold text-white leading-snug line-clamp-2 text-center">{video.title}</p>
+        )}
+        <button onClick={openLink} className="mt-1 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto">
+          <FaInstagram className="h-3 w-3" />
+          Assistir no Instagram
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0 group" style={{ scrollSnapAlign: "start" }}>
-      <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-gradient-to-b from-gray-800 to-gray-950 aspect-[9/16] relative cursor-pointer" onClick={handlePlay}>
+      <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-gradient-to-b from-gray-800 to-gray-950 aspect-[9/16] relative cursor-pointer" onClick={() => igId ? openLink() : setPlaying(true)}>
         {thumbSrc ? (
           <img src={thumbSrc} alt={video.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
         ) : (
@@ -97,18 +113,9 @@ function VideoCard({ video }: { video: any }) {
           </div>
         )}
       </div>
-      {igId && (
-        <button onClick={openLink} className="mt-1 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto">
-          <FaInstagram className="h-3 w-3" />
-          Assistir no Instagram
-        </button>
-      )}
-      {isYouTube && (
-        <button onClick={openLink} className="mt-1 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto">
-          <ExternalLink className="h-3 w-3" />
-          Abrir no YouTube
-        </button>
-      )}
+      <button onClick={openLink} className="mt-1 flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-white transition-colors mx-auto">
+        {isYouTube ? <><ExternalLink className="h-3 w-3" /> Abrir no YouTube</> : <><FaInstagram className="h-3 w-3" /> Assistir no Instagram</>}
+      </button>
     </div>
   );
 }
