@@ -275,16 +275,16 @@ export function PublicLayout({ children }: { children: ReactNode }) {
               <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-8">
                 <div className="flex flex-col items-center sm:items-start gap-1.5">
                   <span className="text-xs font-bold uppercase tracking-wider text-white">Redes Sociais</span>
-                  <div className="flex items-center gap-3">
-                    <a href="https://www.facebook.com/share/14TiuW9h73u" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Facebook className="h-6 w-6" /></a>
-                    <a href="https://www.instagram.com/informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Instagram className="h-6 w-6" /></a>
-                    <a href="https://youtube.com/@informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Youtube className="h-6 w-6" /></a>
+                  <div className="flex items-center gap-3 h-[38px]">
+                    <a href="https://www.facebook.com/share/14TiuW9h73u" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Facebook className="h-7 w-7" /></a>
+                    <a href="https://www.instagram.com/informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Instagram className="h-7 w-7" /></a>
+                    <a href="https://youtube.com/@informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Youtube className="h-7 w-7" /></a>
                   </div>
                 </div>
 
                 <div className="flex flex-col items-center sm:items-start gap-1.5">
                   <span className="text-xs font-bold uppercase tracking-wider text-white">Entre em Contato</span>
-                  <a href="https://wa.me/5537998249936" target="_blank" rel="noreferrer" className="border border-white/30 hover:bg-white/10 rounded-lg px-4 py-2 flex items-center gap-2 font-bold text-sm transition-colors">
+                  <a href="https://wa.me/5537998249936" target="_blank" rel="noreferrer" className="border border-white/30 hover:bg-white/10 rounded-lg px-4 py-2 flex items-center gap-2 font-bold text-sm transition-colors h-[38px]">
                     <FaWhatsapp className="h-5 w-5" /> WhatsApp
                   </a>
                 </div>
