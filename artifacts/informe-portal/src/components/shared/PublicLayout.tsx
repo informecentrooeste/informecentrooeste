@@ -273,11 +273,13 @@ export function PublicLayout({ children }: { children: ReactNode }) {
               </div>
 
               <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col items-center sm:items-start gap-1.5">
                   <span className="text-xs font-bold uppercase tracking-wider text-white">Redes Sociais</span>
-                  <a href="https://www.facebook.com/share/14TiuW9h73u" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Facebook className="h-6 w-6" /></a>
-                  <a href="https://www.instagram.com/informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Instagram className="h-6 w-6" /></a>
-                  <a href="https://youtube.com/@informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Youtube className="h-6 w-6" /></a>
+                  <div className="flex items-center gap-3">
+                    <a href="https://www.facebook.com/share/14TiuW9h73u" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Facebook className="h-6 w-6" /></a>
+                    <a href="https://www.instagram.com/informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Instagram className="h-6 w-6" /></a>
+                    <a href="https://youtube.com/@informecentrooeste" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity"><Youtube className="h-6 w-6" /></a>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-3">
