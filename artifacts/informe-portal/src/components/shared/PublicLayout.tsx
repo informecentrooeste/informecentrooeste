@@ -244,15 +244,15 @@ export function PublicLayout({ children }: { children: ReactNode }) {
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-8 sm:py-10">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12 justify-center">
 
             <div className="shrink-0">
               <img src={logoInforme} alt="Informe Centro-Oeste" className="h-16 sm:h-20 w-auto" />
             </div>
 
-            <div className="flex-1 flex flex-col items-center lg:items-end gap-5">
+            <div className="flex flex-col items-center lg:items-start gap-5">
 
-              <div className="flex flex-col items-center lg:items-end gap-2">
+              <div className="flex flex-col items-center lg:items-start gap-2">
                 <h4 className="font-bold text-xs sm:text-sm uppercase tracking-widest text-white">Tenha a Informe TV na palma da sua mão</h4>
                 <div className="flex gap-3">
                   <a href="https://play.google.com/store/apps/details?id=com.logicahost.informetv" target="_blank" rel="noreferrer" className="bg-black hover:bg-gray-900 border border-white/20 rounded-lg px-4 py-2 flex items-center gap-3 text-white transition-colors">
