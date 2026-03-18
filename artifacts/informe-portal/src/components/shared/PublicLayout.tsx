@@ -282,7 +282,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col items-center sm:items-start gap-1.5">
                   <span className="text-xs font-bold uppercase tracking-wider text-white">Entre em Contato</span>
                   <a href="https://wa.me/5537998249936" target="_blank" rel="noreferrer" className="border border-white/30 hover:bg-white/10 rounded-lg px-4 py-2 flex items-center gap-2 font-bold text-sm transition-colors">
                     <FaWhatsapp className="h-5 w-5" /> WhatsApp
