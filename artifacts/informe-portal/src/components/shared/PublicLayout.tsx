@@ -272,7 +272,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+              <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-8">
                 <div className="flex flex-col items-center sm:items-start gap-1.5">
                   <span className="text-xs font-bold uppercase tracking-wider text-white">Redes Sociais</span>
                   <div className="flex items-center gap-3">
