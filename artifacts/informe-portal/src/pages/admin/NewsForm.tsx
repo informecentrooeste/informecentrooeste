@@ -160,6 +160,7 @@ export default function NewsForm() {
       const payload = {
         ...formData,
         categoryId: Number(formData.categoryId),
+        cityId: formData.cityId ? Number(formData.cityId) : null,
         galleryImages: formData.galleryImages.length > 0 ? JSON.stringify(formData.galleryImages) : "",
         redirectUrl: formData.redirectUrl || undefined,
         videoUrl: formData.videoUrl || undefined,
