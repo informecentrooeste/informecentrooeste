@@ -215,49 +215,28 @@ export default function Home() {
           {/* BANNER ACIMA DO POLÍTICA */}
           <BannerCarousel position="ABOVE_POLITICA" />
 
-          {/* POLÍTICA SECTION */}
-          <section>
-            <div className="flex items-center justify-between border-b-2 border-border mb-4 sm:mb-5 pb-2">
-              <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 text-primary uppercase">Política</h2>
-            </div>
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="md:w-1/2 flex flex-col gap-3">
-                {politicaNews?.data?.[0] && <NewsCard article={politicaNews.data[0]} large />}
-                {politicaNews?.data?.slice(1, 4).map((item) => (
-                  <NewsCard key={item.id} article={item} variant="horizontal" />
-                ))}
-              </div>
-              <div className="md:w-1/2">
-                <BannerCarousel position="SIDE_POLITICA" fallbackHeight="h-full min-h-[300px]" />
-              </div>
-            </div>
-            <Link href="/categoria/politica" className="inline-flex items-center text-primary font-bold text-sm mt-4 hover:underline group">
-              VER MAIS NOTÍCIAS <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </section>
-
-          {/* GERAL SECTION */}
-          <section>
-            <div className="flex items-center justify-between border-b-2 border-border mb-4 sm:mb-5 pb-2">
-              <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 text-primary uppercase">Geral</h2>
-            </div>
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="md:w-1/2">
-                <BannerCarousel position="SIDE_GERAL" fallbackHeight="h-full min-h-[300px]" />
-              </div>
-              <div className="md:w-1/2 flex flex-col gap-3">
-                {geralNews?.data?.[0] && <NewsCard article={geralNews.data[0]} large />}
-                {geralNews?.data?.slice(1, 4).map((item) => (
-                  <NewsCard key={item.id} article={item} variant="horizontal" />
-                ))}
-              </div>
-            </div>
-            <div className="flex justify-end">
-              <Link href="/categoria/geral" className="inline-flex items-center text-primary font-bold text-sm mt-4 hover:underline group">
-                VER MAIS NOTÍCIAS <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-          </section>
+          {/* POLÍTICA | GERAL */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
+            {[
+              { title: "Política", slug: "politica", data: politicaNews },
+              { title: "Geral", slug: "geral", data: geralNews },
+            ].map(({ title, slug, data }) => (
+              <section key={slug}>
+                <div className="flex items-center justify-between border-b-2 border-border mb-4 sm:mb-5 pb-2">
+                  <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 text-primary uppercase">{title}</h2>
+                </div>
+                <div className="flex flex-col gap-3">
+                  {data?.data?.[0] && <NewsCard article={data.data[0]} large />}
+                  {data?.data?.slice(1, 4).map((item) => (
+                    <NewsCard key={item.id} article={item} variant="horizontal" />
+                  ))}
+                </div>
+                <Link href={`/categoria/${slug}`} className="inline-flex items-center text-primary font-bold text-sm mt-4 hover:underline group">
+                  VER MAIS NOTÍCIAS <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </section>
+            ))}
+          </div>
 
         </div>
 

@@ -12,8 +12,6 @@ const POSITIONS = [
   { value: "BELOW_DESTAQUE", label: "Banner Abaixo do Destaque", description: "Logo abaixo do carrossel de destaque", size: "970×120" },
   { value: "BELOW_ARTICULISTAS", label: "Banner Abaixo dos Articulistas", description: "Após a seção de articulistas", size: "970×120" },
   { value: "ABOVE_POLITICA", label: "Banner Acima do Política", description: "Antes da seção Política", size: "970×120" },
-  { value: "SIDE_POLITICA", label: "Banner ao Lado do Política", description: "Na lateral direita, ao lado da seção Política", size: "300×250" },
-  { value: "SIDE_GERAL", label: "Banner ao Lado do Geral", description: "Na lateral direita, ao lado da seção Geral", size: "300×250" },
   { value: "ABOVE_PROGRAMAS", label: "Banner Acima do Programas", description: "Na sidebar, acima da seção Programas", size: "300×250" },
   { value: "ABOVE_ULTIMAS_NOTICIAS_NEW", label: "Banner Acima das Últimas Notícias", description: "Na sidebar, entre Programas e Últimas Notícias", size: "300×250" },
   { value: "BELOW_MAIS_LIDAS", label: "Banner Abaixo das Mais Lidas", description: "Na sidebar, abaixo da seção Mais Lidas", size: "300×250" },
