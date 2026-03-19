@@ -15,6 +15,7 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **Validation**: Zod (`zod/v4`), `drizzle-zod`
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
+- **Media Management**: Cloudinary integration for image and video uploads
 
 ## Structure
 
@@ -113,6 +114,13 @@ React + Vite frontend for Informe Centro-Oeste news portal. Brand color: `#47408
 - Each position supports up to 5 banners, auto-rotating every 5s with dots navigation
 - `BannerCarousel` component (`src/components/shared/BannerCarousel.tsx`) fetches banners by position and renders carousel
 - Admin page shows positions as expandable accordions with thumbnail previews
+- Cloudinary integration for image uploads: `CloudinaryUpload` component at `src/components/admin/CloudinaryUpload.tsx`
+
+**Cloudinary integration**:
+- Backend route: `POST /api/admin/cloudinary/image` (images) and `POST /api/admin/cloudinary/video` (videos)
+- Frontend component: `CloudinaryUpload.tsx` — handles file selection, upload progress, and preview
+- Used in: BannersAdmin (banner images), NewsForm (featured images), VideosAdmin (video thumbnails)
+- Credentials: CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET (stored as Replit secrets)
 
 **Admin credentials**: `admin@informecentrooeste.com.br` / `admin@2024Informe!`
 

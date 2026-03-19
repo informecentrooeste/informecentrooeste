@@ -3,6 +3,7 @@ import { useAdminVideos, useCreateVideo, useUpdateVideo, useDeleteVideo, useTogg
 import { useState } from "react";
 import { Plus, Pencil, Trash2, ToggleLeft, ToggleRight, Play } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { CloudinaryUpload } from "@/components/admin/CloudinaryUpload";
 
 const SOURCE_TYPES = [
   { value: "YOUTUBE", label: "YouTube" },
@@ -121,9 +122,22 @@ export default function VideosAdmin() {
               <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.videoUrl} onChange={e => setForm({ ...form, videoUrl: e.target.value })} required placeholder="Link do vídeo (YouTube, upload, etc.)" />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">URL da Thumbnail (Capa)</label>
-              <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.thumbnailUrl} onChange={e => setForm({ ...form, thumbnailUrl: e.target.value })} placeholder="Link da imagem de capa do vídeo" />
-              <p className="text-xs text-gray-500 mt-1">Para YouTube, a capa é extraída automaticamente. Para Instagram/Interno, cole o link de uma imagem.</p>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Thumbnail (Capa do Vídeo)</label>
+              {form.sourceType === "YOUTUBE" ? (
+                <input className="w-full border rounded-lg px-3 py-2 text-sm" value={form.thumbnailUrl} onChange={e => setForm({ ...form, thumbnailUrl: e.target.value })} placeholder="Para YouTube, a capa é extraída automaticamente." disabled />
+              ) : (
+                <>
+                  <CloudinaryUpload
+                    type="image"
+                    onSuccess={(data) => setForm({ ...form, thumbnailUrl: data.url })}
+                  />
+                  {form.thumbnailUrl && (
+                    <div className="mt-2">
+                      <img src={form.thumbnailUrl} alt="thumbnail" className="w-full h-auto max-h-[150px] object-cover rounded-lg" />
+                    </div>
+                  )}
+                </>
+              )}
             </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-gray-700 mb-1">Link de Redirecionamento (Post no Instagram)</label>

@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Save, Upload, X, FileText, Video, Link2, ImagePlus, Paperclip } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
-import { ImageUpload } from "@/components/admin/ImageUpload";
+import { CloudinaryUpload } from "@/components/admin/CloudinaryUpload";
 import { getAuthHeaders } from "@/hooks/use-auth";
 
 const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
@@ -366,12 +366,16 @@ export default function NewsForm() {
 
           <div className="bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-5 sm:gap-6">
             <h3 className="font-black text-lg border-b border-gray-100 pb-3">Imagem de Capa</h3>
-            <ImageUpload
-              value={formData.featuredImage}
-              onChange={(url) => setFormData(prev => ({ ...prev, featuredImage: url }))}
-              label=""
-              hint="Imagem principal que aparece nos cards e no topo da notícia."
+            <CloudinaryUpload
+              type="image"
+              onSuccess={(data) => setFormData(prev => ({ ...prev, featuredImage: data.url }))}
             />
+            {formData.featuredImage && (
+              <div>
+                <p className="text-xs text-gray-500 mb-2">Prévia:</p>
+                <img src={formData.featuredImage} alt="featured" className="w-full h-auto max-h-[200px] object-cover rounded-lg" />
+              </div>
+            )}
           </div>
         </div>
       </form>

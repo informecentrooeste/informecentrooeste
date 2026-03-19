@@ -3,7 +3,7 @@ import { useAdminBanners, useCreateBanner, useUpdateBanner, useDeleteBanner, use
 import { useState } from "react";
 import { Plus, Pencil, Trash2, ExternalLink, ToggleLeft, ToggleRight, ChevronDown, ChevronUp, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { ImageUpload } from "@/components/admin/ImageUpload";
+import { CloudinaryUpload } from "@/components/admin/CloudinaryUpload";
 
 const POSITIONS = [
   { value: "TOP", label: "Banner Topo (Desktop)", description: "Banner no topo do site, acima do menu — visível em telas maiores (desktop/tablet)", size: "1920×250" },
@@ -140,12 +140,17 @@ export default function BannersAdmin() {
               </select>
             </div>
             <div className="md:col-span-2">
-              <ImageUpload
-                value={form.imageUrl}
-                onChange={(url) => setForm({ ...form, imageUrl: url })}
-                label="Imagem do Banner"
-                hint="Imagem que será exibida como banner na posição selecionada."
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Imagem do Banner</label>
+              <CloudinaryUpload
+                type="image"
+                onSuccess={(data) => setForm({ ...form, imageUrl: data.url })}
               />
+              {form.imageUrl && (
+                <div className="mt-2">
+                  <p className="text-xs text-gray-500 mb-1">Prévia:</p>
+                  <img src={form.imageUrl} alt="preview" className="w-full h-auto max-h-[150px] object-cover rounded-lg" />
+                </div>
+              )}
             </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-gray-700 mb-1">Link de Direcionamento</label>
