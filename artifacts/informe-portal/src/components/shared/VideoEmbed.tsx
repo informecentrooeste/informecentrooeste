@@ -28,10 +28,27 @@ function extractYouTubeId(url: string): string | null {
   return null;
 }
 
-function detectPlatform(url: string): "instagram" | "youtube" | "unknown" {
+function detectPlatform(url: string): "instagram" | "youtube" | "direct-video" | "unknown" {
   if (url.includes("instagram.com")) return "instagram";
   if (url.includes("youtube.com") || url.includes("youtu.be")) return "youtube";
+  if (url.includes("cloudinary.com") || url.match(/\.(mp4|webm|mov)(\?|$)/i)) return "direct-video";
   return "unknown";
+}
+
+function DirectVideoPlayer({ url }: { url: string }) {
+  return (
+    <div className="max-w-[560px] w-full">
+      <div className="relative w-full rounded-xl overflow-hidden shadow-lg border border-gray-200">
+        <video
+          src={url}
+          controls
+          preload="metadata"
+          className="w-full h-auto"
+          style={{ maxHeight: "400px" }}
+        />
+      </div>
+    </div>
+  );
 }
 
 function YouTubeEmbed({ videoId }: { videoId: string }) {
@@ -140,6 +157,10 @@ export function VideoEmbed({ url }: { url: string }) {
   if (platform === "youtube") {
     const videoId = extractYouTubeId(url);
     if (videoId) return <YouTubeEmbed videoId={videoId} />;
+  }
+
+  if (platform === "direct-video") {
+    return <DirectVideoPlayer url={url} />;
   }
 
   return (

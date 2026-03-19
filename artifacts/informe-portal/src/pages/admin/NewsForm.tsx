@@ -104,9 +104,9 @@ export default function NewsForm() {
       for (const file of Array.from(files)) {
         const fd = new FormData();
         fd.append("file", file);
-        const res = await fetch(`${API_BASE}/admin/upload`, {
+        const res = await fetch(`${API_BASE}/admin/cloudinary/image`, {
           method: "POST",
-          headers: getAuthHeaders(),
+          headers: { "Authorization": `Bearer ${localStorage.getItem("informe_access_token") || ""}` },
           body: fd,
         });
         if (!res.ok) throw new Error("Erro ao enviar imagem");
@@ -238,10 +238,24 @@ export default function NewsForm() {
 
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
-                <Video className="h-4 w-4 text-primary" /> Vídeo (Redes Sociais)
+                <Video className="h-4 w-4 text-primary" /> Vídeo
               </label>
-              <input name="videoUrl" value={formData.videoUrl} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-primary focus:border-primary text-sm" placeholder="https://www.instagram.com/reel/... ou https://youtube.com/watch?v=..." />
-              <p className="text-xs text-gray-500 mt-1">Cole o link do vídeo do Instagram, YouTube, TikTok, etc. Aparecerá um player pequeno na notícia — ao clicar, redireciona para o link.</p>
+              <input name="videoUrl" value={formData.videoUrl} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-primary focus:border-primary text-sm mb-2" placeholder="https://www.instagram.com/reel/... ou https://youtube.com/watch?v=..." />
+              <p className="text-xs text-gray-500 mb-3">Cole um link (Instagram, YouTube) ou faça upload de um vídeo direto:</p>
+              <CloudinaryUpload
+                type="video"
+                onSuccess={(data) => setFormData(prev => ({ ...prev, videoUrl: data.url }))}
+                maxSize={100}
+              />
+              {formData.videoUrl && (
+                <div className="mt-2 flex items-center gap-2 p-2 bg-green-50 rounded-lg border border-green-200">
+                  <Video className="h-4 w-4 text-green-600 shrink-0" />
+                  <p className="text-xs text-green-700 truncate flex-1">{formData.videoUrl}</p>
+                  <button type="button" onClick={() => setFormData(prev => ({ ...prev, videoUrl: "" }))} className="p-1 hover:bg-red-50 rounded">
+                    <X className="h-3 w-3 text-red-500" />
+                  </button>
+                </div>
+              )}
             </div>
 
             <div>
