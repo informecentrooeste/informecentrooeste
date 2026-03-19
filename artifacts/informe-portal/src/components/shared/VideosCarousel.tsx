@@ -34,6 +34,47 @@ function extractYouTubeId(url: string): string | null {
   return null;
 }
 
+function LazyIframe({ igId, title }: { igId: string; title: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className="absolute inset-0 w-full h-full">
+      {visible ? (
+        <iframe
+          src={`https://www.instagram.com/reel/${igId}/embed/`}
+          className="absolute inset-0 w-full h-full border-0"
+          title={title}
+          loading="lazy"
+          allow="encrypted-media"
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-800 to-gray-950">
+          <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center animate-pulse">
+            <FaInstagram className="h-10 w-10 text-white/20" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function VideoCard({ video }: { video: any }) {
   const url = video.videoUrl || "";
   const igId = extractInstagramId(url);
@@ -63,13 +104,7 @@ function VideoCard({ video }: { video: any }) {
     return (
       <div data-video-card className="min-w-[220px] sm:min-w-[250px] md:min-w-[270px] flex-shrink-0" style={{ scrollSnapAlign: "start" }}>
         <div className="rounded-2xl overflow-hidden shadow-lg shadow-black/50 bg-black aspect-[9/16] relative">
-          <iframe
-            src={`https://www.instagram.com/reel/${igId}/embed/`}
-            className="absolute inset-0 w-full h-full border-0"
-            title={video.title || "Instagram video"}
-            loading="lazy"
-            allow="encrypted-media"
-          />
+          <LazyIframe igId={igId} title={video.title || "Instagram video"} />
           <div className="absolute top-3 right-3 z-20">
             <div className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 rounded-lg p-1.5 shadow-lg">
               <FaInstagram className="h-3.5 w-3.5 text-white" />
