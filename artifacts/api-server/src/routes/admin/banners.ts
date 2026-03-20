@@ -7,7 +7,7 @@ import { logAudit } from "../../lib/audit.js";
 import { cache } from "../../lib/cache.js";
 
 const VALID_POSITIONS = [
-  "TOP", "TOP_MOBILE", "ABOVE_DESTAQUE", "ABOVE_TITLE_NEWS",
+  "TOP", "TOP_MOBILE", "ABOVE_DESTAQUE", "ABOVE_TITLE_NEWS", "MID_NEWS",
 ] as const;
 
 const MAX_BANNERS_PER_POSITION = 5;

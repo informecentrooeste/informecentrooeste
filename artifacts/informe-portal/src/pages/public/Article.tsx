@@ -159,12 +159,23 @@ export default function Article() {
                 const midPoint = Math.max(1, Math.ceil(paragraphs.length / 2));
 
                 if (paragraphs.length >= 2) {
+                  const firstHalf = paragraphs.slice(0, midPoint).map(p => p + '</p>').join('');
+                  const secondHalf = paragraphs.slice(midPoint).map(p => p + '</p>').join('');
                   return (
                     <div ref={contentRef} onClick={handleContentClick}>
                       <div className="p-4 sm:p-8 pt-6 sm:pt-10">
                         <div
                           className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
-                          dangerouslySetInnerHTML={{ __html: cleanContent }}
+                          dangerouslySetInnerHTML={{ __html: firstHalf }}
+                        />
+                      </div>
+                      <div className="px-4 sm:px-8 py-4">
+                        <BannerCarousel position="MID_NEWS" />
+                      </div>
+                      <div className="p-4 sm:p-8 pt-0">
+                        <div
+                          className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
+                          dangerouslySetInnerHTML={{ __html: secondHalf }}
                         />
                       </div>
                     </div>

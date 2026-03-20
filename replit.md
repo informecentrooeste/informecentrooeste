@@ -111,7 +111,7 @@ React + Vite frontend for Informe Centro-Oeste news portal. Brand color: `#47408
 - Schema: `lib/db/src/schema/cities.ts`, news table has `city_id` FK
 
 **Banner system**:
-- Positions: TOP, TOP_MOBILE, ABOVE_DESTAQUE, ABOVE_TITLE_NEWS
+- Positions: TOP, TOP_MOBILE, ABOVE_DESTAQUE, ABOVE_TITLE_NEWS, MID_NEWS
 - Each position supports up to 5 banners, auto-rotating every 5s with dots navigation
 - `BannerCarousel` component (`src/components/shared/BannerCarousel.tsx`) fetches banners by position and renders carousel
 - Admin page shows positions as expandable accordions with thumbnail previews
