@@ -109,7 +109,7 @@ export default function Home() {
         <div className="w-full lg:w-[75%] flex flex-col gap-6 sm:gap-10">
           
           {/* 1. LIVE TV PLAYER */}
-          <section>
+          <section id="tv-ao-vivo">
             <div className="flex items-center mb-3 sm:mb-4">
               <span className="bg-red-600 text-white text-[10px] sm:text-xs font-black px-2 sm:px-3 py-1 rounded mr-2 sm:mr-3 flex items-center gap-1 sm:gap-1.5 animate-pulse shadow-sm">
                 <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full"></span> TV AO VIVO
