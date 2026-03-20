@@ -127,9 +127,6 @@ export default function Home() {
           {/* 3. DESTAQUE - carrossel das últimas 5 notícias */}
           <DestaquesCarousel articles={Array.isArray(latestForCarousel) ? latestForCarousel : (latestForCarousel as any)?.data ?? []} />
 
-          {/* 4. BANNER ABAIXO DO DESTAQUE */}
-          <BannerCarousel position="BELOW_DESTAQUE" />
-
           {/* 5. TWO-COLUMN NEWS GRID (FORMIGA | REGIONAL) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
             {[
