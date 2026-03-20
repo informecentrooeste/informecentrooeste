@@ -165,19 +165,15 @@ export function PublicLayout({ children }: { children: ReactNode }) {
               <a href="https://youtube.com/@informecentrooeste" target="_blank" rel="noreferrer" className="hover:text-gray-300 transition-colors"><Youtube className="h-5 w-5" /></a>
             </div>
             
-            <Link
-              href="/"
-              onClick={() => {
-                setTimeout(() => {
-                  const tvSection = document.getElementById("tv-ao-vivo");
-                  if (tvSection) tvSection.scrollIntoView({ behavior: "smooth" });
-                }, 100);
-              }}
+            <a
+              href="https://player.logicahost.com.br/player.php?player=2050"
+              target="_blank"
+              rel="noreferrer"
               className="lg:hidden flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white text-[10px] font-black px-2.5 py-1.5 rounded animate-pulse shadow-sm transition-colors"
             >
               <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
               TV AO VIVO
-            </Link>
+            </a>
 
             <button 
               className="lg:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
