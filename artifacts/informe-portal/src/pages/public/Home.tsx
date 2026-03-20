@@ -112,7 +112,7 @@ export default function Home() {
           <section>
             <div className="flex items-center mb-3 sm:mb-4">
               <span className="bg-red-600 text-white text-[10px] sm:text-xs font-black px-2 sm:px-3 py-1 rounded mr-2 sm:mr-3 flex items-center gap-1 sm:gap-1.5 animate-pulse shadow-sm">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full"></span> AO VIVO
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full"></span> TV AO VIVO
               </span>
               <h2 className="text-lg sm:text-2xl font-black text-primary tracking-tight">INFORME TV </h2>
             </div>
