@@ -10,13 +10,6 @@ const POSITIONS = [
   { value: "TOP_MOBILE", label: "Banner Topo (Mobile)", description: "Banner no topo do site, acima do menu — visível apenas em celulares", size: "750×150" },
   { value: "ABOVE_DESTAQUE", label: "Banner Acima do Destaque", description: "Entre o player de TV e a seção de destaque", size: "970×120" },
   { value: "BELOW_DESTAQUE", label: "Banner Abaixo do Destaque", description: "Logo abaixo do carrossel de destaque", size: "970×120" },
-  { value: "BELOW_ARTICULISTAS", label: "Banner Abaixo dos Articulistas", description: "Após a seção de articulistas", size: "970×120" },
-  { value: "ABOVE_POLITICA", label: "Banner Acima do Política", description: "Antes da seção Política", size: "970×120" },
-  { value: "ABOVE_PROGRAMAS", label: "Banner Acima do Programas", description: "Na sidebar, acima da seção Programas", size: "300×250" },
-  { value: "ABOVE_ULTIMAS_NOTICIAS_NEW", label: "Banner Acima das Últimas Notícias", description: "Na sidebar, entre Programas e Últimas Notícias", size: "300×250" },
-  { value: "BELOW_MAIS_LIDAS", label: "Banner Abaixo das Mais Lidas", description: "Na sidebar, abaixo da seção Mais Lidas", size: "300×250" },
-  { value: "ABOVE_NAVEGAR", label: "Banner Acima do Navegar", description: "Na sidebar, acima da seção Navegar", size: "300×250" },
-  { value: "MID_NEWS", label: "Banner Meio Notícia", description: "No meio do conteúdo da notícia", size: "970×120" },
 ] as const;
 
 type BannerForm = {

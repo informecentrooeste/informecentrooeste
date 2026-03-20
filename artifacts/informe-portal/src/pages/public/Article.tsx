@@ -10,7 +10,6 @@ import { Calendar, User, Eye, ArrowLeft, ArrowRight, ExternalLink, FileText, Pla
 import { Link } from "wouter";
 import { NewsCard } from "@/components/shared/NewsCard";
 import { VideoEmbed } from "@/components/shared/VideoEmbed";
-import { BannerCarousel } from "@/components/shared/BannerCarousel";
 import { useLightbox } from "@/components/shared/ImageLightbox";
 
 export default function Article() {
@@ -157,54 +156,17 @@ export default function Article() {
                 const midPoint = Math.max(1, Math.ceil(paragraphs.length / 2));
 
                 if (paragraphs.length >= 2) {
-                  const firstHalf = paragraphs.slice(0, midPoint).join('</p>') + '</p>';
-                  const secondHalf = paragraphs.slice(midPoint).join('</p>') + '</p>';
                   return (
                     <div ref={contentRef} onClick={handleContentClick}>
-                      <div className="p-4 sm:p-8 pt-6 sm:pt-10 pb-0">
+                      <div className="p-4 sm:p-8 pt-6 sm:pt-10">
                         <div
                           className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
-                          dangerouslySetInnerHTML={{ __html: firstHalf }}
-                        />
-                      </div>
-                      <div className="px-4 sm:px-8 py-4">
-                        <BannerCarousel position="MID_NEWS" />
-                      </div>
-                      <div className="p-4 sm:p-8 pt-0">
-                        <div
-                          className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
-                          dangerouslySetInnerHTML={{ __html: secondHalf }}
+                          dangerouslySetInnerHTML={{ __html: cleanContent }}
                         />
                       </div>
                     </div>
                   );
                 }
-              }
-
-              const sentences = cleanContent.split(/(?<=\.\s)|(?<=<br\s*\/?>)/i).filter(s => s.trim());
-              if (sentences.length >= 4) {
-                const mid = Math.ceil(sentences.length / 2);
-                const firstHalf = sentences.slice(0, mid).join('');
-                const secondHalf = sentences.slice(mid).join('');
-                return (
-                  <div ref={contentRef} onClick={handleContentClick}>
-                    <div className="p-4 sm:p-8 pt-6 sm:pt-10 pb-0">
-                      <div
-                        className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
-                        dangerouslySetInnerHTML={{ __html: firstHalf }}
-                      />
-                    </div>
-                    <div className="px-4 sm:px-8 py-4">
-                      <BannerCarousel position="MID_NEWS" />
-                    </div>
-                    <div className="p-4 sm:p-8 pt-0">
-                      <div
-                        className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
-                        dangerouslySetInnerHTML={{ __html: secondHalf }}
-                      />
-                    </div>
-                  </div>
-                );
               }
 
               return (
@@ -214,9 +176,6 @@ export default function Article() {
                       className="prose prose-sm sm:prose-lg max-w-none text-foreground font-medium leading-relaxed prose-headings:font-black prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-p:my-2 prose-br:content-[''] prose-br:block prose-br:my-1 [&_img]:cursor-zoom-in"
                       dangerouslySetInnerHTML={{ __html: cleanContent }}
                     />
-                  </div>
-                  <div className="px-4 sm:px-8 py-4">
-                    <BannerCarousel position="MID_NEWS" />
                   </div>
                 </div>
               );

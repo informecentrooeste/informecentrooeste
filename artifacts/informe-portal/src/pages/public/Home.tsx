@@ -186,9 +186,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* BANNER ABAIXO DOS ARTICULISTAS */}
-          <BannerCarousel position="BELOW_ARTICULISTAS" />
-
           {/* ESTADUAL | BRASIL */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
             {[
@@ -211,9 +208,6 @@ export default function Home() {
               </section>
             ))}
           </div>
-
-          {/* BANNER ACIMA DO POLÍTICA */}
-          <BannerCarousel position="ABOVE_POLITICA" />
 
           {/* POLÍTICA | GERAL */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">

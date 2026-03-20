@@ -4,7 +4,6 @@ import { Link } from "wouter";
 import { usePublicLatestNews, usePublicMostRead } from "@/hooks/use-public";
 import { useQuery } from "@tanstack/react-query";
 import { getImageUrl } from "@/lib/image-url";
-import { BannerCarousel } from "@/components/shared/BannerCarousel";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -61,8 +60,6 @@ export function PublicSidebar() {
         </span>
       </a>
 
-      <BannerCarousel position="ABOVE_PROGRAMAS" fallbackHeight="h-[250px]" fallbackLabel="BANNER ACIMA DO PROGRAMAS" />
-
       <section className="bg-white p-5 rounded-xl shadow-md shadow-black/5 border border-gray-100">
         <h2 className="text-xl font-bold border-l-4 border-primary pl-3 mb-5 text-primary uppercase">Programas</h2>
         <div className="flex flex-col gap-3">
@@ -99,8 +96,6 @@ export function PublicSidebar() {
           Ver mais <ChevronRight className="h-4 w-4" />
         </Link>
       </section>
-
-      <BannerCarousel position="ABOVE_ULTIMAS_NOTICIAS_NEW" fallbackHeight="h-[250px]" fallbackLabel="BANNER ACIMA DAS ÚLTIMAS NOTÍCIAS" />
 
       <section className="bg-white p-5 rounded-xl shadow-md shadow-black/5 border border-gray-100">
         <h2 className="text-xl font-bold border-l-4 border-primary pl-3 mb-5 text-primary uppercase">Últimas Notícias</h2>
@@ -201,8 +196,6 @@ export function PublicSidebar() {
         </div>
       </section>
 
-      <BannerCarousel position="BELOW_MAIS_LIDAS" fallbackHeight="h-[250px]" fallbackLabel="BANNER ABAIXO DAS MAIS LIDAS" />
-
       <section className="bg-white p-6 rounded-xl shadow-md shadow-black/5 border border-gray-100 text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 rounded-full text-white mb-4 shadow-lg shadow-green-500/30">
           <FaWhatsapp className="h-8 w-8" />
@@ -225,8 +218,6 @@ export function PublicSidebar() {
           </a>
         </div>
       </section>
-
-      <BannerCarousel position="ABOVE_NAVEGAR" fallbackHeight="h-[250px]" fallbackLabel="BANNER ACIMA DO NAVEGAR" />
 
       <section className="bg-white p-6 rounded-xl shadow-md shadow-black/5 border border-gray-100">
         <h2 className="text-xl font-bold border-l-4 border-primary pl-3 mb-5 text-primary uppercase">Navegar</h2>
