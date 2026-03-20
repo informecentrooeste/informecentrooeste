@@ -10,6 +10,7 @@ const POSITIONS = [
   { value: "TOP_MOBILE", label: "Banner Topo (Mobile)", description: "Banner no topo do site, acima do menu — visível apenas em celulares", size: "750×150" },
   { value: "ABOVE_DESTAQUE", label: "Banner Acima do Destaque", description: "Entre o player de TV e a seção de destaque", size: "970×120" },
   { value: "BELOW_DESTAQUE", label: "Banner Abaixo do Destaque", description: "Logo abaixo do carrossel de destaque", size: "970×120" },
+  { value: "ABOVE_TITLE_NEWS", label: "Banner Acima do Título (Notícia)", description: "Dentro da página de notícia, acima do título", size: "728×90" },
 ] as const;
 
 type BannerForm = {

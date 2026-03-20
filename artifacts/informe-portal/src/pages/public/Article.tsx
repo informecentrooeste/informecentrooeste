@@ -11,6 +11,7 @@ import { Link } from "wouter";
 import { NewsCard } from "@/components/shared/NewsCard";
 import { VideoEmbed } from "@/components/shared/VideoEmbed";
 import { useLightbox } from "@/components/shared/ImageLightbox";
+import { BannerCarousel } from "@/components/shared/BannerCarousel";
 
 export default function Article() {
   const params = useParams<{ slug: string }>();
@@ -64,6 +65,8 @@ export default function Article() {
     <PublicLayout>
       <main className="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-10">
         <div className="w-full lg:w-[70%]">
+          <BannerCarousel position="ABOVE_TITLE_NEWS" className="mb-4" />
+
           <article className="bg-card rounded-xl sm:rounded-2xl shadow-lg border border-border overflow-hidden">
             <div className="p-4 sm:p-8 pb-4 sm:pb-6">
               <div className="flex items-center gap-3 mb-6">

@@ -21,6 +21,7 @@ export const bannerPositionEnum = pgEnum("banner_position", [
   "ABOVE_ULTIMAS_NOTICIAS_NEW",
   "ABOVE_NAVEGAR",
   "MID_NEWS",
+  "ABOVE_TITLE_NEWS",
 ]);
 
 export const bannersTable = pgTable("banners", {
