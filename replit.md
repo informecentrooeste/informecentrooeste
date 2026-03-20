@@ -105,8 +105,9 @@ React + Vite frontend for Informe Centro-Oeste news portal. Brand color: `#47408
 **Cities system**:
 - Admin registers cities linked to categories (e.g., "Regional" → Pains, Córrego Fundo)
 - News form shows city dropdown when selected category has linked cities
-- Category pages show city filter chips when cities exist for that category
+- Category pages show city filter chips when cities exist for that category; uses wouter `useSearch()` for query params
 - API: `/api/admin/cities` (CRUD), `/api/public/cities?category=<slug>`, `/api/public/news?city=<slug>`
+- API returns `cityName` field via LEFT JOIN with cities table; NewsCard shows city badge when cityName present
 - Schema: `lib/db/src/schema/cities.ts`, news table has `city_id` FK
 
 **Banner system**:

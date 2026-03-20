@@ -18,13 +18,15 @@ const newsSelect = {
   publishedAt: newsTable.publishedAt,
   viewCount: newsTable.viewCount,
   isFeatured: newsTable.isFeatured,
+  cityId: newsTable.cityId,
 };
 
-function buildNewsCard(row: { news: typeof newsSelect & { id: number; title: string; slug: string }; category: { id: number; name: string; slug: string; description: string | null; isActive: boolean; createdAt: Date }; author: { id: number; name: string } }) {
+function buildNewsCard(row: { news: typeof newsSelect & { id: number; title: string; slug: string }; category: { id: number; name: string; slug: string; description: string | null; isActive: boolean; createdAt: Date }; author: { id: number; name: string }; city?: { id: number; name: string; slug: string } | null }) {
   return {
     ...row.news,
     category: row.category,
     author: row.author,
+    cityName: row.city?.name || null,
   };
 }
 
@@ -56,10 +58,11 @@ router.get("/news", async (req, res) => {
   const orderBy = sort === "most_viewed" ? desc(newsTable.viewCount) : desc(newsTable.publishedAt);
 
   const [rows, [{ count }]] = await Promise.all([
-    db.select({ news: newsTable, category: categoriesTable, author: { id: usersTable.id, name: usersTable.name } })
+    db.select({ news: newsTable, category: categoriesTable, author: { id: usersTable.id, name: usersTable.name }, city: { id: citiesTable.id, name: citiesTable.name, slug: citiesTable.slug } })
       .from(newsTable)
       .innerJoin(categoriesTable, eq(newsTable.categoryId, categoriesTable.id))
       .innerJoin(usersTable, eq(newsTable.authorId, usersTable.id))
+      .leftJoin(citiesTable, eq(newsTable.cityId, citiesTable.id))
       .where(and(...conditions))
       .orderBy(orderBy)
       .limit(limit)

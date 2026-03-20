@@ -1,10 +1,11 @@
 import { Link } from "wouter";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { MapPin } from "lucide-react";
 import { getImageUrl } from "@/lib/image-url";
 import { type NewsCard as NewsCardType } from "@workspace/api-client-react";
 
-export function NewsCard({ article, large = false, variant = "vertical" }: { article: NewsCardType, large?: boolean, variant?: "vertical" | "horizontal" }) {
+export function NewsCard({ article, large = false, variant = "vertical" }: { article: NewsCardType & { cityName?: string | null }, large?: boolean, variant?: "vertical" | "horizontal" }) {
   if (variant === "horizontal") {
     return (
       <Link href={`/noticia/${article.slug}`} className="group cursor-pointer flex flex-row bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-border min-h-[80px]">
@@ -41,6 +42,12 @@ export function NewsCard({ article, large = false, variant = "vertical" }: { art
         {article.category && (
           <span className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded z-20 shadow-md">
             {article.category.name}
+          </span>
+        )}
+        {article.cityName && (
+          <span className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-white/90 text-primary text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded z-20 shadow-md flex items-center gap-0.5">
+            <MapPin className="h-2.5 w-2.5" />
+            {article.cityName}
           </span>
         )}
         {article.featuredImage ? (

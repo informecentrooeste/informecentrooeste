@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useLocation } from "wouter";
+import { useParams, useSearch } from "wouter";
 import { PublicLayout } from "@/components/shared/PublicLayout";
 import { PublicSidebar } from "@/components/shared/PublicSidebar";
 import { usePublicCategories } from "@/hooks/use-public";
@@ -12,8 +12,8 @@ const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
 export default function Category() {
   const params = useParams<{ slug: string }>();
   const categorySlug = params.slug || "";
-  const [location] = useLocation();
-  const cidadeParam = new URLSearchParams(location.split("?")[1] || "").get("cidade") || "";
+  const searchString = useSearch();
+  const cidadeParam = new URLSearchParams(searchString).get("cidade") || "";
   const [selectedCity, setSelectedCity] = useState(cidadeParam);
 
   useEffect(() => {
@@ -76,6 +76,15 @@ export default function Category() {
                   </button>
                 ))}
               </div>
+            )}
+
+            {news && (
+              <p className="mt-3 text-sm text-muted-foreground font-medium">
+                {selectedCity
+                  ? `Mostrando ${Math.min(news.data?.length || 0, news.total)} de ${news.total} notícias de ${cities.find(c => c.slug === selectedCity)?.name || selectedCity}`
+                  : `${news.total} notícias encontradas`
+                }
+              </p>
             )}
           </div>
 
