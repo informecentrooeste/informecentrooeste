@@ -176,4 +176,60 @@ router.post("/import", async (req: AuthRequest, res) => {
   }
 });
 
+router.post("/fix-images", async (_req: AuthRequest, res) => {
+  try {
+    const noImage = await db.select().from(newsTable).where(
+      eq(newsTable.featuredImage, "")
+    );
+    const nullImage = await db.select({ id: newsTable.id, slug: newsTable.slug }).from(newsTable);
+    const toFix = nullImage.filter(n => n.slug.includes("-wp") && !noImage.find(x => x.id === n.id));
+
+    const allNoImg = await db.select({ id: newsTable.id, slug: newsTable.slug, featuredImage: newsTable.featuredImage }).from(newsTable);
+    const needsFix = allNoImg.filter(n => n.slug.includes("-wp") && (!n.featuredImage || n.featuredImage === ""));
+
+    let fixed = 0;
+    let failed = 0;
+    const results: any[] = [];
+
+    for (const article of needsFix) {
+      const wpIdMatch = article.slug.match(/wp(\d+)$/);
+      if (!wpIdMatch) { failed++; continue; }
+      const wpId = wpIdMatch[1];
+
+      try {
+        const post = await fetchJSON(`${WP_BASE}/posts/${wpId}?_fields=featured_media`);
+        if (!post.featured_media) { 
+          results.push({ id: article.id, status: "no_media" });
+          failed++; 
+          continue; 
+        }
+
+        const media = await fetchJSON(`${WP_BASE}/media/${post.featured_media}?_fields=source_url`);
+        if (!media.source_url) { 
+          results.push({ id: article.id, status: "no_source" });
+          failed++; 
+          continue; 
+        }
+
+        const cloudinaryUrl = await uploadToCloudinary(media.source_url);
+        if (cloudinaryUrl) {
+          await db.update(newsTable).set({ featuredImage: cloudinaryUrl }).where(eq(newsTable.id, article.id));
+          fixed++;
+          results.push({ id: article.id, status: "fixed", url: cloudinaryUrl.substring(0, 60) });
+        } else {
+          failed++;
+          results.push({ id: article.id, status: "upload_failed" });
+        }
+      } catch (e: any) {
+        failed++;
+        results.push({ id: article.id, status: "error", error: e.message });
+      }
+    }
+
+    res.json({ total: needsFix.length, fixed, failed, results });
+  } catch (e: any) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 export default router;
