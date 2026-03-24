@@ -153,7 +153,7 @@ export default function Home() {
           {/* ARTICULISTAS SECTION */}
           <section className="bg-card p-5 sm:p-8 rounded-xl sm:rounded-2xl shadow-lg shadow-black/5 border border-border">
             <h2 className="text-xl sm:text-2xl font-black border-l-4 sm:border-l-[6px] border-primary pl-3 mb-5 sm:mb-8 text-primary uppercase">Articulistas</h2>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-4 sm:gap-6">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-6 sm:gap-8">
               {(columnists.length > 0 ? columnists : []).map((c: any) => (
                 <Link key={c.id} href={`/articulista/${c.id}`}>
                   <div className="flex flex-col items-center gap-2 sm:gap-3 cursor-pointer group">
