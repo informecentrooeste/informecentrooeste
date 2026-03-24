@@ -5,12 +5,15 @@ import { eq } from "drizzle-orm";
 import { requireAuth, requireRole, type AuthRequest } from "../../middleware/auth.js";
 import https from "https";
 import http from "http";
-import fs from "fs";
-import path from "path";
-import { randomUUID } from "crypto";
+import { v2 as cloudinary } from "cloudinary";
 
 const WP_BASE = "https://informecentrooeste.com.br/wp-json/wp/v2";
-const UPLOADS_DIR = path.join(process.cwd(), "uploads");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const CATEGORY_MAP: Record<number, string> = {
   22: "brasil",
@@ -41,28 +44,16 @@ async function fetchJSON(url: string): Promise<any> {
   });
 }
 
-async function downloadImage(url: string): Promise<string | null> {
-  return new Promise((resolve) => {
-    try {
-      const ext = path.extname(new URL(url).pathname).split("?")[0] || ".jpg";
-      const filename = `${randomUUID()}${ext}`;
-      const filePath = path.join(UPLOADS_DIR, filename);
-
-      if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
-
-      const client = url.startsWith("https") ? https : http;
-      client.get(url, { headers: { "User-Agent": "InformeImporter/1.0" } }, (res) => {
-        if (res.statusCode === 301 || res.statusCode === 302) {
-          return downloadImage(res.headers.location!).then(resolve);
-        }
-        if (res.statusCode !== 200) { resolve(null); return; }
-        const ws = fs.createWriteStream(filePath);
-        res.pipe(ws);
-        ws.on("finish", () => resolve(`/uploads/${filename}`));
-        ws.on("error", () => resolve(null));
-      }).on("error", () => resolve(null));
-    } catch { resolve(null); }
-  });
+async function uploadToCloudinary(imageUrl: string): Promise<string | null> {
+  try {
+    const result = await cloudinary.uploader.upload(imageUrl, {
+      folder: "informe-centro-oeste/images",
+      resource_type: "auto",
+    });
+    return result.secure_url;
+  } catch {
+    return null;
+  }
 }
 
 function stripHtml(html: string): string {
@@ -145,7 +136,7 @@ router.post("/import", async (req: AuthRequest, res) => {
           try {
             const media = await fetchJSON(`${WP_BASE}/media/${post.featured_media}?_fields=source_url`);
             if (media.source_url) {
-              featuredImage = await downloadImage(media.source_url);
+              featuredImage = await uploadToCloudinary(media.source_url);
             }
           } catch {}
         }
