@@ -28,6 +28,7 @@ export default function WpImportAdmin() {
   const [totalSkipped, setTotalSkipped] = useState(0);
   const [totalErrors, setTotalErrors] = useState(0);
   const [autoImport, setAutoImport] = useState(false);
+  const [afterDate, setAfterDate] = useState("2025-01-01");
 
   const { data: status, refetch: refetchStatus } = useQuery({
     queryKey: ["/api/admin/wp-import/status"],
@@ -38,7 +39,7 @@ export default function WpImportAdmin() {
     try {
       const result = await apiFetch("/admin/wp-import/import", {
         method: "POST",
-        body: JSON.stringify({ page, perPage }),
+        body: JSON.stringify({ page, perPage, after: afterDate ? `${afterDate}T00:00:00` : undefined }),
       });
 
       setTotalImported(prev => prev + (result.imported || 0));
@@ -130,7 +131,7 @@ export default function WpImportAdmin() {
 
       <div className="bg-white rounded-xl border p-6 mb-6">
         <h2 className="text-lg font-bold mb-4">Configuração</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Página atual</label>
             <input
@@ -142,6 +143,17 @@ export default function WpImportAdmin() {
               disabled={importing}
             />
             <p className="text-xs text-gray-500 mt-1">Página 1 = posts mais recentes</p>
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Importar a partir de</label>
+            <input
+              type="date"
+              className="w-full border rounded-lg px-3 py-2 text-sm"
+              value={afterDate}
+              onChange={e => setAfterDate(e.target.value)}
+              disabled={importing}
+            />
+            <p className="text-xs text-gray-500 mt-1">Somente posts publicados depois desta data</p>
           </div>
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Posts por página</label>
