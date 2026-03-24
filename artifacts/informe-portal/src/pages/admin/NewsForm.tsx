@@ -7,6 +7,7 @@ import { ArrowLeft, Save, Upload, X, FileText, Video, Link2, ImagePlus, Papercli
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import { CloudinaryUpload } from "@/components/admin/CloudinaryUpload";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { getAuthHeaders } from "@/hooks/use-auth";
 
 const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "") + "/api";
@@ -208,21 +209,11 @@ export default function NewsForm() {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1">Conteúdo (HTML/Texto Livre)</label>
-              <div className="border border-gray-300 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-primary focus-within:border-primary">
-                <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 flex gap-2">
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Editor Simples</span>
-                </div>
-                <textarea 
-                  required 
-                  name="content" 
-                  value={formData.content} 
-                  onChange={handleChange} 
-                  rows={20} 
-                  className="w-full px-4 py-4 border-none focus:ring-0 resize-y font-mono text-sm leading-relaxed" 
-                  placeholder="<p>Escreva o conteúdo da notícia aqui...</p>" 
-                />
-              </div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">Conteúdo</label>
+              <RichTextEditor
+                value={formData.content}
+                onChange={(html) => setFormData(prev => ({ ...prev, content: html }))}
+              />
             </div>
           </div>
 
