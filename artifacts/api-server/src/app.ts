@@ -38,6 +38,14 @@ app.use("/api/uploads", express.static(path.join(process.cwd(), "uploads"), {
 
 app.use("/api", router);
 
+if (process.env.NODE_ENV === "production") {
+  const frontendPath = path.resolve(__dirname, "../../informe-portal/dist/public");
+  app.use(express.static(frontendPath, { maxAge: "7d" }));
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
+  });
+}
+
 // 404 handler
 app.use((_req, res) => {
   res.status(404).json({ error: "Not found" });

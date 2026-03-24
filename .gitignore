@@ -1,5 +1,3 @@
-# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
 # compiled output
 dist
 tmp
@@ -41,9 +39,33 @@ testem.log
 .DS_Store
 Thumbs.db
 
-.cursor/rules/nx-rules.mdc
-.github/instructions/nx.instructions.md
-
 # Replit
 .cache/
 .local/
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Uploads (armazenados no servidor, não versionados)
+artifacts/api-server/uploads/
+
+# Logs
+*.log
+logs/
+
+# Canvas / Mockup sandbox (apenas para desenvolvimento)
+artifacts/mockup-sandbox/
+.canvas/
+
+# Build output
+artifacts/api-server/dist/
+artifacts/informe-portal/dist/
+
+# OS files
+*.swp
+*.swo
+*~
